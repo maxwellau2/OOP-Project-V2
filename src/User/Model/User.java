@@ -46,6 +46,10 @@ public class User implements IEntity{
         this.role = role;
     }
 
+    public boolean isAdmin(){
+        return this.role.equals("Administrator");
+    }
+
     public boolean isBlacklist() {
         return isBlacklist;
     }

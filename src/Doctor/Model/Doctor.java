@@ -5,10 +5,14 @@ import Interfaces.IEntity;
 public class Doctor implements IEntity {
     private String id;
     private String name;
+    private Integer age;
+    private String gender;
     private String specialization;
-    public Doctor(String id, String name, String specialization) {
+    public Doctor(String id, String name, Integer age, String gender, String specialization) {
         this.id = id;
         this.name = name;
+        this.age = age;
+        this.gender = gender;
         this.specialization = specialization;
     }
 
@@ -18,7 +22,7 @@ public class Doctor implements IEntity {
 
     @Override
     public String toCSV() {
-        return id + "," + name + "," + specialization;
+        return id + "," + name + "," + age + "," + gender + "," + specialization;
     }
 
     public void setId(String id) {
@@ -43,6 +47,22 @@ public class Doctor implements IEntity {
 
     @Override
     public String toString() {
-        return String.format("Doctor{ID: %s, Name: %s, Specialization: %s}", id, name, specialization);
+        return String.format("Doctor{ID: %s, Name: %s, Gender: %s, Specialization: %s}", id, name, gender, specialization);
+    }
+
+    public String getGender() {
+        return gender;
+    }
+
+    public void setGender(String gender) {
+        this.gender = gender;
+    }
+
+    public Integer getAge() {
+        return age;
+    }
+
+    public void setAge(Integer age) {
+        this.age = age;
     }
 }

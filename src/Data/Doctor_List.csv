@@ -1,1 +1,3 @@
-id,name,gender,age
+id,name,gender,age,specialization
+D001,John Smith,male,69,ortho
+D002,Emily Clarke,female,42,family

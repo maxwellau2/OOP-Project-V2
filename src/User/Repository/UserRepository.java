@@ -8,10 +8,19 @@ import Abstract.Repository;
 import User.Model.User;
 
 public class UserRepository extends Repository<User> {
+    private static UserRepository instance; // The singleton instance
 
-    public UserRepository(String csvPath) {
+    private UserRepository(String csvPath) {
         super(csvPath);
         this.entities = new ArrayList<>(); // Initialize the list of users
+    }
+
+    public static UserRepository getInstance(String csvPath) {
+        if (instance == null) {
+            instance = new UserRepository(csvPath);
+            instance.load();
+        }
+        return instance;
     }
 
     @Override
@@ -19,7 +28,7 @@ public class UserRepository extends Repository<User> {
         String[] data = csvLine.split(",");
         User user = new User(data[0], data[1], data[2]);
         user.setBlacklist(Boolean.parseBoolean(data[3]));
-        if (!data[4].isEmpty()) {
+        if (data.length >= 5 && !data[4].isEmpty()) {
             user.setLastLogin(LocalDateTime.parse(data[4], DateTimeFormatter.ISO_DATE_TIME));
         }
         return user;

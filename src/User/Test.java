@@ -12,7 +12,7 @@ public class Test {
         String testFilePath = "src/Data/User_List.csv";
 
         // Initialize UserRepository and add sample users
-        UserRepository userRepository = new UserRepository(testFilePath);
+        UserRepository userRepository = UserRepository.getInstance(testFilePath);
         userRepository.load();
         userRepository.display();
 //        userRepository.display();

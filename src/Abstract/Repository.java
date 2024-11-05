@@ -43,6 +43,16 @@ public abstract class Repository<T extends IEntity> {
         }
     }
 
+    public List<T> readAllWhere(String id) {
+        ArrayList<T> res = new ArrayList<>();
+        for (T entity : entities) {
+            if (entity.getId().equals(id)) {
+                res.add(entity);
+            }
+        }
+        return res;
+    }
+
     public void update(T entity) {
         String id = entity.getId();
         for (int i = 0; i < entities.size(); i++) {
