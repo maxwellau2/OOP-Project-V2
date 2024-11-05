@@ -1,0 +1,2 @@
+hospitalID,passwordHash,role,isBlacklist,lastLogin
+123,poop123,Doctor,true,2024-11-01T15:08:01.4403045
