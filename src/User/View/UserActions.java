@@ -9,7 +9,7 @@ public class UserActions {
     }
 
     public User login(String username, String password){
-
+        return new User();
     }
 
     public void ViewProfile(){
