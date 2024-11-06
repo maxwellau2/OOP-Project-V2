@@ -12,8 +12,8 @@ public class DoctorActions {
     private Doctor doctor;
     private UserActions userActions;
     public DoctorActions(User user) {
-        DoctorRepository repo = DoctorRepository.getInstance("src/Data/Doctor_List.csv");
-        Doctor doc = repo.read(user.getId());
+        DoctorRepository docRepo = DoctorRepository.getInstance("src/Data/Doctor_List.csv");
+        Doctor doc = docRepo.read(user.getId());
         if (doc == null){
             System.out.println("Doctor not found");
         }

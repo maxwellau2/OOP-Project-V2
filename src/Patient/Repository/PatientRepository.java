@@ -7,8 +7,15 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
 public class PatientRepository extends Repository<Patient> {
+    private static PatientRepository instance = null;
+    public static PatientRepository getInstance(String csvPath){
+        if(instance == null){
+            instance = new PatientRepository(csvPath);
+        }
+        return instance;
+    }
 
-    public PatientRepository(String csvPath) {
+    private PatientRepository(String csvPath) {
         super(csvPath);
         this.entities = new ArrayList<Patient>();
     }
