@@ -40,16 +40,17 @@ public class UserActions {
         return foundUser;
     }
 
-    public void updatePassword(String password){
+    public boolean updatePassword(String password){
         UserRepository repo = UserRepository.getInstance("src/Data/User_List.csv");
         if (this.user == null) {
             System.out.println("User not found, have you logged in?");
-            return;
+            return false;
         }
         // user not null, just call update...
         this.user.setPasswordHash(hashPassword(password));
         repo.update(this.user);
         repo.store();
+        return true;
     }
 
     public static String hashPassword(String password) {
