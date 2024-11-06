@@ -8,6 +8,8 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 public abstract class Repository<T extends IEntity> {
     protected List<T> entities = new ArrayList<T>();
@@ -43,14 +45,12 @@ public abstract class Repository<T extends IEntity> {
         }
     }
 
-    public List<T> readAllWhere(String id) {
-        ArrayList<T> res = new ArrayList<>();
-        for (T entity : entities) {
-            if (entity.getId().equals(id)) {
-                res.add(entity);
-            }
-        }
-        return res;
+    public List<T> filterById(String id) {
+        return this.getByFilter((T entry) -> entry.getId().equals(id));
+    }
+
+    public List<T> getByFilter(Predicate<T> predicate){
+        return this.entities.stream().filter(predicate).toList();
     }
 
     public void update(T entity) {

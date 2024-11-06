@@ -2,9 +2,11 @@ package Doctor.View;
 
 import Doctor.Model.Doctor;
 import Doctor.Repository.DoctorRepository;
+import MedicalRecord.Model.MedicalRecord;
 import MedicalRecord.Repository.MedicalRecordRepository;
 import User.Model.User;
 import User.View.UserActions;
+import java.util.List;
 
 public class DoctorActions {
     private Doctor doctor;
@@ -35,9 +37,13 @@ public class DoctorActions {
         this.doctor = doctor;
     }
 
-    public void viewPatientRecord(String patientId){
+    public List<MedicalRecord> viewPatientRecord(){
         MedicalRecordRepository medRepo = MedicalRecordRepository.getInstance("src/Data/MedicalRecord_List.csv");
+        return medRepo.getByFilter((MedicalRecord record) -> record.getDoctorId().equals(this.doctor.getId()));
+    }
 
-
+    public void updatePatientRecord(MedicalRecord entity){
+        MedicalRecordRepository repo = MedicalRecordRepository.getInstance("src/Data/MedicalRecord_List.csv");
+        repo.update(entity);
     }
 }
