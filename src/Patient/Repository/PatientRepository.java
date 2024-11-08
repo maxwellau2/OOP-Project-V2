@@ -2,6 +2,7 @@ package Patient.Repository;
 import Patient.Model.Patient;
 import Abstract.Repository;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -11,6 +12,7 @@ public class PatientRepository extends Repository<Patient> {
     public static PatientRepository getInstance(String csvPath){
         if(instance == null){
             instance = new PatientRepository(csvPath);
+            instance.load();
         }
         return instance;
     }
@@ -23,8 +25,9 @@ public class PatientRepository extends Repository<Patient> {
     @Override
     protected Patient fromCSV(String csv) {
         String[] values = csv.split(",");
-        LocalDateTime date = LocalDateTime.parse(values[2], DateTimeFormatter.ISO_DATE_TIME);
-        return new Patient(values[0], values[1], date, values[3], values[4], values[5]);
+        DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE; // yyyy-MM-dd format
+        LocalDateTime dateTime = LocalDate.parse(values[2], formatter).atStartOfDay();
+        return new Patient(values[0], values[1], dateTime, values[3], values[4], values[5]);
     }
 
     @Override

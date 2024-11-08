@@ -3,26 +3,17 @@ import User.Model.User;
 import User.Repository.UserRepository;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.time.LocalDateTime;
 
 public class UserActions {
-    public User user;
 
-    public static void main(String[] args){
-        User user = UserActions.login("guest", "password");
-        if (user == null){
-            System.out.println("User not found");
-            return;
-        }
-        UserActions userActions = new UserActions(user);
-        userActions.viewProfile();
-    }
+    public static UserRepository getUserRepository(){
+        return UserRepository.getInstance("src/Data/User_List.csv");
 
-    public UserActions(User user){
-        this.user = user;
     }
 
     public static User login(String hospitalId, String password){
-        UserRepository repo = UserRepository.getInstance("src/Data/User_List.csv");
+        UserRepository repo = getUserRepository();
         User foundUser = repo.read(hospitalId);
         if (foundUser == null) {
             return null;
@@ -40,17 +31,23 @@ public class UserActions {
         return foundUser;
     }
 
-    public boolean updatePassword(String password){
-        UserRepository repo = UserRepository.getInstance("src/Data/User_List.csv");
-        if (this.user == null) {
+    public static User updatePassword(User user, String password){
+        UserRepository repo = getUserRepository();
+        if (user == null) {
             System.out.println("User not found, have you logged in?");
-            return false;
+            return null;
         }
         // user not null, just call update...
-        this.user.setPasswordHash(hashPassword(password));
-        repo.update(this.user);
-        repo.store();
-        return true;
+        user.setPasswordHash(hashPassword(password));
+        user = updateLastLoginToNow(user);
+        return user;
+    }
+
+    public static User updateLastLoginToNow(User user){
+        user.setLastLogin(LocalDateTime.now());
+        UserRepository repo = getUserRepository();
+        User res = repo.update(user);
+        return res;
     }
 
     public static String hashPassword(String password) {
@@ -75,8 +72,8 @@ public class UserActions {
         }
     }
 
-    public void viewProfile(){
+    public void viewProfile(User user){
         System.out.println("====User Profile===");
-        System.out.println(this.user);
+        System.out.println(user);
     }
 }

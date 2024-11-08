@@ -1,5 +1,6 @@
 package User.Repository;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -29,7 +30,9 @@ public class UserRepository extends Repository<User> {
         User user = new User(data[0], data[1], data[2]);
         user.setBlacklist(Boolean.parseBoolean(data[3]));
         if (data.length >= 5 && !data[4].isEmpty()) {
-            user.setLastLogin(LocalDateTime.parse(data[4], DateTimeFormatter.ISO_DATE_TIME));
+            DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE; // yyyy-MM-dd format
+            LocalDateTime dateTime = LocalDate.parse(data[4], formatter).atStartOfDay();
+            user.setLastLogin(dateTime); // Set to midnight
         }
         return user;
     }

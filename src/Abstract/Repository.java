@@ -30,6 +30,7 @@ public abstract class Repository<T extends IEntity> {
     public void create(T entity) {
         entities.add(entity);
         System.out.println("Entity created: " + entity);
+        this.store();
     }
 
     public T read(String id) {
@@ -37,10 +38,10 @@ public abstract class Repository<T extends IEntity> {
                 .filter(e -> e.getId().equals(id))
                 .findFirst();
         if (entity.isPresent()) {
-            System.out.println("Entity found: " + entity.get());
+//            System.out.println("Entity found: " + entity.get());
             return entity.get();
         } else {
-            System.out.println("Entity not found with ID: " + id);
+//            System.out.println("Entity not found with ID: " + id);
             return null;
         }
     }
@@ -53,25 +54,30 @@ public abstract class Repository<T extends IEntity> {
         return this.entities.stream().filter(predicate).toList();
     }
 
-    public void update(T entity) {
+    public T update(T entity) {
         String id = entity.getId();
         for (int i = 0; i < entities.size(); i++) {
             if (entities.get(i).getId().equals(id)) {
                 entities.set(i, entity);
-                System.out.println("Entity updated: " + entity);
-                return;
+//                System.out.println("Entity updated: " + entity);
+                this.store();
+                return entity;
             }
         }
-        System.out.println("Entity not found for update with ID: " + id);
+
+//        System.out.println("Entity not found for update with ID: " + id);
+        return null;
     }
 
     public void delete(String id) {
         boolean removed = entities.removeIf(e -> e.getId().equals(id));
         if (removed) {
-            System.out.println("Entity deleted with ID: " + id);
+//            System.out.println("Entity deleted with ID: " + id);
         } else {
-            System.out.println("Entity not found for deletion with ID: " + id);
+//            System.out.println("Entity not found for deletion with ID: " + id);
         }
+        this.store();
+
     }
 
     public List<T> getAll() {
@@ -91,7 +97,7 @@ public abstract class Repository<T extends IEntity> {
             for (String line : lines) {
                 if (flag == 1){
                     T entity = fromCSV(line);
-                    System.out.println("Entity loaded: " + entity);
+//                    System.out.println("Entity loaded: " + entity);
                     entities.add(entity);
                 }
                 else{

@@ -1,6 +1,7 @@
 package User.Model;
 
 import Interfaces.IEntity;
+import User.Repository.UserRepository;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -66,6 +67,7 @@ public class User implements IEntity{
         this.lastLogin = lastLogin;
     }
 
+
     // Login method: verifies if provided credentials are correct
     public boolean login(String hospitalID, String passwordHash) {
         if (this.isBlacklist) {
@@ -106,7 +108,7 @@ public class User implements IEntity{
 
     @Override
     public String toCSV() {
-        String lastLoginStr = (lastLogin != null) ? lastLogin.format(DateTimeFormatter.ISO_DATE_TIME) : "";
+        String lastLoginStr = (lastLogin != null) ? lastLogin.format(DateTimeFormatter.ofPattern("yyyy-MM-dd")) : "";
         return String.join(",", hospitalID, passwordHash, role, Boolean.toString(isBlacklist), lastLoginStr);
     }
 }
