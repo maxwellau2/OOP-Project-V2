@@ -1,0 +1,72 @@
+import java.io.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+public class AdminActions extends UserActions{
+	public void manageStaff(String csvPath) {
+		int choice_int;
+        List<String[]> rows = new ArrayList<>();
+        System.out.println("1. Add staff member");
+        System.out.println("2. Update staff member");
+        System.out.println("3. Remove staff member");
+		Scanner choice = new Scanner(System.in);
+		choice_int = choice.nextInt();
+		if (choice_int == 1)
+		{
+			int rowIndex;
+			int i;
+			String[] values;
+	        System.out.println("Enter the doctor's id, name, age, gender and specialization.");
+			Scanner id = new Scanner(System.in);
+			String id_Str = id.nextLine();
+			Scanner name = new Scanner(System.in);
+			String name_Str = name.nextLine();
+			Scanner age = new Scanner(System.in);
+			String age_Str = age.nextLine();
+			Scanner gender = new Scanner(System.in);
+			String gender_Str = gender.nextLine();
+			Scanner spec = new Scanner(System.in);
+			String spec_Str = spec.nextLine();
+			Doctor d = new Doctor(id.nextInt(),name.nextLine(),age.nextInt(),gender.nextLine(),spec.nextLine());
+	        try (BufferedReader br = new BufferedReader(new FileReader(csvPath))) {
+	            String line;
+	            while ((line = br.readLine()) != null) {
+	                values = line.split(",");
+	                rows.add(values);
+	            }
+	        } catch (IOException e) {
+	            e.printStackTrace();
+	            return;
+	        }
+			String[] newRowData = {id_Str, name_Str, age_Str, gender_Str, spec_Str};
+			for (i=0;i<values.length;i++) {
+				if(values[0] == id_Str) {
+					rowIndex = i;
+				}
+			}
+	        if (rowIndex >= 0 && rowIndex < rows.size()) {
+	            rows.set(rowIndex, newRowData);
+	        } else {
+	            System.out.println("Row index out of bounds.");
+	            return;
+	        }
+	        try (BufferedWriter bw = new BufferedWriter(new FileWriter(csvPath))) {
+	            for (String[] row : rows) {
+	                bw.write(String.join(",", row));
+	                bw.newLine();
+	            }
+	            System.out.println("Row modified successfully.");
+	        } catch (IOException e) {
+	            e.printStackTrace();
+	        }  
+		}
+		if (choice_int == 2)
+		{
+			
+		}
+		if (choice_int == 3)
+		{
+			
+		}
+	}
+}
