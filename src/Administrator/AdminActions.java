@@ -151,10 +151,7 @@ public class AdminActions extends UserActions{
         }
 		if (choice_int == 3)
 		{
-            int j;
-			for(j=0;j<10;j++){
-                
-            }
+            
 		}
 	}
 }
