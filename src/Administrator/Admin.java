@@ -1,4 +1,5 @@
 package Administrator;
+import User.Model.User;
 public class Admin extends User {
 	int id;
 	String name;
