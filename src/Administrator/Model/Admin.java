@@ -1,4 +1,4 @@
-package Administrator;
+package Administrator.Model;
 import User.Model.User;
 import java.lang.String;
 

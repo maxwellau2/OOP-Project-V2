@@ -25,7 +25,7 @@ public class Staff implements IEntity {
 
     @Override
     public String toCSV() {
-        return id + "," + name + "," + role + "," + gender + "," + Integer.toString(age) + "\n";
+        return id + "," + name + "," + role + "," + gender + "," + Integer.toString(age);
     }
 
     public void setId(String id) {

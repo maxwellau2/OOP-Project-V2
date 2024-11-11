@@ -1,4 +1,4 @@
-package Administrator;
+package Administrator.Repository;
 public enum AdminRepository {
     
 }
