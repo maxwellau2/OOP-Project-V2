@@ -25,10 +25,11 @@ public abstract class Repository<T extends IEntity> {
         }
     }
 
-    public void create(T entity) {
+    public boolean create(T entity) {
         entities.add(entity);
         System.out.println("Entity created: " + entity);
         this.store();
+        return true;
     }
 
     public T read(String id) {
@@ -83,6 +84,30 @@ public abstract class Repository<T extends IEntity> {
     }
 
     protected abstract T fromCSV(String csv);
+
+    protected String getLastId(){
+        int lastEntry = entities.size() - 1;
+        // look at the id of the last entry
+        return entities.get(lastEntry).getId();
+    }
+
+    protected String generateId() {
+        String lastId = this.getLastId();
+        // Find the index where the numeric part starts using a for loop
+        int i;
+        for (i = 0; i < lastId.length(); i++) {
+            if (Character.isDigit(lastId.charAt(i))) {
+                break;
+            }
+        }
+        // Separate the prefix and the numeric part
+        String prefix = lastId.substring(0, i);
+        int number = Integer.parseInt(lastId.substring(i));
+        // Increment the numeric part
+        number++;
+        // Format the new ID with leading zeros (adjust %03d based on required width)
+        return String.format("%s%03d", prefix, number);
+    }
 
     protected abstract String getHeader();
 

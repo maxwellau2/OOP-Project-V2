@@ -20,6 +20,14 @@ public class Prescription implements IEntity {
         this.dosage = dosage;
         this.status = status;
     }
+    public Prescription(String doctorId, String patientId, String medicationName, String dosage, String status) {
+        this.id = null;
+        this.doctorId = doctorId;
+        this.patientId = patientId;
+        this.medicationName = medicationName;
+        this.dosage = dosage;
+        this.status = status;
+    }
 
     @Override
     public String getId() {

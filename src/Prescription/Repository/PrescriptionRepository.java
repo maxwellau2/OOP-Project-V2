@@ -9,9 +9,10 @@ import java.util.List;
 public class PrescriptionRepository extends Repository<Prescription> {
     private static PrescriptionRepository instance;
 
-    public PrescriptionRepository(String csvPath) {
+    private PrescriptionRepository(String csvPath) { // make sure constructor is private
         super(csvPath); 
         this.entities = new ArrayList<Prescription>();
+        this.load();
     }
     public static PrescriptionRepository getInstance(String csvPath) {
         if (instance == null) {
@@ -19,6 +20,17 @@ public class PrescriptionRepository extends Repository<Prescription> {
             instance.load();
         }
         return instance;
+    }
+
+    public Prescription createPrescription(Prescription prescription){
+        // returns a prescription if is unique, else none
+        if (prescription.getId() == null){
+            prescription.setId(this.generateId());
+        }
+        if (this.create(prescription)){
+            return prescription;
+        }
+        return null;
     }
 
     @Override
@@ -49,5 +61,11 @@ public class PrescriptionRepository extends Repository<Prescription> {
     // Find prescriptions by status (e.g., pending, dispensed)
     public List<Prescription> getByStatus(String status) {
         return this.getByFilter(prescription -> prescription.getStatus().equalsIgnoreCase(status));
+    }
+
+    // update prescription status
+    public Prescription updatePrescriptionStatus(Prescription prescription, String status) {
+        prescription.setStatus(status);
+        return this.update(prescription);
     }
 }

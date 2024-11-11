@@ -1,0 +1,5 @@
+prescriptionId,doctorId,patientId,medicationName,dosage,status
+1,D001,POO1,ibuprofen,3,dispensed
+123,D002,P001,xanax,3mg,dispensed
+123,D002,P001,xanax,3mg,dispensed
+124,D002,P001,mother,69mg,dispensed
