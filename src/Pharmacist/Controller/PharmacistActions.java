@@ -30,7 +30,7 @@ public class PharmacistActions {
         if (prescription != null) {
             prescription.setStatus(newStatus);
             prescriptionRepo.update(prescription);
-            System.out.println("Prescription status updated to: " + newStatus);
+            System.out.println("Prescription status updated to: " + newStatus); //pending or dispensed
         } else {
             System.out.println("Prescription with ID " + prescriptionId + " not found.");
         }
