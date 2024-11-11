@@ -7,12 +7,14 @@ public class Inventory implements IEntity {
     private String medicationName;
     private int quantity;
     private int lowStockAlert;
+    private boolean restockRequested;
 
-    public Inventory(String id, String medicationName, int quantity, int lowStockAlert) {
+    public Inventory(String id, String medicationName, int quantity, int lowStockAlert, boolean restockRequested) {
         this.id = id;
         this.medicationName = medicationName;
         this.quantity = quantity;
         this.lowStockAlert = lowStockAlert;
+        this.restockRequested = restockRequested;
     }
 
 
@@ -21,10 +23,6 @@ public class Inventory implements IEntity {
         return id;
     }
 
-    @Override
-    public String toCSV() {
-        return id + "," + medicationName + "," + quantity + "," + lowStockAlert;
-    }
 
     public void setId(String id) {
         this.id = id;
@@ -54,9 +52,20 @@ public class Inventory implements IEntity {
         this.lowStockAlert = lowStockAlert;
     }
 
+    public boolean isRestockRequested() {
+        return restockRequested;
+    }
+
+    public void setRestockRequested(boolean restockRequested) {
+        this.restockRequested = restockRequested;
+    }
+
     @Override
     public String toString(){
-        return "Inventory {id=" + id + ", medicationName=" + medicationName + ", quantity=" + quantity
-                + ", lowStockAlert=" + lowStockAlert + "}";
+        return "Inventory {id=" + id + ", medicationName=" + medicationName + ", quantity=" + quantity + ", lowStockAlert=" + lowStockAlert +"restockRequested=" + restockRequested + "}";
+    }
+    @Override
+    public String toCSV() {
+        return String.join(",", id, medicationName, String.valueOf(quantity), String.valueOf(lowStockAlert), String.valueOf(restockRequested));
     }
 }
