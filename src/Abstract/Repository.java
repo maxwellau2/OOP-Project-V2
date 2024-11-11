@@ -1,7 +1,6 @@
 package Abstract;
 
 import Interfaces.IEntity;
-
 import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -9,10 +8,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
 public abstract class Repository<T extends IEntity> {
-    protected List<T> entities = new ArrayList<T>();
+    protected List<T> entities = new ArrayList<>();
     protected String csvPath;
 
     public Repository(String csvPath) {
@@ -81,7 +79,7 @@ public abstract class Repository<T extends IEntity> {
     }
 
     public List<T> getAll() {
-        return new ArrayList<T>(entities);
+        return new ArrayList<>(entities);
     }
 
     protected abstract T fromCSV(String csv);
