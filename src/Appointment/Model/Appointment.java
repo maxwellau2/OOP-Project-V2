@@ -1,10 +1,8 @@
 package Appointment.Model;
 
 import Interfaces.IEntity;
-
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
 
 public class Appointment implements IEntity {
     private String id;
@@ -65,6 +63,7 @@ public class Appointment implements IEntity {
     public void setStatus(String status) {
         this.status = status;
     }
+    @Override
     public String toString() {
         return "Appointment {id=" + id + ", patientId=" + patientId + ", doctorId="
                 + doctorId + ", date=" + date + ", status=" + status + "}";

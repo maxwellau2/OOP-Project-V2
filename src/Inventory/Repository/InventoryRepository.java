@@ -50,6 +50,6 @@ public class InventoryRepository extends Repository<Inventory> {
 
     @Override
     protected String getHeader() {
-        return "id,medicationName,quantity,lowStockAlert";
+        return "id,medicationName,quantity,lowStockAlert,restockRequested";
     }
 }
