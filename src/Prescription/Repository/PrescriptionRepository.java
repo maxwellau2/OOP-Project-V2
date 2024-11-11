@@ -34,7 +34,7 @@ public class PrescriptionRepository extends Repository<Prescription> {
     protected String getHeader() {
         return "prescriptionId,doctorId,patientId,medicationName,dosage,status";
     }
-.
+
 
     // Find prescriptions by patientId
     public List<Prescription> getByPatientId(String patientId) {
