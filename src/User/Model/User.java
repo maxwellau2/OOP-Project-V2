@@ -1,8 +1,6 @@
 package User.Model;
 
 import Interfaces.IEntity;
-import User.Repository.UserRepository;
-
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 

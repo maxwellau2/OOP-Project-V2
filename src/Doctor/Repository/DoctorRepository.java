@@ -1,8 +1,6 @@
 package Doctor.Repository;
-import Doctor.Model.Doctor;
-
 import Abstract.Repository;
-
+import Doctor.Model.Doctor;
 import java.util.ArrayList;
 
 public class DoctorRepository extends Repository<Doctor> {
@@ -22,7 +20,7 @@ public class DoctorRepository extends Repository<Doctor> {
     @Override
     protected Doctor fromCSV(String csvLine){
         String[] data = csvLine.split(",");
-        return new Doctor(data[0], data[1], Integer.parseInt(data[2]), data[3], data[4]);
+        return new Doctor(data[0], data[1], Integer.valueOf(data[2]), data[3], data[4]);
     }
 
     @Override
