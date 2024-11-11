@@ -9,10 +9,17 @@ import java.util.ArrayList;
 import java.util.Date;
 
 public class AppointmentRepository extends Repository<Appointment> {
-
-    public AppointmentRepository(String csvPath) {
+    private static AppointmentRepository instance;
+    private AppointmentRepository(String csvPath) {
         super(csvPath);
         this.entities = new ArrayList<Appointment>();
+        this.load();
+    }
+    public static AppointmentRepository getInstance(String csvPath) {
+        if (instance == null) {
+            instance = new AppointmentRepository(csvPath);
+        }
+        return instance;
     }
 
     @Override

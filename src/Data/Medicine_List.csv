@@ -1,4 +1,4 @@
-medicineName,initialStock,lowStockLevelAlert
-Paracetamol,100,20
-Ibuprofen,50,10
-Amoxicillin,75,15
+id,medicationName,quantity,lowStockAlert,restockRequested
+1,New Medication,5,10,false
+2,Ibuprofen,50,10,true
+3,Amoxicillin,75,15,true

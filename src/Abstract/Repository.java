@@ -91,7 +91,7 @@ public abstract class Repository<T extends IEntity> {
         return entities.get(lastEntry).getId();
     }
 
-    protected String generateId() {
+    public String generateId() {
         String lastId = this.getLastId();
         // Find the index where the numeric part starts using a for loop
         int i;
