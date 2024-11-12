@@ -3,48 +3,24 @@ import Appointment.Model.Appointment;
 import AppointmentOutcome.Controller.AppointmentOutcomeController;
 import Doctor.Model.Doctor;
 import Appointment.Controller.AppointmentController;
-import Doctor.Controller.DoctorActions;
+import Doctor.Controller.DoctorController;
 import MedicalRecord.Model.MedicalRecord;
 import Patient.Controller.PatientActions;
-import Patient.Repository.PatientRepository;
-import User.Model.User;
 import Patient.Model.Patient;
 import Util.TimeRangeMerger;
 import AppointmentOutcome.Model.AppointmentOutcome;
 import java.time.LocalDateTime;
-import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
+
+import static Util.RepositoryGetter.getAppointmentRepository;
+import static Util.SafeScanner.getValidatedIntInput;
 
 public class PatientView {
     Patient patient;
     Scanner scanner = new Scanner(System.in);
     public PatientView(Patient patient){
         this.patient = patient;
-    }
-
-    public static int getValidatedIntInput(Scanner scanner, String prompt, int min, int max) {
-        int input = -1;
-        boolean valid = false;
-
-        while (!valid) {
-            System.out.print(prompt);
-            try {
-                input = scanner.nextInt();
-
-                // Check if the input is within the range
-                if (input >= min && input <= max) {
-                    valid = true;
-                } else {
-                    System.out.println("Please enter a number between " + min + " and " + max + ".");
-                }
-            } catch (InputMismatchException e) {
-                System.out.println("Invalid input. Please enter a valid integer.");
-                scanner.next(); // Clear the invalid input
-            }
-        }
-
-        return input;
     }
 
     public void displayMenu() {
@@ -182,7 +158,7 @@ public class PatientView {
     // test case 3
     public void viewAvailableAppointmentsSlots(){
         // get each doctor's doctor id
-        List<Doctor> doctors = DoctorActions.getAllDoctors();
+        List<Doctor> doctors = DoctorController.getAllDoctors();
         for(Doctor doctor : doctors){
             printBorder();
             System.out.println("Doctor Name : " + doctor.getName());
@@ -194,11 +170,15 @@ public class PatientView {
             LocalDateTime timeFuture = timeNow.plusDays(7);
             // get appointments within these 7 days
             List<LocalDateTime> timeslots = AppointmentController.getAvailableTimeslots(doctor.getId(), timeNow);
-            List<String> timeRanges = TimeRangeMerger.mergeTimeslotsIntoRanges(timeslots);
-
-            for (String range : timeRanges) {
-                System.out.println(range);
+            for(LocalDateTime timeslot : timeslots){
+                printBorder();
+                System.out.println(timeslot);
             }
+//            List<String> timeRanges = TimeRangeMerger.mergeTimeslotsIntoRanges(timeslots);
+//
+//            for (String range : timeRanges) {
+//                System.out.println(range);
+//            }
         }
     }
 
@@ -206,7 +186,7 @@ public class PatientView {
         System.out.println("=== Schedule an Appointment ===");
 
         // Step 1: Display list of doctors
-        List<Doctor> doctors = DoctorActions.getAllDoctors();
+        List<Doctor> doctors = DoctorController.getAllDoctors();
         System.out.println("Available Doctors:");
         for (int i = 0; i < doctors.size(); i++) {
             System.out.println((i + 1) + ". Dr. " + doctors.get(i).getName() + " - " + doctors.get(i).getSpecialization());
@@ -239,7 +219,7 @@ public class PatientView {
 
         // Step 5: Confirm the appointment
         Appointment newAppointment = new Appointment(
-                AppointmentController.getAppointmentRepository().generateId(),  // Generate a unique ID
+                getAppointmentRepository().generateId(),  // Generate a unique ID
                 patient.getId(),
                 selectedDoctor.getId(),
                 selectedTimeslot,
@@ -332,7 +312,7 @@ public class PatientView {
         System.out.println("=== Your Appointments ===");
         for (int i = 0; i < appointments.size(); i++) {
             Appointment appointment = appointments.get(i);
-            System.out.println((i + 1) + ". Appointment with Dr. " + DoctorActions.getDoctorById(appointment.getDoctorId()).getName() +
+            System.out.println((i + 1) + ". Appointment with Dr. " + DoctorController.getDoctorById(appointment.getDoctorId()).getName() +
                     " on " + appointment.getDate() + " - Status: " + appointment.getStatus());
         }
 
@@ -373,7 +353,7 @@ public class PatientView {
         // Step 3: Display each appointment with details
         for (Appointment appointment : appointments) {
             // Retrieve doctor details for display
-            Doctor doctor = DoctorActions.getDoctorById(appointment.getDoctorId());
+            Doctor doctor = DoctorController.getDoctorById(appointment.getDoctorId());
             if (doctor != null) {
                 System.out.println("Doctor: Dr. " + doctor.getName() + " - " + doctor.getSpecialization());
             } else {
@@ -400,7 +380,7 @@ public class PatientView {
         // Step 3: Display each outcome's details
         for (AppointmentOutcome outcome : outcomes) {
             System.out.println("Appointment ID: " + outcome.getAppointmentId());
-            System.out.println("Doctor Name: " + DoctorActions.getDoctorById(outcome.getDoctorId()).getName());
+            System.out.println("Doctor Name: " + DoctorController.getDoctorById(outcome.getDoctorId()).getName());
             System.out.println("Services Provided: " + outcome.getServices());
             System.out.println("Prescribed Medication: " + outcome.getMedication());
             System.out.println("Consultation Notes: " + outcome.getConsultationNotes());

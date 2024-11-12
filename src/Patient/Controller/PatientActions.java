@@ -52,4 +52,7 @@ public class PatientActions {
         return repo.update(patient);
     }
 
+    public static Patient getPatientById(String patientId) {
+        return initPatientRepository().read(patientId);
+    }
 }

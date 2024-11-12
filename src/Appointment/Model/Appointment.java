@@ -60,6 +60,21 @@ public class Appointment implements IEntity {
         return status;
     }
 
+    public void prettyPrint() {
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+        DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("hh:mm a");
+
+        System.out.println("Appointment Details:");
+        System.out.println("----------------------------");
+        System.out.println("Appointment ID: " + id);
+        System.out.println("Patient ID    : " + patientId);
+        System.out.println("Doctor ID     : " + doctorId);
+        System.out.println("Date          : " + date.format(dateFormatter));
+        System.out.println("Time          : " + date.format(timeFormatter));
+        System.out.println("Status        : " + status);
+        System.out.println("----------------------------");
+    }
+
     public void setStatus(String status) {
         this.status = status;
     }

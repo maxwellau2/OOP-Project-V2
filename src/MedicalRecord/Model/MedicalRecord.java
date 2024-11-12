@@ -1,9 +1,12 @@
 package MedicalRecord.Model;
 
 import Interfaces.IEntity;
+import MedicalRecord.Repository.MedicalRecordRepository;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+
+import static Util.RepositoryGetter.getMedicalRecordRepository;
 
 public class MedicalRecord implements IEntity {
     private String recordId;
@@ -20,6 +23,10 @@ public class MedicalRecord implements IEntity {
         this.diagnosis = diagnosis;
         this.treatment = treatment;
         this.date = date;
+    }
+
+    public static MedicalRecord createNewMedicalRecordToday(String patientId, String doctorId, String diagnosis, String treatment) {
+        return new MedicalRecord(getMedicalRecordRepository().generateId(), patientId, doctorId, diagnosis, treatment, LocalDateTime.now());
     }
 
     public String getRecordId() {

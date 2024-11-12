@@ -3,6 +3,8 @@ package Util;
 import Appointment.Repository.AppointmentRepository;
 import AppointmentOutcome.Repository.AppointmentOutcomeRepository;
 import Doctor.Repository.DoctorRepository;
+import Leaves.Repository.LeavesRepository;
+import MedicalRecord.Repository.MedicalRecordRepository;
 import Prescription.Repository.PrescriptionRepository;
 
 public class RepositoryGetter {
@@ -24,5 +26,19 @@ public class RepositoryGetter {
 
     public static AppointmentOutcomeRepository getAppointmentOutcomeRepository() {
         return AppointmentOutcomeRepository.getInstance("src/Data/AppointmentOutcome_List.csv");
+    }
+
+
+    public static MedicalRecordRepository getMedicalRecordRepository(){
+        return MedicalRecordRepository.getInstance("src/Data/MedicalRecords_List.csv");
+    }
+
+    public static PrescriptionRepository getPrescriptionRepository(){
+        return PrescriptionRepository.getInstance("src/Data/Prescription_List.csv");
+    }
+
+
+    public static LeavesRepository getLeavesRepository() {
+        return LeavesRepository.getInstance("src/Data/Leaves_List.csv");
     }
 }

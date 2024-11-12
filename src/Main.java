@@ -1,5 +1,5 @@
-import Doctor.Controller.DoctorActions;
-import MedicalRecord.Model.MedicalRecord;
+import Doctor.Controller.DoctorController;
+import Doctor.View.DoctorView;
 import Patient.Controller.PatientActions;
 import Patient.Model.Patient;
 import Patient.View.PatientView;
@@ -7,7 +7,6 @@ import User.Model.User;
 import User.View.UserActions;
 import Doctor.Model.Doctor;
 
-import java.util.List;
 import java.util.Scanner;
 
 //TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
@@ -30,15 +29,15 @@ public class Main {
         }
         if (user == null) return ;
         // check if they logged in before
-        if (user.getLastLogin() == null){
-            System.out.println("You have not logged in before! Change your password!");
-            String newPassword = scanner.nextLine();
-            User u = UserActions.updatePassword(user, newPassword);
-            if (u != null) {
-                System.out.println("You have successfully changed password!");
-            }
-        }
-        user = UserActions.updateLastLoginToNow(user);
+//        if (user.getLastLogin() == null){
+//            System.out.println("You have not logged in before! Change your password!");
+//            String newPassword = scanner.nextLine();
+//            User u = UserActions.updatePassword(user, newPassword);
+//            if (u != null) {
+//                System.out.println("You have successfully changed password!");
+//            }
+//        }
+//        user = UserActions.updateLastLoginToNow(user);
 
         // look at role
         switch (user.getRole()){
@@ -53,7 +52,9 @@ public class Main {
             }
             case "Doctor":{
                 System.out.println("You are a doctor");
-                Doctor doctor = DoctorActions.createDoctorFromUser(user);
+                Doctor doctor = DoctorController.createDoctorFromUser(user);
+                DoctorView view = new DoctorView(doctor);
+                view.displayMenu();
                 break;
             }
         }
