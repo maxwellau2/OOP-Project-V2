@@ -5,10 +5,9 @@ import AppointmentOutcome.Repository.AppointmentOutcomeRepository;
 
 import java.util.List;
 
+import static Util.RepositoryGetter.getAppointmentOutcomeRepository;
+
 public class AppointmentOutcomeController {
-    private static AppointmentOutcomeRepository getAppointmentOutcomeRepository() {
-        return AppointmentOutcomeRepository.getInstance("src/Data/AppointmentOutcome_List.csv");
-    }
 
     public static List<AppointmentOutcome> getAllAppointmentOutcome() {
         return getAppointmentOutcomeRepository().getAll();

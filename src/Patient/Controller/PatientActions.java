@@ -37,7 +37,6 @@ public class PatientActions {
     // probably put under user actions is btr
     public static Patient createPatientFromUser(User user){
         PatientRepository repo = initPatientRepository();
-        repo.display();
 //        repo.display();
         Patient patient = repo.read(user.getId());
         if (patient == null) {

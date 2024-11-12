@@ -7,10 +7,9 @@ import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import static Util.RepositoryGetter.getAppointmentRepository;
+
 public class AppointmentController {
-    public static AppointmentRepository getAppointmentRepository() {
-        return AppointmentRepository.getInstance("src/Data/Appointment_List.csv");
-    }
 
     public static Appointment createNewAppointment(Appointment appointment) {
         return getAppointmentRepository().create(appointment);

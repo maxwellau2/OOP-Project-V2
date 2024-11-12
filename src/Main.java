@@ -1,9 +1,11 @@
+import Doctor.Controller.DoctorActions;
 import MedicalRecord.Model.MedicalRecord;
 import Patient.Controller.PatientActions;
 import Patient.Model.Patient;
 import Patient.View.PatientView;
 import User.Model.User;
 import User.View.UserActions;
+import Doctor.Model.Doctor;
 
 import java.util.List;
 import java.util.Scanner;
@@ -51,8 +53,8 @@ public class Main {
             }
             case "Doctor":{
                 System.out.println("You are a doctor");
+                Doctor doctor = DoctorActions.createDoctorFromUser(user);
                 break;
-//                Doctor
             }
         }
 

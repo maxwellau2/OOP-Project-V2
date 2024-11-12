@@ -6,17 +6,24 @@ import MedicalRecord.Model.MedicalRecord;
 import MedicalRecord.Repository.MedicalRecordRepository;
 import Prescription.Model.Prescription;
 import Prescription.Repository.PrescriptionRepository;
+import User.Model.User;
 import java.util.List;
+
+import static Util.RepositoryGetter.getDoctorRepository;
 
 public class DoctorActions {
 
-
-    public static DoctorRepository getDoctorRepository() {
-        return DoctorRepository.getInstance("src/Data/Doctor_List.csv");
-    }
-
     public static List<Doctor> getAllDoctors(){
         return getDoctorRepository().getAll();
+    }
+
+    public static Doctor createDoctorFromUser(User user){
+        Doctor doctor = getDoctorRepository().read(user.getId());
+        if (doctor == null) {
+            return null;
+        }
+        doctor.setUser(user);
+        return doctor;
     }
 
     public static List<MedicalRecord> viewPatientRecord(Doctor doctor){

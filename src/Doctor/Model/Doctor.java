@@ -1,6 +1,7 @@
 package Doctor.Model;
 
 import Interfaces.IEntity;
+import User.Model.User;
 
 public class Doctor implements IEntity {
     private String id;
@@ -8,6 +9,7 @@ public class Doctor implements IEntity {
     private Integer age;
     private String gender;
     private String specialization;
+    private User user = null;
     public Doctor(String id, String name, Integer age, String gender, String specialization) {
         this.id = id;
         this.name = name;
@@ -64,5 +66,13 @@ public class Doctor implements IEntity {
 
     public void setAge(Integer age) {
         this.age = age;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }
