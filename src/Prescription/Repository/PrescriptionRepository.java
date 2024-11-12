@@ -27,7 +27,7 @@ public class PrescriptionRepository extends Repository<Prescription> {
         if (prescription.getId() == null){
             prescription.setId(this.generateId());
         }
-        if (this.create(prescription)){
+        if (this.create(prescription) != null){
             return prescription;
         }
         return null;

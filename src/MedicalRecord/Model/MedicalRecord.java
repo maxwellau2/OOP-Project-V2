@@ -70,6 +70,15 @@ public class MedicalRecord implements IEntity {
         this.date = date;
     }
 
+    public void prettyPrintMedicalRecord(){
+        System.out.println("Record ID: " + recordId);
+        System.out.println("\t\tPatient ID: " + patientId);
+        System.out.println("\t\tDoctor ID: " + doctorId);
+        System.out.println("\t\tDiagnosis: " + diagnosis);
+        System.out.println("\t\tTreatment: " + treatment);
+        System.out.println("\t\tDate: " + date);
+    }
+
     @Override
     public String getId() {
         return recordId;

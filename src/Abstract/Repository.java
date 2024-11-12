@@ -25,11 +25,17 @@ public abstract class Repository<T extends IEntity> {
         }
     }
 
-    public boolean create(T entity) {
+    public T create(T entity) {
+        // check if entity is in entities
+        for (T t : entities) {
+            if (t.equals(entity)) {
+                return null;
+            }
+        }
         entities.add(entity);
-        System.out.println("Entity created: " + entity);
+//        System.out.println("Entity created: " + entity);
         this.store();
-        return true;
+        return entity;
     }
 
     public T read(String id) {
@@ -68,15 +74,13 @@ public abstract class Repository<T extends IEntity> {
         return null;
     }
 
-    public void delete(String id) {
-        boolean removed = entities.removeIf(e -> e.getId().equals(id));
+    public T delete(T item) {
+        boolean removed = entities.removeIf(e -> e.getId().equals(item.getId()));
         if (removed) {
-//            System.out.println("Entity deleted with ID: " + id);
-        } else {
-//            System.out.println("Entity not found for deletion with ID: " + id);
+            this.store();
+            return item;
         }
-        this.store();
-
+        return null;
     }
 
     public List<T> getAll() {
@@ -143,7 +147,7 @@ public abstract class Repository<T extends IEntity> {
                 bw.write(entity.toCSV());
                 bw.newLine();
             }
-            System.out.println("Data stored to CSV.");
+//            System.out.println("Data stored to CSV.");
             return true;
         } catch (IOException e) {
             System.err.println("Error storing data to CSV: " + e.getMessage());

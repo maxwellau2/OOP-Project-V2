@@ -1,4 +1,4 @@
 id,medicationName,quantity,lowStockAlert,restockRequested
-1,New Medication,5,10,false
+1,viagra,5,10,false
 2,Ibuprofen,50,10,true
 3,Amoxicillin,75,15,true

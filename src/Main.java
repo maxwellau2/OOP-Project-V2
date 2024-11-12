@@ -1,6 +1,7 @@
 import MedicalRecord.Model.MedicalRecord;
 import Patient.Controller.PatientActions;
 import Patient.Model.Patient;
+import Patient.View.PatientView;
 import User.Model.User;
 import User.View.UserActions;
 
@@ -44,12 +45,8 @@ public class Main {
                 if (patient == null)
                     System.out.println("Patient could not be created!");
                 System.out.println("You have successfully created patient!");
-                System.out.println(patient);
-                // testing getitng medical records
-                List<MedicalRecord> records = PatientActions.getMedicalRecords(patient);
-                for (MedicalRecord mr : records){
-                    System.out.println(mr);
-                }
+                PatientView patientView = new PatientView(patient);
+                patientView.displayMenu();
                 break;
             }
             case "Doctor":{

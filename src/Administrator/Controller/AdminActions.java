@@ -20,8 +20,9 @@ public class AdminActions{
 //        getStaffRepoInstance().delete("A002");
 //        getStaffRepoInstance().display();
 //        System.out.println(getAllAppointments());
-        Inventory Inv = new Inventory("1", "New Medication", 5, 10, false);
-        updateStock(Inv);
+        Inventory Inv = new Inventory("22222", "viagra", 5, 10, false);
+        boolean res = updateStock(Inv);
+        System.out.println(res);
     }
 
     private static StaffRepository getStaffRepoInstance(){
@@ -41,7 +42,7 @@ public class AdminActions{
         StaffRepository repo = getStaffRepoInstance();
         return repo.getAll();
     }
-    public static boolean addStaff(Staff staff){
+    public static Staff addStaff(Staff staff){
         StaffRepository repo = getStaffRepoInstance();
         return repo.create(staff);
     }
@@ -52,7 +53,8 @@ public class AdminActions{
     }
     public static boolean deleteStaff(Staff staff) {
         StaffRepository repo = getStaffRepoInstance();
-        repo.delete(staff.getId());
+        if (repo.delete(staff) == null)
+            return false;
         return true;
     }
     public static List<Appointment> getAllAppointments() {
@@ -60,7 +62,8 @@ public class AdminActions{
     }
     public static boolean updateStock(Inventory item){
         InventoryRepository repo = getInventoryRepoInstance();
-        repo.update(item);
+        if (repo.update(item) == null)
+            return false;
         return true;
     }
 }

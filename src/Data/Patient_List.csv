@@ -1,4 +1,4 @@
-id,name,dob,gender,contactInfo,bloodType
-P001,jonathan tan,2024-11-08,Female,A+,alice.brown@example.com
-P002,Bob Stone,1975-11-22,Male,B+,bob.stone@example.com
-P003,Charlie White,1990-07-08,Male,O-,charlie.white@example.com
+id,name,dob,gender,email,phoneNumber,bloodType
+P001,jonathan tan,2024-11-08,Female,lalala@kfkfk.com,lalala@lalal.com,A+
+P002,Bob Stone,1975-11-22,Male,bob.stone@example.com,92837811,B+
+P003,Charlie White,1990-07-08,Male,charlie.white@example.com,189237129,O-

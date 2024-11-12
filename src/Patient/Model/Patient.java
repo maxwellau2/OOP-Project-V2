@@ -6,20 +6,22 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 public class Patient implements IEntity {
+    private String phoneNumber;
     private String id;
     private String name;
     private LocalDateTime dob;
     private String gender;
-    private String contactInfo;
+    private String email;
     private String bloodType;
     private User user;
 
-    public Patient(String id, String name, LocalDateTime dob, String gender, String contactInfo, String bloodType) {
+    public Patient(String id, String name, LocalDateTime dob, String gender, String email, String phoneNumber, String bloodType) {
         this.id = id;
         this.name = name;
         this.dob = dob;
         this.gender = gender;
-        this.contactInfo = contactInfo;
+        this.email = email;
+        this.phoneNumber = phoneNumber;
         this.bloodType = bloodType;
     }
 
@@ -33,7 +35,20 @@ public class Patient implements IEntity {
     public String toCSV() {
         DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE; // yyyy-MM-dd format
         String formattedDob = dob.toLocalDate().format(formatter); // Format the LocalDateTime as yyyy-MM-dd
-        return this.id + "," + this.name + "," + formattedDob + "," + this.gender + "," + this.contactInfo + "," + this.bloodType;
+        return this.id + "," + this.name + "," + formattedDob + "," + this.gender + "," + this.email + "," + this.phoneNumber + "," + this.bloodType;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+    public String getEmail(){
+        return email;
+    }
+    public void setEmail(String email){
+        this.email = email;
     }
 
     public void setId(String id) {
@@ -43,6 +58,7 @@ public class Patient implements IEntity {
     public String getName() {
         return name;
     }
+
 
     public void setName(String name) {
         this.name = name;
@@ -62,14 +78,6 @@ public class Patient implements IEntity {
 
     public void setGender(String gender) {
         this.gender = gender;
-    }
-
-    public String getContactInfo() {
-        return contactInfo;
-    }
-
-    public void setContactInfo(String contactInfo) {
-        this.contactInfo = contactInfo;
     }
 
     public String getBloodType() {
@@ -95,7 +103,8 @@ public class Patient implements IEntity {
                 ", Name='" + name + '\'' +
                 ", DOB=" + dob +
                 ", Gender='" + gender + '\'' +
-                ", Contact Info='" + contactInfo + '\'' +
+                ", Email='" + email + '\'' +
+                ", Phone Number='" + phoneNumber + '\'' +
                 ", Blood Type='" + bloodType + '\'' +
                 ", User=" + (user != null ? user.toString() : "None") +
                 '}';

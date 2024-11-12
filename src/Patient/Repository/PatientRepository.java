@@ -27,11 +27,11 @@ public class PatientRepository extends Repository<Patient> {
         String[] values = csv.split(",");
         DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE; // yyyy-MM-dd format
         LocalDateTime dateTime = LocalDate.parse(values[2], formatter).atStartOfDay();
-        return new Patient(values[0], values[1], dateTime, values[3], values[4], values[5]);
+        return new Patient(values[0], values[1], dateTime, values[3], values[4], values[5], values[6]);
     }
 
     @Override
     protected String getHeader() {
-        return "id,name,dob,gender,contactInfo,bloodType";
+        return "id,name,dob,gender,email,phoneNumber,bloodType";
     }
 }

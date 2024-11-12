@@ -11,8 +11,8 @@ public class Doctor implements IEntity {
     public Doctor(String id, String name, Integer age, String gender, String specialization) {
         this.id = id;
         this.name = name;
-        this.age = age;
         this.gender = gender;
+        this.age = age;
         this.specialization = specialization;
     }
 
@@ -47,7 +47,7 @@ public class Doctor implements IEntity {
 
     @Override
     public String toString() {
-        return String.format("Doctor{ID: %s, Name: %s, Gender: %s, Specialization: %s}", id, name, gender, specialization);
+        return String.format("Doctor{ID: %s, Name: %s, Gender: %s, Age: %s, Specialization: %s}", id, name, gender, age, specialization);
     }
 
     public String getGender() {
