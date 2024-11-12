@@ -1,4 +1,5 @@
 import Doctor.Controller.DoctorActions;
+import Doctor.View.DoctorView;
 import MedicalRecord.Model.MedicalRecord;
 import Patient.Controller.PatientActions;
 import Patient.Model.Patient;
@@ -30,15 +31,15 @@ public class Main {
         }
         if (user == null) return ;
         // check if they logged in before
-        if (user.getLastLogin() == null){
-            System.out.println("You have not logged in before! Change your password!");
-            String newPassword = scanner.nextLine();
-            User u = UserActions.updatePassword(user, newPassword);
-            if (u != null) {
-                System.out.println("You have successfully changed password!");
-            }
-        }
-        user = UserActions.updateLastLoginToNow(user);
+//        if (user.getLastLogin() == null){
+//            System.out.println("You have not logged in before! Change your password!");
+//            String newPassword = scanner.nextLine();
+//            User u = UserActions.updatePassword(user, newPassword);
+//            if (u != null) {
+//                System.out.println("You have successfully changed password!");
+//            }
+//        }
+//        user = UserActions.updateLastLoginToNow(user);
 
         // look at role
         switch (user.getRole()){
@@ -54,6 +55,8 @@ public class Main {
             case "Doctor":{
                 System.out.println("You are a doctor");
                 Doctor doctor = DoctorActions.createDoctorFromUser(user);
+                DoctorView view = new DoctorView(doctor);
+                view.displayMenu();
                 break;
             }
         }

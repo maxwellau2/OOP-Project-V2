@@ -16,35 +16,14 @@ import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 
+import static Util.RepositoryGetter.getAppointmentRepository;
+import static Util.SafeScanner.getValidatedIntInput;
+
 public class PatientView {
     Patient patient;
     Scanner scanner = new Scanner(System.in);
     public PatientView(Patient patient){
         this.patient = patient;
-    }
-
-    public static int getValidatedIntInput(Scanner scanner, String prompt, int min, int max) {
-        int input = -1;
-        boolean valid = false;
-
-        while (!valid) {
-            System.out.print(prompt);
-            try {
-                input = scanner.nextInt();
-
-                // Check if the input is within the range
-                if (input >= min && input <= max) {
-                    valid = true;
-                } else {
-                    System.out.println("Please enter a number between " + min + " and " + max + ".");
-                }
-            } catch (InputMismatchException e) {
-                System.out.println("Invalid input. Please enter a valid integer.");
-                scanner.next(); // Clear the invalid input
-            }
-        }
-
-        return input;
     }
 
     public void displayMenu() {
@@ -239,7 +218,7 @@ public class PatientView {
 
         // Step 5: Confirm the appointment
         Appointment newAppointment = new Appointment(
-                AppointmentController.getAppointmentRepository().generateId(),  // Generate a unique ID
+                getAppointmentRepository().generateId(),  // Generate a unique ID
                 patient.getId(),
                 selectedDoctor.getId(),
                 selectedTimeslot,
