@@ -18,6 +18,7 @@ public class Appointment implements IEntity {
         this.status = status;
     }
 
+    @Override
     public String getId() {
         return id;
     }

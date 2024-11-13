@@ -1,15 +1,15 @@
 package Doctor.Controller;
 
+import Appointment.Model.Appointment;
 import Doctor.Model.Doctor;
-import Doctor.Repository.DoctorRepository;
 import MedicalRecord.Model.MedicalRecord;
-import MedicalRecord.Repository.MedicalRecordRepository;
 import Prescription.Model.Prescription;
 import Prescription.Repository.PrescriptionRepository;
 import User.Model.User;
-import java.util.List;
-
 import static Util.RepositoryGetter.*;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 public class DoctorActions {
 
@@ -34,22 +34,25 @@ public class DoctorActions {
         }
         return getMedicalRecordRepository().getByFilter((MedicalRecord record) -> record.getDoctorId().equals(doctor.getId()));
     }
-    public static MedicalRecord viewSpecificPatientRecord(Doctor doctor, String patientId) {
+    public static List<MedicalRecord> viewSpecificPatientRecord(Doctor doctor, String patientId) {
         if (doctor == null || patientId == null) {
             System.out.println("Doctor or Patient ID cannot be null.");
             return null;
         }
-
-        List<MedicalRecord> records = getMedicalRecordRepository().getByFilter((MedicalRecord record) -> record.getPatientId().equals(patientId) && record.getDoctorId().equals(doctor.getId()));
-
+    
+        List<MedicalRecord> records = getMedicalRecordRepository().getByFilter(
+            record -> record.getPatientId().equals(patientId) && record.getDoctorId().equals(doctor.getId())
+        );
+    
         if (records.isEmpty()) {
             System.out.println("No records found for patient with ID: " + patientId + " assigned to doctor with ID: " + doctor.getId());
             return null;
         } else {
-            System.out.println("Found record for patient with ID: " + patientId);
-            return records.getFirst(); // Assuming each patient has one record per doctor
+            System.out.println("Found " + records.size() + " record(s) for patient with ID: " + patientId);
+            return records; 
         }
-    }   
+    }
+     
     public static void addPatientRecord(MedicalRecord record) {
         if (record == null) {
             System.out.println("Medical record cannot be null.");
@@ -72,13 +75,37 @@ public class DoctorActions {
         }
         getMedicalRecordRepository().update(entity);
     }
-    public static void generatePrescription(Prescription prescription) {
-        if (prescription == null) {
-            System.out.println("Prescription cannot be null.");
+    public static void generatePrescription(Prescription prescription, Appointment appointment) {
+        if (prescription == null || appointment == null) {
+            System.out.println("Prescription or Appointment cannot be null.");
             return;
         }
+
+        // Generate Prescription ID based on the appointment time
+        String prescriptionId = generatePrescriptionIdFromAppointment(appointment);
+        prescription.setId(prescriptionId);
+
         PrescriptionRepository prescriptionRepo = getPrescriptionRepository();
-        prescriptionRepo.update(prescription); //insert id of the prescription
+        Prescription addedPrescription = prescriptionRepo.create(prescription);  // Assuming 'create' adds a new prescription
+
+        if (addedPrescription != null) {
+            System.out.println("Prescription created successfully with ID: " + addedPrescription.getId());
+        } else {
+            System.out.println("Failed to create prescription.");
+        }
+    }
+
+    private static String generatePrescriptionIdFromAppointment(Appointment appointment) {
+        // Use the appointment's date to generate a unique prescription ID 
+        LocalDateTime appointmentDate = appointment.getDate();
+        if (appointmentDate == null) {
+            System.out.println("Appointment date is null.");
+            return null;
+        }
+
+        // Format the appointment time as a string
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMdd-HHmmss");
+        return appointmentDate.format(formatter);  // Format to "YYYYMMDD-HHMMSS"
     }
 
     public static List<Prescription> viewPrescriptionsByDoctor(Doctor doctor) {
