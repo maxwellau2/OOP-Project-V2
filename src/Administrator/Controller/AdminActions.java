@@ -4,11 +4,9 @@ import Appointment.Model.Appointment;
 import Appointment.Repository.AppointmentRepository;
 import Inventory.Model.Inventory;
 import Inventory.Repository.InventoryRepository;
-import Staff.Repository.StaffRepository;
-
-import java.util.List;
-
 import Staff.Model.Staff;
+import Staff.Repository.StaffRepository;
+import java.util.List;
 
 public class AdminActions{
     public static void main (String[] args){
@@ -34,7 +32,7 @@ public class AdminActions{
         return AppointmentRepository.getInstance("src/Data/Appointment_List.csv");
     }
 
-    private static InventoryRepository getInventoryRepoInstance(){
+    public static InventoryRepository getInventoryRepoInstance(){
         return InventoryRepository.getInstance("src/Data/Medicine_List.csv");
     }
 
