@@ -20,6 +20,7 @@ public class DoctorController {
     public static Doctor createDoctorFromUser(User user){
         Doctor doctor = getDoctorRepository().read(user.getId());
         if (doctor == null) {
+            System.out.println("Doctor not found");
             return null;
         }
         doctor.setUser(user);

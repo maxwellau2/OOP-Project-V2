@@ -2,15 +2,28 @@ package Pharmacist.Controller;
 
 import Inventory.Model.Inventory;
 import Inventory.Repository.InventoryRepository;
+import Pharmacist.Model.Pharmacist;
 import Pharmacist.Repository.PharmacistRepository;
 import Prescription.Model.Prescription;
 import Prescription.Repository.PrescriptionRepository;
+import User.Model.User;
+import static Util.RepositoryGetter.getPharmacistRepository;
 import java.util.List;
 
 
 public class PharmacistActions {
     public PharmacistRepository getPharmacistrRepository() {
         return PharmacistRepository.getInstance("src/Data/Pharmacist_List.csv");
+    }
+
+        public static Pharmacist createPharmacistFromUser(User user) {
+        Pharmacist pharmacist = getPharmacistRepository().read(user.getId());
+        if (pharmacist == null) {
+            System.out.println("Pharmacist not found");
+            return null;
+        }
+        pharmacist.setUser(user);
+        return pharmacist;
     }
 
     public void viewPrescriptionDetails(String patientId) {

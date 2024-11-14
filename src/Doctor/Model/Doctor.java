@@ -18,6 +18,7 @@ public class Doctor implements IEntity {
         this.specialization = specialization;
     }
 
+    @Override
     public String getId() {
         return id;
     }

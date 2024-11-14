@@ -1,10 +1,12 @@
 package Util;
 
+import Administrator.Repository.AdminRepository;
 import Appointment.Repository.AppointmentRepository;
 import AppointmentOutcome.Repository.AppointmentOutcomeRepository;
 import Doctor.Repository.DoctorRepository;
 import Leaves.Repository.LeavesRepository;
 import MedicalRecord.Repository.MedicalRecordRepository;
+import Pharmacist.Repository.PharmacistRepository;
 import Prescription.Repository.PrescriptionRepository;
 
 public class RepositoryGetter {
@@ -41,4 +43,13 @@ public class RepositoryGetter {
     public static LeavesRepository getLeavesRepository() {
         return LeavesRepository.getInstance("src/Data/Leaves_List.csv");
     }
+
+    public static PharmacistRepository getPharmacistRepository() {
+        return PharmacistRepository.getInstance("src/Data/Pharmacist_List.csv");
+    }
+    
+    public static AdminRepository getAdminRepository() {
+        return AdminRepository.getInstance("src/Data/Administrator_List.csv");
+    }
 }
+
