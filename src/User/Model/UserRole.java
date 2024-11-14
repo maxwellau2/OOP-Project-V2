@@ -4,7 +4,7 @@ public enum UserRole {
     ADMIN("Administrator"),
     DOCTOR("Doctor"),
     PATIENT("Patient"),
-    NURSE("Nurse"); // Add more roles as needed
+    PHARMACIST("Pharmacist"); // Add more roles as needed
 
     private final String roleName;
 

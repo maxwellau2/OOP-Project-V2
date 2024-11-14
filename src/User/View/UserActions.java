@@ -16,23 +16,29 @@ public class UserActions {
         UserRepository repo = getUserRepository();
         User foundUser = repo.read(hospitalId);
         if (foundUser == null) {
+            System.out.println("User not found.");
             return null;
         }
         // user exists
         // 1. check the blacklist
-        if (foundUser.isBlacklist())
+        if (foundUser.isBlacklist()) {
+            System.out.println("User is blacklisted.");
             return null;
+        }
         // 2. check the password
         String hashedPassword = hashPassword(password);
 //        System.out.println(hashedPassword);
-        if(!hashedPassword.equals(foundUser.getPasswordHash())) // passwords don't match
+        if(!hashedPassword.equals(foundUser.getPasswordHash())) {
+            System.out.println("Incorrect password.");
             return null;
+        }
         // 3. all checks passed
+        System.out.println("Login successful.");
         return foundUser;
     }
 
     public static User updatePassword(User user, String password){
-        UserRepository repo = getUserRepository();
+        //UserRepository repo = getUserRepository();
         if (user == null) {
             System.out.println("User not found, have you logged in?");
             return null;

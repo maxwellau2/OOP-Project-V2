@@ -1,6 +1,7 @@
 package Pharmacist.Model;
 
 import Interfaces.IEntity;
+import User.Model.User;
 
 
 public class Pharmacist implements IEntity {
@@ -9,6 +10,7 @@ public class Pharmacist implements IEntity {
     private Integer age;
     private String gender;
     private String qualification;
+    private User user = null;
 
     public Pharmacist(String id, String name, Integer age, String gender, String qualification){
         this.id = id;
@@ -48,6 +50,14 @@ public class Pharmacist implements IEntity {
     }
     public void setqualification(String qualification){
         this.qualification = qualification;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
     @Override
