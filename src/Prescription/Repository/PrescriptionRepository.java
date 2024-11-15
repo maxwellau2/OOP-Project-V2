@@ -36,15 +36,15 @@ public class PrescriptionRepository extends Repository<Prescription> {
     @Override
     protected Prescription fromCSV(String csvLine) {
         String[] data = csvLine.split(",");
-        if (data.length == 6) {
-            return new Prescription(data[0], data[1], data[2], data[3], data[4], data[5]);
+        if (data.length == 7) {
+            return new Prescription(data[0], data[1], data[2], data[3], data[4], data[5], data[6]);
         }
         return null;
     }
 
     @Override
     protected String getHeader() {
-        return "prescriptionId,doctorId,patientId,medicationName,dosage,status";
+        return "prescriptionId,doctorId,patientId,medicationName,dosage,status,appointmentId";
     }
 
 

@@ -1,10 +1,17 @@
 package Pharmacist.View;
 
+import Appointment.Controller.AppointmentController;
+import Appointment.Model.Appointment;
+import AppointmentOutcome.Model.AppointmentOutcome;
 import Inventory.Model.Inventory;
 import Pharmacist.Controller.PharmacistActions;
 import static Util.SafeScanner.getValidatedIntInput;
+import static Util.SafeScanner.getValidatedStringInput;
+
 import java.util.List;
 import java.util.Scanner;
+
+import Prescription.Controller.PrescriptionActions;
 
 public class PharmacistView {
     private Scanner scanner = new Scanner(System.in);
@@ -49,28 +56,31 @@ public class PharmacistView {
 
     // View prescription details by patientId
     public void viewPrescriptionDetails() {
-        System.out.print("Enter the patient ID to view their appointment outcome record: ");
-        String patientId = scanner.nextLine();
-        pharmacistActions.viewPrescriptionDetails(patientId);
+        List<AppointmentOutcome> appointments = AppointmentController.getAppointmentOutcomeNotDispensed();
+        for (AppointmentOutcome appointment : appointments) {
+            appointment.prettyPrint();
+        }
     }
 
     // Update prescription
     public void updatePrescriptionStatus() {
-        System.out.print("Enter the prescription ID to update: ");
-        String prescriptionId = scanner.nextLine();
-        System.out.print("Enter the new status (e.g., pending, dispensed): ");
-        String newStatus = scanner.nextLine();
-        pharmacistActions.updatePrescriptionStatus(prescriptionId, newStatus);
+        String prescriptionId = getValidatedStringInput(scanner, "Enter the prescription ID to update: ", 10);
+        if (PrescriptionActions.getPrescriptionById(prescriptionId) == null){
+            System.out.println("Prescription does not exist.");
+            return;
+        }
+        String newStatus = getValidatedStringInput(scanner, "Enter the new status (e.g., pending, dispensed): ", List.of("pending", "dispensed"));
+        PharmacistActions.updatePrescriptionStatusById(prescriptionId, newStatus);
     }
 
     // View medication inventory
     public void viewMedicationInventory() {
-        List<Inventory> inventoryList = pharmacistActions.viewInventory();
+        List<Inventory> inventoryList = PharmacistActions.viewInventory();
         if (inventoryList.isEmpty()) {
             System.out.println("No medications found in inventory.");
         } else {
             for (Inventory item : inventoryList) {
-                System.out.println(item);
+                item.prettyPrint();
             }
         }
     }

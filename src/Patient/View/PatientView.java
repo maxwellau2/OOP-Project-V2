@@ -15,6 +15,7 @@ import java.util.Scanner;
 
 import static Util.RepositoryGetter.getAppointmentRepository;
 import static Util.SafeScanner.getValidatedIntInput;
+import static Util.TimeRangeMerger.mergeTimeslotsIntoRanges;
 
 public class PatientView {
     Patient patient;
@@ -170,15 +171,10 @@ public class PatientView {
             LocalDateTime timeFuture = timeNow.plusDays(7);
             // get appointments within these 7 days
             List<LocalDateTime> timeslots = AppointmentController.getAvailableTimeslots(doctor.getId(), timeNow);
-            for(LocalDateTime timeslot : timeslots){
-                printBorder();
-                System.out.println(timeslot);
+            List<String> formatted = mergeTimeslotsIntoRanges(timeslots);
+            for(String f : formatted){
+                System.out.println(f);
             }
-//            List<String> timeRanges = TimeRangeMerger.mergeTimeslotsIntoRanges(timeslots);
-//
-//            for (String range : timeRanges) {
-//                System.out.println(range);
-//            }
         }
     }
 
@@ -217,19 +213,20 @@ public class PatientView {
         int timeslotIndex = scanner.nextInt() - 1;
         LocalDateTime selectedTimeslot = availableTimeslots.get(timeslotIndex);
 
-        // Step 5: Confirm the appointment
+        // Step 5: Make  the appointment Pending
         Appointment newAppointment = new Appointment(
                 getAppointmentRepository().generateId(),  // Generate a unique ID
                 patient.getId(),
                 selectedDoctor.getId(),
                 selectedTimeslot,
-                "Confirmed"
+                "Pending"
         );
 
         Appointment createdAppt = AppointmentController.createNewAppointment(newAppointment);
 
         if (createdAppt != null) {
             System.out.println("Appointment successfully scheduled at " + selectedTimeslot + " with Dr. " + selectedDoctor.getName());
+            System.out.println("Please wait for Dr " + selectedDoctor.getName() + " to confirm the appointment.");
         } else {
             System.out.println("Failed to schedule appointment. Please try again.");
         }

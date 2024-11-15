@@ -56,4 +56,9 @@ public class Leave implements IEntity {
     public void setStaffId(String staffId) {
         this.staffId = staffId;
     }
+
+    @Override
+    public String toString() {
+        return "{ id: " + this.leaveId + ", staffId: " + this.staffId + ", leaveName: " + this.leaveName + ", start: " + this.start + ", end: " + this.end + " }";
+    }
 }

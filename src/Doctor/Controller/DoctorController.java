@@ -30,14 +30,14 @@ public class DoctorController {
 
     public static List<MedicalRecord> viewPatientRecord(Doctor doctor){
         if (doctor == null) {
-            System.out.println("Doctor cannot be null.");
+//            System.out.println("Doctor cannot be null.");
             return null;
         }
         return getMedicalRecordRepository().getByFilter((MedicalRecord record) -> record.getDoctorId().equals(doctor.getId()));
     }
     public static List<MedicalRecord> viewSpecificPatientRecord(Doctor doctor, String patientId) {
         if (doctor == null || patientId == null) {
-            System.out.println("Doctor or Patient ID cannot be null.");
+//            System.out.println("Doctor or Patient ID cannot be null.");
             return null;
         }
     

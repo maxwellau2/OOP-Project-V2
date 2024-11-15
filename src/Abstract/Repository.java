@@ -90,9 +90,14 @@ public abstract class Repository<T extends IEntity> {
     protected abstract T fromCSV(String csv);
 
     protected String getLastId(){
+
+        if (entities==null || entities.isEmpty()) {
+            return "0";
+        }
         int lastEntry = entities.size() - 1;
         // look at the id of the last entry
         if (lastEntry < 0) return "0"; // edge case for empty csv
+        if (entities.get(lastEntry) == null) return "0";
         return entities.get(lastEntry).getId();
     }
 

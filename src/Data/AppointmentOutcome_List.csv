@@ -1,4 +1,4 @@
 appointmentId,patientId,doctorId,services,medication,consultationNotes
-A011,P001,D001,massage and rest,ibuprofen,patient was jaundiced
-A012,P001,D002,chemotherapy,ibuprofen,patient had history of cancer
-A013,P002,D002,chemotherapy,ibuprofen,patient had history of covid
+A005,P005,D001,mssage,cooling tea,gonna die in 5 days
+A006,P005,D001,Completed,xanax,man gonna die
+A007,P005,D001,Completed,panadol,man gonna die pls help

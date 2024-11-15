@@ -1,1 +1,3 @@
-id,name,role,gender,age
+id,name,age,gender
+PH001,Pharmacist Tan,69,male
+PH002,Pharmacist Lily,40,female

@@ -1,5 +1,7 @@
 package Util;
 
+
+import java.util.List;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
@@ -26,6 +28,52 @@ public class SafeScanner {
             }
         }
 
+        // Clear the buffer after reading an integer to handle any lingering newline
+        if (scanner.hasNextLine()) {
+            scanner.nextLine();
+        }
+
         return input;
     }
+
+    public static String getValidatedStringInput(Scanner scanner, String prompt, int maxLength) {
+        String input = "";
+        boolean valid = false;
+
+        while (!valid) {
+            System.out.print(prompt);
+            input = scanner.nextLine().trim(); // Get the line and trim spaces
+
+            if (input.isEmpty()) {
+                System.out.println("Invalid input. Please enter a non-empty string.");
+            } else if (input.length() > maxLength) {
+                System.out.println("Input is too long. Maximum length allowed is " + maxLength + " characters.");
+            } else {
+                valid = true;
+            }
+        }
+
+        return input;
+    }
+
+    public static String getValidatedStringInput(Scanner scanner, String prompt, List<String> validInputs) {
+        String input = "";
+        boolean valid = false;
+
+        while (!valid) {
+            System.out.print(prompt);
+            input = scanner.nextLine().trim(); // Get the line and trim spaces
+
+            if (input.isEmpty()) {
+                System.out.println("Invalid input. Please enter a non-empty string.");
+            } else if (!validInputs.contains(input)) {
+                System.out.println("Invalid input. Accepted values are: " + validInputs);
+            } else {
+                valid = true;
+            }
+        }
+
+        return input;
+    }
+
 }

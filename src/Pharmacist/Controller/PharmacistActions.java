@@ -8,6 +8,8 @@ import Prescription.Model.Prescription;
 import Prescription.Repository.PrescriptionRepository;
 import User.Model.User;
 import static Util.RepositoryGetter.getPharmacistRepository;
+import static Util.RepositoryGetter.getPrescriptionRepository;
+
 import java.util.List;
 
 
@@ -26,7 +28,7 @@ public class PharmacistActions {
         return pharmacist;
     }
 
-    public void viewPrescriptionDetails(String patientId) {
+    public static void viewPrescriptionDetails(String patientId) {
         PrescriptionRepository prescriptionRepo = PrescriptionRepository.getInstance("src/Data/Prescription_List.csv");
         List<Prescription> prescriptions = prescriptionRepo.getByPatientId(patientId);
         if (prescriptions.isEmpty()) {
@@ -37,8 +39,8 @@ public class PharmacistActions {
             }
         }
     }
-    public void updatePrescriptionStatus(String prescriptionId, String newStatus) {
-        PrescriptionRepository prescriptionRepo = PrescriptionRepository.getInstance("src/Data/Prescription_List.csv");
+    public static void updatePrescriptionStatusById(String prescriptionId, String newStatus) {
+        PrescriptionRepository prescriptionRepo = getPrescriptionRepository();
         Prescription prescription = prescriptionRepo.read(prescriptionId);
         if (prescription != null) {
             prescription.setStatus(newStatus);
@@ -48,12 +50,12 @@ public class PharmacistActions {
             System.out.println("Prescription with ID " + prescriptionId + " not found.");
         }
     }
-    public List<Inventory> viewInventory(){
+    public static List<Inventory> viewInventory(){
         InventoryRepository inventoryRepo = InventoryRepository.getInstance("src/Data/Medicine_List.csv");
         return inventoryRepo.getAll();
     }
 
-    public void requestRestock(String medicationName) {
+    public static void requestRestock(String medicationName) {
         InventoryRepository inventoryRepo = InventoryRepository.getInstance("src/Data/Inventory_List.csv");
         Inventory item = inventoryRepo.getItemByName(medicationName);
         
