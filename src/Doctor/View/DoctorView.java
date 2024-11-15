@@ -1,25 +1,28 @@
 package Doctor.View;
 
+import Appointment.Controller.AppointmentController;
+import Appointment.Model.Appointment;
+import AppointmentOutcome.Controller.AppointmentOutcomeController;
+import AppointmentOutcome.Model.AppointmentOutcome;
+import Doctor.Controller.DoctorController;
+import Doctor.Model.Doctor;
+import Inventory.Controller.InventoryController;
+import Leaves.Controller.LeavesController;
+import Leaves.Model.Leave;
+import MedicalRecord.Model.MedicalRecord;
+import Patient.Controller.PatientActions;
+import Patient.Model.Patient;
+import Prescription.Controller.PrescriptionActions;
+import Prescription.Model.Prescription;
+
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.Scanner;
-import java.time.format.DateTimeFormatter;
-import Appointment.Controller.AppointmentController;
-import Appointment.Model.Appointment;
-import Leaves.Controller.LeavesController;
-import Leaves.Model.Leave;
-import Patient.Model.Patient;
-import Doctor.Controller.DoctorController;
-import Doctor.Model.Doctor;
-import MedicalRecord.Model.MedicalRecord;
-import Patient.Controller.PatientActions;
+
 import static Util.SafeScanner.getValidatedIntInput;
 import static Util.SafeScanner.getValidatedStringInput;
-import AppointmentOutcome.Model.AppointmentOutcome;
-import AppointmentOutcome.Controller.AppointmentOutcomeController;
-import Prescription.Model.Prescription;
-import Prescription.Controller.PrescriptionActions;
 
 public class DoctorView {
     private Doctor doctor;
@@ -273,7 +276,7 @@ public class DoctorView {
         String dosage = "None";
 
         if (prescribeMedication.equalsIgnoreCase("yes")) {
-            medication = getValidatedStringInput(scanner, "Enter prescribed medication: ", 200);
+            medication = getValidatedStringInput(scanner, "Enter prescribed medication: " + InventoryController.getUniqueInventoryItems().toString() , InventoryController.getUniqueInventoryItems());
             dosage = getValidatedStringInput(scanner, "Enter dosage: ", 100);
 
             // Step 5: Create a new prescription
