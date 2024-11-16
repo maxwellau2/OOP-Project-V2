@@ -1,5 +1,6 @@
 id,name,role,gender,age
-D001,John Smith,Doctor,Male,45
-D002,Emily Clarke,Doctor,Female,38
-P001,Mark Lee,Pharmacist,Male,29
-A001,Sarah Lee,Administrator,Female,41
+D001,jontan,doctor,male,29
+D003,tan ah kow,doctor,male,29
+D004,kayce,doctor,female,29
+PH002,Pharmacist Lily,pharmacist,female,40
+A001,Admin1,admin,male,29

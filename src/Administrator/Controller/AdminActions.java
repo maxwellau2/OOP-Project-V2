@@ -2,42 +2,17 @@ package Administrator.Controller;
 
 import Administrator.Model.Admin;
 import Appointment.Model.Appointment;
-import Appointment.Repository.AppointmentRepository;
 import Inventory.Model.Inventory;
 import Inventory.Repository.InventoryRepository;
 import Staff.Model.Staff;
 import Staff.Repository.StaffRepository;
 import User.Model.User;
-import static Util.RepositoryGetter.getAdminRepository;
+
 import java.util.List;
 
+import static Util.RepositoryGetter.*;
+
 public class AdminActions{
-//    public static void main (String[] args){
-//       System.out.println(AdminActions.getAllStaff());
-////       Staff s = new Staff("A001","Sarah Lee","Administrator","Female",41);
-//       Staff s = new Staff(getStaffRepoInstance().generateId(),"Carnegie","Administrator","Make",22);
-////       updateStaff(s);
-//        //addStaff(s);
-//        getStaffRepoInstance().delete("A002");
-//        getStaffRepoInstance().display();
-//        System.out.println(getAllAppointments());
-//        Inventory Inv = new Inventory("22222", "viagra", 5, 10, false);
-//        boolean res = updateStock(Inv);
-//        System.out.println(res);
-//    }
-
-    private static StaffRepository getStaffRepoInstance(){
-        StaffRepository repo = StaffRepository.getInstance("src/Data/Staff_List.csv");
-        return repo;
-    }
-
-    private static AppointmentRepository getAppointmentRepoInstance(){
-        return AppointmentRepository.getInstance("src/Data/Appointment_List.csv");
-    }
-
-    public static InventoryRepository getInventoryRepoInstance(){
-        return InventoryRepository.getInstance("src/Data/Medicine_List.csv");
-    }
 
     public static List<Staff> getAllStaff(){
         StaffRepository repo = getStaffRepoInstance();
@@ -60,7 +35,7 @@ public class AdminActions{
         return true;
     }
     public static List<Appointment> getAllAppointments() {
-        return getAppointmentRepoInstance().getAll();
+        return getAppointmentRepository().getAll();
     }
     public static boolean updateStock(Inventory item){
         InventoryRepository repo = getInventoryRepoInstance();
@@ -98,5 +73,9 @@ public class AdminActions{
         } else {
             System.out.println("Medication not found.");
         }
+    }
+
+    public static boolean deleteAdminById(String id) {
+        return getAdminRepository().deleteById(id);
     }
 }

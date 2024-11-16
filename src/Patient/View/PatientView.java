@@ -1,20 +1,21 @@
 package Patient.View;
+
+import Appointment.Controller.AppointmentController;
 import Appointment.Model.Appointment;
 import AppointmentOutcome.Controller.AppointmentOutcomeController;
-import Doctor.Model.Doctor;
-import Appointment.Controller.AppointmentController;
-import Doctor.Controller.DoctorController;
-import MedicalRecord.Model.MedicalRecord;
-import Patient.Controller.PatientActions;
-import Patient.Model.Patient;
-import Util.TimeRangeMerger;
 import AppointmentOutcome.Model.AppointmentOutcome;
+import Doctor.Controller.DoctorController;
+import Doctor.Model.Doctor;
+import MedicalRecord.Model.MedicalRecord;
+import Patient.Controller.PatientController;
+import Patient.Model.Patient;
+
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Scanner;
 
-import static Util.RepositoryGetter.getAppointmentRepository;
 import static Util.SafeScanner.getValidatedIntInput;
+import static Util.SafeScanner.getValidatedStringInput;
 import static Util.TimeRangeMerger.mergeTimeslotsIntoRanges;
 
 public class PatientView {
@@ -88,7 +89,7 @@ public class PatientView {
         System.out.println("Phone Number : " + patient.getPhoneNumber());
         System.out.println("Blood Type : " + patient.getBloodType());
         // get medical records
-        List<MedicalRecord> records =  PatientActions.getMedicalRecords(patient);
+        List<MedicalRecord> records =  PatientController.getMedicalRecords(patient);
         for (MedicalRecord record : records){
             record.prettyPrintMedicalRecord();
         }
@@ -111,30 +112,24 @@ public class PatientView {
 
         int choice = scanner.nextInt();
         scanner.nextLine(); // Consume newline
-
+        String newEmail = "";
+        String newContactNumber;
         switch (choice) {
             case 1:
-                System.out.print("Enter new email address: ");
-                String newEmail = scanner.nextLine();
+                newEmail = getValidatedStringInput(scanner,"Enter new email address: ", 30);
                 patient.setEmail(newEmail);
                 System.out.println("Email updated successfully.");
                 break;
             case 2:
-                System.out.print("Enter new contact number: ");
-                String newContactNumber = scanner.nextLine();
+                newContactNumber = getValidatedStringInput(scanner,"Enter new contact number: ", 20);
                 patient.setPhoneNumber(newContactNumber);
                 System.out.println("Contact number updated successfully.");
                 break;
             case 3:
-                System.out.print("Enter new email address: ");
-                newEmail = scanner.nextLine();
+                newEmail = getValidatedStringInput(scanner,"Enter new email address: ", 30);
                 patient.setEmail(newEmail);
-
-                System.out.print("Enter new contact number: ");
-                newContactNumber = scanner.nextLine();
+                newContactNumber = getValidatedStringInput(scanner,"Enter new contact number: ", 20);
                 patient.setPhoneNumber(newContactNumber);
-
-                System.out.println("Email and contact number updated successfully.");
                 break;
             default:
                 System.out.println("Invalid choice. Please run the program again.");
@@ -142,11 +137,12 @@ public class PatientView {
         }
 
         // Display updated patient information
+        System.out.println("Email and contact number updated successfully.");
         System.out.println("\nUpdated Patient Information:");
         System.out.println("Email : " + patient.getEmail());
         System.out.println("Phone Number : " + patient.getPhoneNumber());
         // update in the repo
-        PatientActions.updatePatient(patient);
+        PatientController.updatePatient(patient);
 
         return patient;
     }
@@ -189,8 +185,7 @@ public class PatientView {
         }
 
         // Step 2: Choose a doctor
-        System.out.print("Select a doctor by number: ");
-        int doctorIndex = scanner.nextInt() - 1;
+        int doctorIndex = getValidatedIntInput(scanner, "Select a doctor by number: ", 1, doctors.size()) - 1;
         Doctor selectedDoctor = doctors.get(doctorIndex);
 
         // Step 3: Display available timeslots for the next 3 days
@@ -209,18 +204,11 @@ public class PatientView {
         }
 
         // Step 4: Select a timeslot
-        System.out.print("Select a timeslot by number: ");
-        int timeslotIndex = scanner.nextInt() - 1;
+        int timeslotIndex = getValidatedIntInput(scanner, "Select a timeslot by number: ", 1, availableTimeslots.size()) - 1;
         LocalDateTime selectedTimeslot = availableTimeslots.get(timeslotIndex);
 
         // Step 5: Make  the appointment Pending
-        Appointment newAppointment = new Appointment(
-                getAppointmentRepository().generateId(),  // Generate a unique ID
-                patient.getId(),
-                selectedDoctor.getId(),
-                selectedTimeslot,
-                "Pending"
-        );
+        Appointment newAppointment = AppointmentController.createPendingAppointmentObject(patient.getId(), selectedDoctor.getId(), selectedTimeslot);
 
         Appointment createdAppt = AppointmentController.createNewAppointment(newAppointment);
 
@@ -233,7 +221,6 @@ public class PatientView {
     }
     // test case 5
     public void rescheduleAppointment() {
-        Scanner scanner = new Scanner(System.in);
 
         // Step 1: Display the patient's confirmed appointments
         List<Appointment> appointments = AppointmentController.getAppointmentByPatientId(patient.getId());
@@ -251,13 +238,12 @@ public class PatientView {
 
         // Step 2: Choose an appointment to reschedule
         System.out.print("Select the appointment number to reschedule: ");
-        int appointmentIndex = scanner.nextInt() - 1;
-        scanner.nextLine(); // Consume newline
+        int appointmentIndex = getValidatedIntInput(scanner,"Select the appointment number to reschedule: (0 to quit) ",0, appointments.size()) - 1;
 
-        if (appointmentIndex < 0 || appointmentIndex >= appointments.size()) {
-            System.out.println("Invalid selection.");
+        if (appointmentIndex == 0){
             return;
         }
+
         Appointment selectedAppointment = appointments.get(appointmentIndex);
 
         // Step 3: Display available timeslots for the next 3 days for the selected doctor
@@ -276,9 +262,8 @@ public class PatientView {
         }
 
         // Step 4: Choose a new timeslot
-        System.out.print("Select a new timeslot number: ");
-        int timeslotIndex = scanner.nextInt() - 1;
-        scanner.nextLine(); // Consume newline
+        int timeslotIndex = getValidatedIntInput(scanner, "Select a new timeslot number: ", 1, availableTimeslots.size()) - 1;
+
 
         if (timeslotIndex < 0 || timeslotIndex >= availableTimeslots.size()) {
             System.out.println("Invalid selection.");
@@ -318,8 +303,7 @@ public class PatientView {
         Appointment selectedAppointment = appointments.get(appointmentIndex);
 
         // Step 3: Confirm cancellation
-        System.out.print("Are you sure you want to cancel this appointment? (yes/no): ");
-        String confirmation = scanner.next().trim().toLowerCase();
+        String confirmation = getValidatedStringInput(scanner, "Are you sure you want to cancel this appointment? (yes/no): ", List.of("yes", "no"));
         if (!confirmation.equals("yes")) {
             System.out.println("Cancellation aborted.");
             return;

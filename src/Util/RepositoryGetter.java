@@ -4,13 +4,19 @@ import Administrator.Repository.AdminRepository;
 import Appointment.Repository.AppointmentRepository;
 import AppointmentOutcome.Repository.AppointmentOutcomeRepository;
 import Doctor.Repository.DoctorRepository;
+import Inventory.Repository.InventoryRepository;
 import Leaves.Repository.LeavesRepository;
 import MedicalRecord.Repository.MedicalRecordRepository;
 import Pharmacist.Repository.PharmacistRepository;
 import Prescription.Repository.PrescriptionRepository;
+import Staff.Repository.StaffRepository;
+import User.Repository.UserRepository;
 
 public class RepositoryGetter {
 
+    public static UserRepository getUserRepository() {
+        return UserRepository.getInstance("src/Data/User_List.csv");
+    }
 
     public static DoctorRepository getDoctorRepository() {
         return DoctorRepository.getInstance("src/Data/Doctor_List.csv");
@@ -51,5 +57,14 @@ public class RepositoryGetter {
     public static AdminRepository getAdminRepository() {
         return AdminRepository.getInstance("src/Data/Administrator_List.csv");
     }
+
+    public static StaffRepository getStaffRepoInstance() {
+        return StaffRepository.getInstance("src/Data/Staff_List.csv");
+    }
+
+    public static InventoryRepository getInventoryRepoInstance(){
+        return InventoryRepository.getInstance("src/Data/Inventory_List.csv");
+    }
+
 }
 

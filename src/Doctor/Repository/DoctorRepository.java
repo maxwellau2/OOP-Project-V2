@@ -3,6 +3,8 @@ import Abstract.Repository;
 import Doctor.Model.Doctor;
 import java.util.ArrayList;
 
+import static Util.RepositoryGetter.getDoctorRepository;
+
 public class DoctorRepository extends Repository<Doctor> {
     private static DoctorRepository instance = null;
     private DoctorRepository(String csvPath) {
@@ -26,5 +28,10 @@ public class DoctorRepository extends Repository<Doctor> {
     @Override
     protected String getHeader(){
         return "id,name,age,gender,specialization";
+    }
+
+    public Doctor createDoctor(String name, Integer age, String gender, String specialization){
+        Doctor newDoctor = new Doctor(getDoctorRepository().generateId(), name, age, gender, specialization);
+        return getDoctorRepository().create(newDoctor);
     }
 }

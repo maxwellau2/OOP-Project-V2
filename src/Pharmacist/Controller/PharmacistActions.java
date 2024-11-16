@@ -7,10 +7,11 @@ import Pharmacist.Repository.PharmacistRepository;
 import Prescription.Model.Prescription;
 import Prescription.Repository.PrescriptionRepository;
 import User.Model.User;
-import static Util.RepositoryGetter.getPharmacistRepository;
-import static Util.RepositoryGetter.getPrescriptionRepository;
 
 import java.util.List;
+
+import static Util.RepositoryGetter.getPharmacistRepository;
+import static Util.RepositoryGetter.getPrescriptionRepository;
 
 
 public class PharmacistActions {
@@ -50,7 +51,7 @@ public class PharmacistActions {
             System.out.println("Prescription with ID " + prescriptionId + " not found.");
         }
     }
-    public static List<Inventory> viewInventory(){
+    public static List<Inventory> getInventory(){
         InventoryRepository inventoryRepo = InventoryRepository.getInstance("src/Data/Medicine_List.csv");
         return inventoryRepo.getAll();
     }
@@ -58,7 +59,7 @@ public class PharmacistActions {
     public static void requestRestock(String medicationName) {
         InventoryRepository inventoryRepo = InventoryRepository.getInstance("src/Data/Inventory_List.csv");
         Inventory item = inventoryRepo.getItemByName(medicationName);
-        
+
         if (item != null && item.getQuantity() < item.getLowStockAlert()) {
             inventoryRepo.submitRestockRequest(item);  // Submit restock request
             System.out.println("Restock request submitted for medication: " + medicationName);
@@ -67,4 +68,7 @@ public class PharmacistActions {
         }
     }
 
+    public static boolean deletePharmacistById(String id){
+        return getPharmacistRepository().deleteById(id);
+    }
 }

@@ -15,8 +15,9 @@ public class Staff implements IEntity {
         this.role = role;
         this.gender = gender;
         this.age = age;
-
     }
+
+
 
     @Override
     public String getId() {
@@ -66,5 +67,15 @@ public class Staff implements IEntity {
 
     public void setAge(int age) {
         this.age = age;
+    }
+
+    public void prettyPrint() {
+        System.out.println("==================================");
+        System.out.println("Staff ID       : " + id);
+        System.out.println("Name           : " + name);
+        System.out.println("Role           : " + role);
+        System.out.println("Gender         : " + gender);
+        System.out.println("Age            : " + age);
+        System.out.println("==================================");
     }
 }

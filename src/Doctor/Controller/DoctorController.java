@@ -6,10 +6,12 @@ import MedicalRecord.Model.MedicalRecord;
 import Prescription.Model.Prescription;
 import Prescription.Repository.PrescriptionRepository;
 import User.Model.User;
-import static Util.RepositoryGetter.*;
+
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+
+import static Util.RepositoryGetter.*;
 
 public class DoctorController {
 
@@ -134,5 +136,8 @@ public class DoctorController {
         return getDoctorRepository().read(id);
     }
 
+    public static boolean deleteDoctorById(String id){
+        return getDoctorRepository().deleteById(id);
+    }
 
 }

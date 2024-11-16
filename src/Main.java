@@ -4,8 +4,7 @@ import Administrator.View.AdminView;
 import Doctor.Controller.DoctorController;
 import Doctor.Model.Doctor;
 import Doctor.View.DoctorView;
-import Leaves.Controller.LeavesController;
-import Patient.Controller.PatientActions;
+import Patient.Controller.PatientController;
 import Patient.Model.Patient;
 import Patient.View.PatientView;
 import Pharmacist.Controller.PharmacistActions;
@@ -13,19 +12,19 @@ import Pharmacist.Model.Pharmacist;
 import Pharmacist.View.PharmacistView;
 import User.Model.User;
 import User.Model.UserRole;
-import User.View.UserActions;
+import User.Controller.UserController;
 
 import java.util.Scanner;
 
-import static Util.SafeScanner.getValidatedStringInput;
+import static Util.SafeScanner.*;
 
 public class Main {
     public static void main(String[] args) {
         // Part 1: Get credentials
         String hospitalId = getValidatedStringInput(new Scanner(System.in), "Enter your Hospital ID: ", 50);
-        String password = getValidatedStringInput(new Scanner(System.in), "Enter your Password: ", 50);
+        String password = readPasswordMasked(new Scanner(System.in), "Enter your Password: ");
 
-        User user = UserActions.login(hospitalId, password);
+        User user = UserController.login(hospitalId, password);
         if (user != null) {
             System.out.println("Successfully logged in as " + user.getRole());
         } else {
@@ -33,6 +32,25 @@ public class Main {
             return;
         }
 
+        // look at blacklist
+        if (user.isBlacklist()){
+            System.out.println("You are blacklisted. Good bye!");
+        }
+
+        System.out.println(user);
+
+        // look at last login, if last login is null, prompt to change password
+//        if (user.getLastLogin() == null){
+//            // user never login in before
+//            String newPassword = getStrongPassword(new Scanner(System.in), "You never logged in before, Please change your password: ");
+////            String newPassword = getStrongPasswordHidden("You never logged in before, Please change your password: ");
+//            user = UserController.updatePassword(user,newPassword);
+//            if (user == null){
+//                System.out.println("Something went wrong, please try again.");
+//                return;
+//            }
+//        }
+//        user = UserController.updateLastLoginToNow(user);
         // Look at role
         UserRole role = UserRole.fromString(user.getRole());
         switch (role) {
@@ -45,7 +63,7 @@ public class Main {
     }
 
     private static void handlePatientRole(User user) {
-        Patient patient = PatientActions.createPatientFromUser(user);
+        Patient patient = PatientController.createPatientFromUser(user);
         if (patient != null) {
             System.out.println("Welcome, " + patient.getName());
             PatientView patientView = new PatientView(patient);

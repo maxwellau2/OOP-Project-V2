@@ -10,6 +10,7 @@ public class Doctor implements IEntity {
     private String gender;
     private String specialization;
     private User user = null;
+    
     public Doctor(String id, String name, Integer age, String gender, String specialization) {
         this.id = id;
         this.name = name;

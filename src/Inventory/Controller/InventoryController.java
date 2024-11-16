@@ -4,7 +4,7 @@ import Inventory.Model.Inventory;
 
 import java.util.List;
 
-import static Administrator.Controller.AdminActions.getInventoryRepoInstance;
+import static Util.RepositoryGetter.getInventoryRepoInstance;
 
 public class InventoryController {
     public static List<String> getUniqueInventoryItems() {
@@ -16,4 +16,16 @@ public class InventoryController {
                 .toList(); // Collect as a list
     }
 
+    public static List<Inventory> getAllInventory() {
+        return getInventoryRepoInstance().getAll();
+    }
+
+    public static List<Inventory> getLowStockInventoryPending() {
+        return getInventoryRepoInstance().getByFilter(inventory -> (inventory.getQuantity() < inventory.getLowStockAlert()) && (!inventory.isRestockRequested()));
+    }
+
+    public static Inventory updateInventoryStockRequest(Inventory inventory) {
+        inventory.setRestockRequested(true);
+        return getInventoryRepoInstance().update(inventory);
+    }
 }

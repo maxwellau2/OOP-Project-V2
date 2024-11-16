@@ -1,12 +1,24 @@
 package Administrator.View;
 
 import Administrator.Controller.AdminActions;
+import Administrator.Model.Admin;
 import Appointment.Model.Appointment;
+import Doctor.Model.Doctor;
+import Inventory.Controller.InventoryController;
 import Inventory.Model.Inventory;
+import Pharmacist.Model.Pharmacist;
+import Pharmacist.Repository.PharmacistRepository;
+import Staff.Controller.StaffActions;
 import Staff.Model.Staff;
-import static Util.SafeScanner.getValidatedIntInput;
+import Staff.Repository.StaffRepository;
+import User.Controller.UserController;
+
 import java.util.List;
 import java.util.Scanner;
+
+import static Util.RepositoryGetter.*;
+import static Util.SafeScanner.getValidatedIntInput;
+import static Util.SafeScanner.getValidatedStringInput;
 
 public class AdminView {
     private Scanner scanner = new Scanner(System.in);
@@ -61,30 +73,69 @@ public class AdminView {
     // Add new staff member
     public void addStaff() {
         System.out.println("=== Add New Staff ===");
-        System.out.print("Enter Staff ID: ");
-        String id = scanner.nextLine();
-        System.out.print("Enter Name: ");
-        String name = scanner.nextLine();
-        System.out.print("Enter Role: ");
-        String role = scanner.nextLine();
-        System.out.print("Enter Gender: ");
-        String gender = scanner.nextLine();
-        System.out.print("Enter Age: ");
-        int age = scanner.nextInt();
-        scanner.nextLine(); // Consume newline
 
-        Staff newStaff = new Staff(id, name, role, gender, age);
-        Staff addedStaff = AdminActions.addStaff(newStaff); 
-        System.out.println("Added staff: " + addedStaff);
+        // Step 1: Ask for the role first
+        String role = getValidatedStringInput(scanner, "Enter Role (doctor, pharmacist, admin): ", List.of("doctor", "pharmacist", "admin"));
+
+        Staff newStaff = null;
+
+        switch (role.toLowerCase()) {
+            case "doctor" -> {
+                String name = getValidatedStringInput(scanner, "Enter Name: ", 30);
+                String gender = getValidatedStringInput(scanner, "Enter Gender (male, female): ", List.of("male", "female"));
+                int age = getValidatedIntInput(scanner, "Enter Age: ", 18, 100);
+                String specialization = getValidatedStringInput(scanner, "Enter Specialization: ", 50);
+
+                // Create Doctor and convert to Staff
+                Doctor newDoctor = getDoctorRepository().createDoctor(name,age,gender,specialization);
+                newStaff = getStaffRepoInstance().createStaffFromDoctor(newDoctor);
+            }
+            case "pharmacist" -> {
+                String name = getValidatedStringInput(scanner, "Enter Name: ", 30);
+                String gender = getValidatedStringInput(scanner, "Enter Gender (male, female): ", List.of("male", "female"));
+                int age = getValidatedIntInput(scanner, "Enter Age: ", 18, 100);
+
+                // Create Pharmacist and convert to Staff
+                Pharmacist newPharmacist = PharmacistRepository.createPharmacist(name, age, gender);
+                newStaff = StaffRepository.getInstance("").createStaffFromPharmacist(newPharmacist);
+
+            }
+            case "admin" -> {
+                String name = getValidatedStringInput(scanner, "Enter Name: ", 30);
+                String gender = getValidatedStringInput(scanner, "Enter Gender (male, female): ", List.of("male", "female"));
+                int age = getValidatedIntInput(scanner, "Enter Age: ", 18, 100);
+
+                // Create Admin and convert to Staff
+                Admin newAdmin = getAdminRepository().createAdmin(name, gender, age);
+                newStaff = getStaffRepoInstance().createStaffFromAdmin(newAdmin);
+                // create new user profile
+            }
+            default -> System.out.println("Invalid role. Please try again.");
+        }
+
+        // Step 2: Add the new Staff object to the Staff repository
+        if (newStaff != null) {
+            newStaff = getStaffRepoInstance().create(newStaff);
+            UserController.createNewUser(newStaff.getId(), newStaff.getRole());
+
+            System.out.println("Successfully added staff:");
+            newStaff.prettyPrint(); // Assuming `prettyPrint` is implemented in the `Staff` class
+        } else {
+            System.out.println("Failed to add new staff. Please try again.");
+        }
     }
+
 
     // Delete a staff member by ID
     public void deleteStaff() {
         System.out.println("=== Delete Staff ===");
         System.out.print("Enter Staff ID to delete: ");
         String staffId = scanner.nextLine();
-        Staff staffToDelete = new Staff(staffId, "", "", "", 0);
-        boolean success = AdminActions.deleteStaff(staffToDelete); 
+        Staff staffToDelete = StaffActions.getStaffById(staffId);
+        if (staffToDelete != null){
+            System.out.println("Staff not found");
+        }
+        boolean success = getStaffRepoInstance().deleteStaffById(staffId);
         if (success) {
             System.out.println("Staff member with ID " + staffId + " has been deleted.");
         } else {
@@ -100,7 +151,7 @@ public class AdminView {
             System.out.println("No appointments found.");
         } else {
             for (Appointment appointment : appointments) {
-                System.out.println(appointment); 
+                appointment.prettyPrint();
             }
         }
     }
@@ -109,7 +160,7 @@ public class AdminView {
     // View and manage medication inventory 
     public void viewAndManageMedicationInventory() {
         System.out.println("=== View and Manage Medication Inventory ===");
-        List<Inventory> inventoryList = AdminActions.getInventoryRepoInstance().getAll(); 
+        List<Inventory> inventoryList = getInventoryRepoInstance().getAll();
         if (inventoryList.isEmpty()) {
             System.out.println("No inventory items found.");
         } else {
@@ -172,7 +223,7 @@ public class AdminView {
     // Approve replenishment requests
     public void approveReplenishmentRequests() {
         System.out.println("=== Approve Replenishment Requests ===");
-        List<Inventory> lowStockItems = AdminActions.getInventoryRepoInstance().getAll(); 
+        List<Inventory> lowStockItems = InventoryController.getLowStockInventoryPending();
         if (lowStockItems.isEmpty()) {
             System.out.println("No replenishment requests pending approval.");
         } else {

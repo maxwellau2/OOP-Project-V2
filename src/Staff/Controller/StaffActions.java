@@ -1,13 +1,15 @@
 package Staff.Controller;
-import Staff.Model.Staff;
-import Staff.Repository.StaffRepository;
 
-import java.util.List;
+import Staff.Model.Staff;
+
+import static Util.RepositoryGetter.getStaffRepoInstance;
 
 public class StaffActions {
-    public static void main(String[] args) {
-        StaffRepository repo = StaffRepository.getInstance("src/Data/Staff_List.csv");
-        List<Staff> s = repo.getAll();
-        System.out.println(s);
+
+    public static Staff getStaffById(String id){
+        return getStaffRepoInstance().read(id);
+    }
+    public static boolean deleteStaffById(String id){
+        return getStaffRepoInstance().deleteById(id);
     }
 }

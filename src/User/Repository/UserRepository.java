@@ -1,12 +1,12 @@
 package User.Repository;
 
+import Abstract.Repository;
+import User.Model.User;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-
-import Abstract.Repository;
-import User.Model.User;
 
 public class UserRepository extends Repository<User> {
     private static UserRepository instance; // The singleton instance

@@ -1,21 +1,20 @@
 package Pharmacist.View;
 
 import Appointment.Controller.AppointmentController;
-import Appointment.Model.Appointment;
 import AppointmentOutcome.Model.AppointmentOutcome;
+import Inventory.Controller.InventoryController;
 import Inventory.Model.Inventory;
 import Pharmacist.Controller.PharmacistActions;
-import static Util.SafeScanner.getValidatedIntInput;
-import static Util.SafeScanner.getValidatedStringInput;
+import Prescription.Controller.PrescriptionActions;
 
 import java.util.List;
 import java.util.Scanner;
 
-import Prescription.Controller.PrescriptionActions;
+import static Util.SafeScanner.getValidatedIntInput;
+import static Util.SafeScanner.getValidatedStringInput;
 
 public class PharmacistView {
     private Scanner scanner = new Scanner(System.in);
-    private PharmacistActions pharmacistActions = new PharmacistActions();
 
     public void displayMenu() {
         int choice;
@@ -75,7 +74,7 @@ public class PharmacistView {
 
     // View medication inventory
     public void viewMedicationInventory() {
-        List<Inventory> inventoryList = PharmacistActions.viewInventory();
+        List<Inventory> inventoryList = InventoryController.getAllInventory();
         if (inventoryList.isEmpty()) {
             System.out.println("No medications found in inventory.");
         } else {
@@ -87,8 +86,31 @@ public class PharmacistView {
 
     // Submit a restock request 
     public void submitRestockRequest() {
-        System.out.print("Enter the medication name to check and request restock: ");
-        String medicationName = scanner.nextLine();
-        pharmacistActions.requestRestock(medicationName);
+        List<Inventory> inventoryList = InventoryController.getLowStockInventoryPending();
+        if (inventoryList.isEmpty()) {
+            System.out.println("No medications need restock request.");
+            return;
+        }
+
+        System.out.println("Select a medication to restock:");
+        for (int i = 0; i < inventoryList.size(); i++) {
+            System.out.print((i + 1) + ". ");
+            inventoryList.get(i).prettyPrint();
+        }
+
+        int choice = getValidatedIntInput(scanner, "Enter the number of the medication to restock: ", 1, inventoryList.size());
+
+        // Get the selected inventory item
+        Inventory selectedInventory = inventoryList.get(choice - 1);
+
+        // Update the inventory stock request
+        Inventory updatedInventory = InventoryController.updateInventoryStockRequest(selectedInventory);
+
+        if (updatedInventory != null && updatedInventory.isRestockRequested()) {
+            System.out.println("Restock request submitted successfully for: " + selectedInventory.getMedicationName());
+        } else {
+            System.out.println("Failed to submit restock request. Please try again.");
+        }
     }
+
 }

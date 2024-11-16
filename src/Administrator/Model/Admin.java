@@ -8,16 +8,14 @@ public class Admin implements IEntity {
     private String name;
     private String gender;
     private int age;
-    private String phoneNumber;
 	private User user = null;
 
     // Constructor
-    public Admin(String id, String name, String gender, int age, String phoneNumber) {
+    public Admin(String id, String name, String gender, int age) {
         this.id = id;
         this.name = name;
         this.gender = gender;
         this.age = age;
-        this.phoneNumber = phoneNumber;
     }
 
     // Getters and Setters
@@ -54,13 +52,6 @@ public class Admin implements IEntity {
         this.age = age;
     }
 
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
-
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
-    }
 
 	public User getUser() {
         return user;
@@ -73,11 +64,11 @@ public class Admin implements IEntity {
     // Implementing toCSV method from IEntity interface
     @Override
     public String toCSV() {
-        return id + "," + name + "," + gender + "," + age + "," + phoneNumber;
+        return id + "," + name + "," + gender + "," + age ;
     }
 
     @Override
     public String toString() {
-        return "Admin{id='" + id + "', name='" + name + "', gender='" + gender + "', age=" + age + ", phoneNumber='" + phoneNumber + "'}";
+        return "Admin{id='" + id + "', name='" + name + "', gender='" + gender + "', age=" + age + "}";
     }
 }

@@ -1,8 +1,8 @@
 package Util;
 
 
-import java.util.List;
 import java.util.InputMismatchException;
+import java.util.List;
 import java.util.Scanner;
 
 public class SafeScanner {
@@ -76,4 +76,81 @@ public class SafeScanner {
         return input;
     }
 
+    public static String getStrongPassword(Scanner scanner, String prompt) {
+        String password = "";
+        boolean valid = false;
+
+        while (!valid) {
+            System.out.print(prompt);
+            password = readPasswordMasked(scanner); // Read and mask password input
+            if (validatePassword(password)) {
+                valid = true;
+            }
+        }
+
+        return password;
+    }
+
+    private static boolean validatePassword(String password) {
+        if (password.length() < 8) {
+            System.out.println("Password must be at least 8 characters long.");
+            return false;
+        } else if (!password.matches(".*[A-Z].*")) {
+            System.out.println("Password must contain at least one uppercase letter.");
+            return false;
+        } else if (!password.matches(".*[a-z].*")) {
+            System.out.println("Password must contain at least one lowercase letter.");
+            return false;
+        } else if (!password.matches(".*\\d.*")) {
+            System.out.println("Password must contain at least one digit.");
+            return false;
+        } else if (!password.matches(".*[!@#$%^&*(),.?\":{}|<>].*")) {
+            System.out.println("Password must contain at least one special character (e.g., !@#$%^&*).");
+            return false;
+        }
+        return true;
+    }
+
+    public static String readPasswordMasked(Scanner scanner) {
+        StringBuilder password = new StringBuilder();
+        try {
+            while (true) {
+                char ch = (char) System.in.read(); // Read one character at a time
+                if (ch == '\n') break; // Enter key signals end of input
+                if (ch == '\b' && password.length() > 0) {
+                    password.deleteCharAt(password.length() - 1); // Handle backspace
+                    System.out.print("\b \b"); // Erase character from console
+                } else if (ch != '\b') {
+                    password.append(ch);
+                    System.out.print("*"); // Print `*` for each character
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        System.out.println(); // Move to the next line
+        return password.toString().trim();
+    }
+    public static String readPasswordMasked(Scanner scanner, String prompt) {
+        System.out.print(prompt);
+
+        StringBuilder password = new StringBuilder();
+        try {
+            while (true) {
+                char ch = (char) System.in.read(); // Read one character at a time
+                if (ch == '\n') break; // Enter key signals end of input
+                if (ch == '\b' && password.length() > 0) {
+                    password.deleteCharAt(password.length() - 1); // Handle backspace
+                    System.out.print("\b \b"); // Erase character from console
+                } else if (ch != '\b') {
+                    password.append(ch);
+                    System.out.print("*"); // Print `*` for each character
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        System.out.println(); // Move to the next line
+        return password.toString().trim();
+    }
 }

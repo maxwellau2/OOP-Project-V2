@@ -7,12 +7,17 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
+import static Util.RepositoryGetter.getMedicalRecordRepository;
+
 public class MedicalRecordRepository extends Repository<MedicalRecord> {
     private static MedicalRecordRepository instance;
 
     private MedicalRecordRepository(String csvPath) {
         super(csvPath);
         this.entities = new ArrayList<MedicalRecord>();
+    }
+    public static MedicalRecord createNewMedicalRecordToday(String patientId, String doctorId, String diagnosis, String treatment) {
+        return new MedicalRecord(getMedicalRecordRepository().generateId(), patientId, doctorId, diagnosis, treatment, LocalDateTime.now());
     }
 
     public static MedicalRecordRepository getInstance(String csvPath) {

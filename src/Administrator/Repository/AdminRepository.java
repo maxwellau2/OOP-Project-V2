@@ -1,9 +1,11 @@
 package Administrator.Repository;
 
-import Administrator.Model.Admin;
 import Abstract.Repository;
+import Administrator.Model.Admin;
 
 import java.util.ArrayList;
+
+import static Util.RepositoryGetter.getAdminRepository;
 
 public class AdminRepository extends Repository<Admin> {
     private static AdminRepository instance = null;
@@ -29,12 +31,16 @@ public class AdminRepository extends Repository<Admin> {
         String name = values[1];
         String gender = values[2];
         int age = Integer.parseInt(values[3]);
-        String phoneNumber = values[4];
-        return new Admin(id, name, gender, age, phoneNumber);
+        return new Admin(id, name, gender, age);
     }
 
     @Override
     protected String getHeader() {
-        return "id,name,gender,age,phoneNumber";
+        return "id,name,gender,age";
+    }
+
+    public Admin createAdmin(String name, String gender, int age) {
+        Admin admin = new Admin(getAdminRepository().generateId(), name, gender, age);
+        return getAdminRepository().create(admin);
     }
 }

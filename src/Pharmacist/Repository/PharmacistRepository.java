@@ -5,6 +5,8 @@ import Abstract.Repository;
 
 import java.util.ArrayList;
 
+import static Util.RepositoryGetter.getPharmacistRepository;
+
 
 public class PharmacistRepository extends Repository<Pharmacist> {
     private static PharmacistRepository instance = null;
@@ -29,6 +31,11 @@ public class PharmacistRepository extends Repository<Pharmacist> {
     @Override
     protected String getHeader(){
         return "id,name,qualification";
+    }
+
+    public static Pharmacist createPharmacist(String name, Integer age, String gender){
+        Pharmacist pharmacist = new Pharmacist(getPharmacistRepository().generateId(), name, age, gender);
+        return getPharmacistRepository().create(pharmacist);
     }
 }
 
