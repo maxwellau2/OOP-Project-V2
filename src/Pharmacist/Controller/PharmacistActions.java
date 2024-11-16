@@ -7,10 +7,11 @@ import Pharmacist.Repository.PharmacistRepository;
 import Prescription.Model.Prescription;
 import Prescription.Repository.PrescriptionRepository;
 import User.Model.User;
-import static Util.RepositoryGetter.getPharmacistRepository;
-import static Util.RepositoryGetter.getPrescriptionRepository;
 
 import java.util.List;
+
+import static Util.RepositoryGetter.getPharmacistRepository;
+import static Util.RepositoryGetter.getPrescriptionRepository;
 
 
 public class PharmacistActions {
@@ -50,7 +51,7 @@ public class PharmacistActions {
             System.out.println("Prescription with ID " + prescriptionId + " not found.");
         }
     }
-    public static List<Inventory> viewInventory(){
+    public static List<Inventory> getInventory(){
         InventoryRepository inventoryRepo = InventoryRepository.getInstance("src/Data/Medicine_List.csv");
         return inventoryRepo.getAll();
     }

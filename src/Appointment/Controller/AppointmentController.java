@@ -131,4 +131,14 @@ public class AppointmentController {
         }
         return appointmentOutcomes;
     }
+
+public static Appointment createPendingAppointmentObject(String patientId, String doctorId, LocalDateTime timeslot){
+    return new Appointment(
+            getAppointmentRepository().generateId(),  // Generate a unique ID
+            patientId,
+            doctorId,
+            timeslot,
+            "Pending"
+    );
+}
 }

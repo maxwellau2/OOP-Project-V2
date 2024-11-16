@@ -10,7 +10,7 @@ import Inventory.Controller.InventoryController;
 import Leaves.Controller.LeavesController;
 import Leaves.Model.Leave;
 import MedicalRecord.Model.MedicalRecord;
-import Patient.Controller.PatientActions;
+import Patient.Controller.PatientController;
 import Patient.Model.Patient;
 import Prescription.Controller.PrescriptionActions;
 import Prescription.Model.Prescription;
@@ -101,7 +101,7 @@ public class DoctorView {
 
         String patientId = getValidatedStringInput(scanner, "Enter Patient ID: ", 20);
 
-        Patient patient = PatientActions.getPatientById(patientId);
+        Patient patient = PatientController.getPatientById(patientId);
         if (patient == null) {
             System.out.println("No patient found with ID: " + patientId);
             return;

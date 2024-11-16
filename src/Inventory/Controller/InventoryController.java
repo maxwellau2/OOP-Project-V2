@@ -16,4 +16,16 @@ public class InventoryController {
                 .toList(); // Collect as a list
     }
 
+    public static List<Inventory> getAllInventory() {
+        return getInventoryRepoInstance().getAll();
+    }
+
+    public static List<Inventory> getLowStockInventoryPending() {
+        return getInventoryRepoInstance().getByFilter(inventory -> (inventory.getQuantity() < inventory.getLowStockAlert()) && (!inventory.isRestockRequested()));
+    }
+
+    public static Inventory updateInventoryStockRequest(Inventory inventory) {
+        inventory.setRestockRequested(true);
+        return getInventoryRepoInstance().update(inventory);
+    }
 }

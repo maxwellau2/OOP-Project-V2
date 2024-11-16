@@ -1,20 +1,30 @@
 package Abstract;
 
 import Interfaces.IEntity;
-import java.io.*;
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Predicate;
 
 public abstract class Repository<T extends IEntity> {
     protected List<T> entities = new ArrayList<>();
     protected String csvPath;
+    private final int cacheSize = 100; // Specify the maximum size of the LRU cache
+    private final Map<String, T> lruCache;
 
     public Repository(String csvPath) {
         this.csvPath = csvPath;
+
+        // Initialize the LRU cache with access order
+        this.lruCache = new LinkedHashMap<>(cacheSize, 0.75f, true) {
+            @Override
+            protected boolean removeEldestEntry(Map.Entry<String, T> eldest) {
+                return size() > cacheSize;
+            }
+        };
     }
 
     protected List<String> readCSV(String path) {
@@ -26,27 +36,32 @@ public abstract class Repository<T extends IEntity> {
     }
 
     public T create(T entity) {
-        // check if entity is in entities
         for (T t : entities) {
             if (t.equals(entity)) {
                 return null;
             }
         }
         entities.add(entity);
-//        System.out.println("Entity created: " + entity);
         this.store();
         return entity;
     }
 
     public T read(String id) {
+        // Check the LRU cache first
+        if (lruCache.containsKey(id)) {
+            return lruCache.get(id);
+        }
+
+        // If not in the cache, search in the main list
         Optional<T> entity = entities.stream()
                 .filter(e -> e.getId().equals(id))
                 .findFirst();
+
         if (entity.isPresent()) {
-//            System.out.println("Entity found: " + entity.get());
-            return entity.get();
+            T foundEntity = entity.get();
+            lruCache.put(id, foundEntity); // Add to the cache
+            return foundEntity;
         } else {
-//            System.out.println("Entity not found with ID: " + id);
             return null;
         }
     }
@@ -55,7 +70,7 @@ public abstract class Repository<T extends IEntity> {
         return this.getByFilter((T entry) -> entry.getId().equals(id));
     }
 
-    public List<T> getByFilter(Predicate<T> predicate){
+    public List<T> getByFilter(Predicate<T> predicate) {
         return this.entities.stream().filter(predicate).toList();
     }
 
@@ -64,19 +79,18 @@ public abstract class Repository<T extends IEntity> {
         for (int i = 0; i < entities.size(); i++) {
             if (entities.get(i).getId().equals(id)) {
                 entities.set(i, entity);
-//                System.out.println("Entity updated: " + entity);
+                lruCache.put(id, entity); // Update the cache
                 this.store();
                 return entity;
             }
         }
-
-//        System.out.println("Entity not found for update with ID: " + id);
         return null;
     }
 
     public T delete(T item) {
         boolean removed = entities.removeIf(e -> e.getId().equals(item.getId()));
         if (removed) {
+            lruCache.remove(item.getId()); // Remove from the cache
             this.store();
             return item;
         }
@@ -89,51 +103,42 @@ public abstract class Repository<T extends IEntity> {
 
     protected abstract T fromCSV(String csv);
 
-    protected String getLastId(){
-
-        if (entities==null || entities.isEmpty()) {
+    protected String getLastId() {
+        if (entities == null || entities.isEmpty()) {
             return "0";
         }
         int lastEntry = entities.size() - 1;
-        // look at the id of the last entry
-        if (lastEntry < 0) return "0"; // edge case for empty csv
+        if (lastEntry < 0) return "0"; // Edge case for empty CSV
         if (entities.get(lastEntry) == null) return "0";
         return entities.get(lastEntry).getId();
     }
 
     public String generateId() {
         String lastId = this.getLastId();
-        // Find the index where the numeric part starts using a for loop
         int i;
         for (i = 0; i < lastId.length(); i++) {
             if (Character.isDigit(lastId.charAt(i))) {
                 break;
             }
         }
-        // Separate the prefix and the numeric part
         String prefix = lastId.substring(0, i);
         int number = Integer.parseInt(lastId.substring(i));
-        // Increment the numeric part
         number++;
-        // Format the new ID with leading zeros (adjust %03d based on required width)
         return String.format("%s%03d", prefix, number);
     }
 
     protected abstract String getHeader();
 
-    public boolean load(){
+    public boolean load() {
         entities.clear();
         try {
             List<String> lines = readCSV(this.csvPath);
-            // flag is used to help skip first line (the csv headers)
             int flag = 0;
             for (String line : lines) {
-                if (flag == 1){
+                if (flag == 1) {
                     T entity = fromCSV(line);
-//                    System.out.println("Entity loaded: " + entity);
                     entities.add(entity);
-                }
-                else{
+                } else {
                     flag = 1;
                 }
             }
@@ -144,7 +149,6 @@ public abstract class Repository<T extends IEntity> {
         }
     }
 
-    // Store data to a CSV file
     public boolean store() {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(csvPath))) {
             bw.write(getHeader());
@@ -153,7 +157,6 @@ public abstract class Repository<T extends IEntity> {
                 bw.write(entity.toCSV());
                 bw.newLine();
             }
-//            System.out.println("Data stored to CSV.");
             return true;
         } catch (IOException e) {
             System.err.println("Error storing data to CSV: " + e.getMessage());
@@ -161,7 +164,7 @@ public abstract class Repository<T extends IEntity> {
         }
     }
 
-    public void display(){
+    public void display() {
         if (entities.size() <= 0) {
             System.out.println("No entities found.");
         }

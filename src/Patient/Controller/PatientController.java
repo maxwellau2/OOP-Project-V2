@@ -7,11 +7,11 @@ import java.util.List;
 
 import Patient.Repository.PatientRepository;
 import User.Model.User;
-import User.View.UserActions;
+import User.Controller.UserController;
 
 // todo: create auth controller
 
-public class PatientActions {
+public class PatientController {
 
     private static PatientRepository initPatientRepository() {
         return PatientRepository.getInstance("src/Data/Patient_List.csv");
@@ -27,9 +27,9 @@ public class PatientActions {
     }
 
     public static Patient changePassword(Patient patient, String newPassword){
-        patient.setUser(UserActions.updatePassword(patient.getUser(), newPassword));
+        patient.setUser(UserController.updatePassword(patient.getUser(), newPassword));
         User u = patient.getUser();
-        u = UserActions.updatePassword(u, newPassword);
+        u = UserController.updatePassword(u, newPassword);
         patient.setUser(u);
         return patient;
     }
