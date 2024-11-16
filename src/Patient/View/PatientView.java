@@ -108,10 +108,9 @@ public class PatientView {
         System.out.println("1. Update Email");
         System.out.println("2. Update Contact Number");
         System.out.println("3. Update Both Email and Contact Number");
-        System.out.print("Enter your choice (1, 2, or 3): ");
+        System.out.println("0. quit");
 
-        int choice = scanner.nextInt();
-        scanner.nextLine(); // Consume newline
+        int choice = getValidatedIntInput(scanner, "Enter your choice (1, 2, or 3):",0,3);
         String newEmail = "";
         String newContactNumber;
         switch (choice) {
@@ -131,6 +130,9 @@ public class PatientView {
                 newContactNumber = getValidatedStringInput(scanner,"Enter new contact number: ", 20);
                 patient.setPhoneNumber(newContactNumber);
                 break;
+            case 0:
+                System.out.println("Quitting.");
+                return patient;
             default:
                 System.out.println("Invalid choice. Please run the program again.");
                 return patient;

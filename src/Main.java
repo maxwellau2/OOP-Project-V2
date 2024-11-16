@@ -88,7 +88,7 @@ public class Main {
         Admin admin = AdminActions.createAdminFromUser(user);
         if (admin != null) {
             System.out.println("Welcome Administrator.");
-            AdminView adminView = new AdminView();
+            AdminView adminView = new AdminView(admin);
             adminView.displayMenu();
         } else {
             System.out.println("Administrator profile creation failed.");

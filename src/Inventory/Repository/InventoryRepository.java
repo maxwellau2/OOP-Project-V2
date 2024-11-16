@@ -1,8 +1,7 @@
 package Inventory.Repository;
+
 import Abstract.Repository;
 import Inventory.Model.Inventory;
-import MedicalRecord.Repository.MedicalRecordRepository;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,8 +10,9 @@ public class InventoryRepository extends Repository<Inventory> {
 
     public InventoryRepository(String csvPath) {
         super(csvPath);
-        this.entities = new ArrayList<Inventory>();
+        this.entities = new ArrayList<>();
     }
+
     public static InventoryRepository getInstance(String csvPath) {
         if (instance == null) {
             instance = new InventoryRepository(csvPath);
@@ -27,24 +27,25 @@ public class InventoryRepository extends Repository<Inventory> {
                 .findFirst()
                 .orElse(null);
     }
-        public List<Inventory> getLowStockItems() {
+
+    public List<Inventory> getLowStockItems() {
         return entities.stream()
                 .filter(item -> item.getQuantity() < item.getLowStockAlert())
                 .toList();
     }
 
-    // Submit a restock request for a specific inventory item
     public void submitRestockRequest(Inventory item) {
         System.out.println("Restock request submitted for item: " + item.getMedicationName());
-        item.setRestockRequested(true);
+        item.setRestockRequested("Requested");
         update(item);
     }
+
     @Override
     protected Inventory fromCSV(String csvLine) {
         String[] values = csvLine.split(",");
         int qty = Integer.parseInt(values[2]);
         int lowStockAlert = Integer.parseInt(values[3]);
-        boolean restockRequested = Boolean.parseBoolean(values[4]);
+        String restockRequested = values[4]; // Now a string
         return new Inventory(values[0], values[1], qty, lowStockAlert, restockRequested);
     }
 

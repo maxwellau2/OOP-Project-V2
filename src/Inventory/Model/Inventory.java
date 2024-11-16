@@ -7,9 +7,9 @@ public class Inventory implements IEntity {
     private String medicationName;
     private int quantity;
     private int lowStockAlert;
-    private boolean restockRequested;
+    private String restockRequested; // Changed from boolean to String
 
-    public Inventory(String id, String medicationName, int quantity, int lowStockAlert, boolean restockRequested) {
+    public Inventory(String id, String medicationName, int quantity, int lowStockAlert, String restockRequested) {
         this.id = id;
         this.medicationName = medicationName;
         this.quantity = quantity;
@@ -50,11 +50,11 @@ public class Inventory implements IEntity {
         this.lowStockAlert = lowStockAlert;
     }
 
-    public boolean isRestockRequested() {
+    public String getRestockRequested() {
         return restockRequested;
     }
 
-    public void setRestockRequested(boolean restockRequested) {
+    public void setRestockRequested(String restockRequested) {
         this.restockRequested = restockRequested;
     }
 
@@ -65,13 +65,13 @@ public class Inventory implements IEntity {
                 ", medicationName='" + medicationName + '\'' +
                 ", quantity=" + quantity +
                 ", lowStockAlert=" + lowStockAlert +
-                ", restockRequested=" + restockRequested +
+                ", restockRequested='" + restockRequested + '\'' +
                 '}';
     }
 
     @Override
     public String toCSV() {
-        return String.join(",", id, medicationName, String.valueOf(quantity), String.valueOf(lowStockAlert), String.valueOf(restockRequested));
+        return String.join(",", id, medicationName, String.valueOf(quantity), String.valueOf(lowStockAlert), restockRequested);
     }
 
     public void prettyPrint() {
@@ -80,7 +80,7 @@ public class Inventory implements IEntity {
         System.out.println("Medication Name   : " + medicationName);
         System.out.println("Quantity          : " + quantity);
         System.out.println("Low Stock Alert   : " + lowStockAlert);
-        System.out.println("Restock Requested : " + (restockRequested ? "Yes" : "No"));
+        System.out.println("Restock Requested : " + restockRequested);
         System.out.println("======================");
     }
 }

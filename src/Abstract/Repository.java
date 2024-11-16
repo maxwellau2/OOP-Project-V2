@@ -139,7 +139,7 @@ public abstract class Repository<T extends IEntity> {
                     headerWriter.write(getHeader());
                     headerWriter.newLine();
                 }
-                System.out.println("CSV file created with headers: " + csvPath);
+//                System.out.println("CSV file created with headers: " + csvPath);
                 return true; // File created but no data to load
             }
 
@@ -158,7 +158,7 @@ public abstract class Repository<T extends IEntity> {
                 }
             }
 
-            System.out.println("Loaded " + entities.size() + " entities from: " + csvPath);
+//            System.out.println("Loaded " + entities.size() + " entities from: " + csvPath);
             return true;
 
         } catch (Exception e) {
@@ -218,7 +218,6 @@ public abstract class Repository<T extends IEntity> {
         boolean removed = entities.removeIf(e -> e.getId().equals(id));
         if (removed) {
             lruCache.remove(id); // Remove from the cache
-            System.out.println("Storing....");
             this.store();
             return true;
         }

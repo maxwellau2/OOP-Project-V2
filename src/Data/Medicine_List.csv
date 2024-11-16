@@ -1,5 +1,6 @@
 id,medicationName,quantity,lowStockAlert,restockRequested
-1,viagra,5,10,false
-2,Ibuprofen,50,10,false
-3,Amoxicillin,75,100,true
-4,Plan-B,75,15,false
+1,viagra,100,10,approved
+2,Ibuprofen,2,10,pending
+3,Amoxicillin,1000,100,Approved
+4,Plan-B,75,15,approved
+005,Doxicylin,1000,10,approved

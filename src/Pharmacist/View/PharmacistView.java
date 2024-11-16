@@ -106,7 +106,7 @@ public class PharmacistView {
         // Update the inventory stock request
         Inventory updatedInventory = InventoryController.updateInventoryStockRequest(selectedInventory);
 
-        if (updatedInventory != null && updatedInventory.isRestockRequested()) {
+        if (updatedInventory != null && updatedInventory.getRestockRequested().equalsIgnoreCase("pending")) {
             System.out.println("Restock request submitted successfully for: " + selectedInventory.getMedicationName());
         } else {
             System.out.println("Failed to submit restock request. Please try again.");

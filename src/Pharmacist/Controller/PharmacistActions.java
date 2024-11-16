@@ -10,8 +10,7 @@ import User.Model.User;
 
 import java.util.List;
 
-import static Util.RepositoryGetter.getPharmacistRepository;
-import static Util.RepositoryGetter.getPrescriptionRepository;
+import static Util.RepositoryGetter.*;
 
 
 public class PharmacistActions {
@@ -57,7 +56,7 @@ public class PharmacistActions {
     }
 
     public static void requestRestock(String medicationName) {
-        InventoryRepository inventoryRepo = InventoryRepository.getInstance("src/Data/Inventory_List.csv");
+        InventoryRepository inventoryRepo = getInventoryRepoInstance();
         Inventory item = inventoryRepo.getItemByName(medicationName);
 
         if (item != null && item.getQuantity() < item.getLowStockAlert()) {

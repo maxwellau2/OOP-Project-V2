@@ -63,7 +63,7 @@ public class RepositoryGetter {
     }
 
     public static InventoryRepository getInventoryRepoInstance(){
-        return InventoryRepository.getInstance("src/Data/Inventory_List.csv");
+        return InventoryRepository.getInstance("src/Data/Medicine_List.csv");
     }
 
 }

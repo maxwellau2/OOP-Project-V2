@@ -21,8 +21,12 @@ import static Util.SafeScanner.getValidatedIntInput;
 import static Util.SafeScanner.getValidatedStringInput;
 
 public class AdminView {
-    private Scanner scanner = new Scanner(System.in);
-
+    private Scanner scanner;
+    private Admin admin;
+    public AdminView(Admin admin) {
+        this.admin = admin;
+        scanner = new Scanner(System.in);
+    }
     public void displayMenu() {
         int choice;
 
@@ -52,7 +56,10 @@ public class AdminView {
     // View and manage hospital staff (Doctors, Pharmacists, etc.)
     public void viewAndManageHospitalStaff() {
         System.out.println("=== View and Manage Hospital Staff ===");
-        List<Staff> staffList = AdminActions.getAllStaff(); 
+        List<Staff> staffList = AdminActions.getAllStaff();
+        // remove self
+        staffList.removeIf(staff -> staff.getId().equalsIgnoreCase(this.admin.getId()));
+        List<String> staffIds = staffList.stream().map(staff -> staff.getId()).toList();
         if (staffList.isEmpty()) {
             System.out.println("No hospital staff found.");
         } else {
@@ -63,10 +70,12 @@ public class AdminView {
         // Add or delete staff
         System.out.println("\n1. Add Staff");
         System.out.println("2. Delete Staff");
-        int choice = getValidatedIntInput(scanner, "Choose an option: ", 1, 2);
+        System.out.println("0. Exit");
+        int choice = getValidatedIntInput(scanner, "Choose an option: ", 0, 2);
         switch (choice) {
             case 1 -> addStaff();
-            case 2 -> deleteStaff();
+            case 2 -> deleteStaff(staffIds);
+            case 0 -> System.out.println("Quitting...\n");
         }
     }
 
@@ -127,10 +136,10 @@ public class AdminView {
 
 
     // Delete a staff member by ID
-    public void deleteStaff() {
+    public void deleteStaff(List<String> staffIds) {
         System.out.println("=== Delete Staff ===");
         System.out.print("Enter Staff ID to delete: ");
-        String staffId = scanner.nextLine();
+        String staffId = getValidatedStringInput(scanner, "Enter Staff ID: ", staffIds);
         Staff staffToDelete = StaffActions.getStaffById(staffId);
         if (staffToDelete != null){
             System.out.println("Staff not found");
@@ -156,7 +165,6 @@ public class AdminView {
         }
     }
 
-
     // View and manage medication inventory 
     public void viewAndManageMedicationInventory() {
         System.out.println("=== View and Manage Medication Inventory ===");
@@ -165,79 +173,130 @@ public class AdminView {
             System.out.println("No inventory items found.");
         } else {
             for (Inventory item : inventoryList) {
-                System.out.println(item);
+                item.prettyPrint();
             }
         }
         // add functionality to update or remove items from inventory
         System.out.println("\n1. Update Stock");
         System.out.println("2. Add New Item");
-        int choice = getValidatedIntInput(scanner, "Choose an option: ", 1, 2);
+        System.out.println("0. Quit");
+
+        int choice = getValidatedIntInput(scanner, "Choose an option: ", 0, 2);
         switch (choice) {
             case 1 -> updateStock();
             case 2 -> addInventoryItem();
+            case 0 -> System.out.println("Quitting");
         }
     }
 
     // Update stock of an inventory item
     public void updateStock() {
         System.out.println("=== Update Stock ===");
-        System.out.print("Enter Medication ID to update: ");
-        String medicationId = scanner.nextLine();
-        System.out.print("Enter New Quantity: ");
-        int newQuantity = scanner.nextInt();
-        scanner.nextLine(); // Consume newline
 
-        Inventory itemToUpdate = new Inventory(medicationId, "", newQuantity, 0, false);
-        boolean success = AdminActions.updateStock(itemToUpdate); 
-        if (success) {
-            System.out.println("Stock updated successfully.");
+        // Step 1: Get and display low-stock items
+        List<Inventory> lowStockItems = InventoryController.getAllInventory();
+
+        if (lowStockItems.isEmpty()) {
+            System.out.println("No low-stock items to update.");
+            return;
+        }
+
+        System.out.println("Low-Stock Items:");
+        for (int i = 0; i < lowStockItems.size(); i++) {
+            System.out.print((i + 1) + ". ");
+            lowStockItems.get(i).prettyPrint(); // Assuming `prettyPrint()` is implemented in the `Inventory` class
+        }
+
+        // Step 2: Ask the user to select an item to update
+        int itemIndex = getValidatedIntInput(scanner, "Select the item number to update: ", 1, lowStockItems.size()) - 1;
+        Inventory selectedItem = lowStockItems.get(itemIndex);
+
+        // Step 3: Get the new quantity for the selected item
+        int newQuantity = getValidatedIntInput(scanner, "Enter new quantity for " + selectedItem.getMedicationName() + ": ", 0, 1000);
+
+        // Step 4: Update the inventory
+        selectedItem.setQuantity(newQuantity);
+        selectedItem.setRestockRequested("approved"); // Clear restock flag since stock is updated
+        Inventory updatedItem = InventoryController.updateInventory(selectedItem);
+
+        // Step 5: Display the result
+        if (updatedItem != null) {
+            System.out.println("Stock updated successfully:");
+            updatedItem.prettyPrint();
         } else {
-            System.out.println("Stock update failed.");
+            System.out.println("Stock update failed. Please try again.");
         }
     }
+
 
     // Add new inventory item
     public void addInventoryItem() {
         System.out.println("=== Add New Inventory Item ===");
-        System.out.print("Enter Medication ID: ");
-        String medicationId = scanner.nextLine();
-        System.out.print("Enter Medication Name: ");
-        String medicationName = scanner.nextLine();
-        System.out.print("Enter Quantity: ");
-        int quantity = scanner.nextInt();
-        System.out.print("Enter Low Stock Alert Level: ");
-        int lowStockAlert = scanner.nextInt();
-        System.out.print("Is medication available? (true/false): ");
-        boolean isAvailable = scanner.nextBoolean();
-        scanner.nextLine(); // Consume newline
 
-        Inventory newItem = new Inventory(medicationId, medicationName, quantity, lowStockAlert, isAvailable);
-        boolean success = AdminActions.updateStock(newItem); 
-        if (success) {
-            System.out.println("New inventory item added successfully.");
+        // Step 1: Get user input for medication details
+        String medicationName = getValidatedStringInput(scanner, "Enter Medication Name: ", 50);
+        int quantity = getValidatedIntInput(scanner, "Enter Quantity: ", 0, 99999);
+        int lowStockAlert = getValidatedIntInput(scanner, "Enter Low Stock Alert Level: ", 0, 1000);
+
+        // Step 2: Create new inventory item using the factory method
+        Inventory newItem = InventoryController.createInventoryItem(medicationName, quantity, lowStockAlert);
+
+        // Step 3: Provide feedback to the user
+        if (newItem != null) {
+            System.out.println("New inventory item added successfully:");
+            newItem.prettyPrint(); // Assuming prettyPrint() is implemented in the Inventory class
         } else {
-            System.out.println("Failed to add new item.");
+            System.out.println("Failed to add new inventory item. Please try again.");
         }
     }
+
 
     // Approve replenishment requests
     public void approveReplenishmentRequests() {
         System.out.println("=== Approve Replenishment Requests ===");
+
+        // Retrieve all pending low stock items
         List<Inventory> lowStockItems = InventoryController.getLowStockInventoryPending();
+
         if (lowStockItems.isEmpty()) {
             System.out.println("No replenishment requests pending approval.");
+            return;
+        }
+
+        // Display all low stock items in a single line with their indices
+        System.out.println("Pending Replenishment Requests:");
+        for (int i = 0; i < lowStockItems.size(); i++) {
+            Inventory item = lowStockItems.get(i);
+            System.out.println((i + 1) + ". " + item.getMedicationName() +
+                    " (Current Quantity: " + item.getQuantity() +
+                    ", Low Stock Alert Level: " + item.getLowStockAlert() + ")");
+        }
+
+        // Prompt user to select an item by index
+        int selectedIndex = getValidatedIntInput(scanner,
+                "Enter the index of the medication to approve restock (or 0 to quit): ", 0, lowStockItems.size()) - 1;
+
+        if (selectedIndex == -1) { // User selected 0 to quit
+            System.out.println("Exiting replenishment approval process.");
+            return;
+        }
+
+        Inventory selectedItem = lowStockItems.get(selectedIndex);
+
+        // Approve restock request and set stock level to 10 * low stock alert level
+        selectedItem.setQuantity(selectedItem.getLowStockAlert() * 10);
+        selectedItem.setRestockRequested("approved"); // Mark as approved
+
+        // Update inventory
+        Inventory updatedItem = InventoryController.updateInventory(selectedItem);
+
+        if (updatedItem != null) {
+            System.out.println("Restock request approved for: " + selectedItem.getMedicationName());
+            System.out.println("New Stock Level: " + updatedItem.getQuantity());
         } else {
-            for (Inventory item : lowStockItems) {
-                if (item.getQuantity() < item.getLowStockAlert()) {
-                    System.out.println("Item: " + item.getMedicationName() + " is low on stock.");
-                    System.out.print("Approve restock request? (yes/no): ");
-                    String response = scanner.nextLine();
-                    if (response.equalsIgnoreCase("yes")) {
-                        AdminActions.updateStock(item);  // Static method call corrected
-                        System.out.println("Restock request approved for: " + item.getMedicationName());
-                    }
-                }
-            }
+            System.out.println("Failed to update stock for: " + selectedItem.getMedicationName());
         }
     }
+
+
 }
