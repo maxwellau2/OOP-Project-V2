@@ -9,12 +9,25 @@ import java.nio.file.Paths;
 import java.util.*;
 import java.util.function.Predicate;
 
+/**
+ * Abstract base class for managing entities stored in a CSV file.
+ * This class provides common CRUD operations and caching mechanisms
+ * for entities implementing the {@link IEntity} interface.
+ *
+ * @param <T> The type of entity that extends {@link IEntity}.
+ */
 public abstract class Repository<T extends IEntity> {
     protected List<T> entities = new ArrayList<>();
     protected String csvPath;
     private final int cacheSize = 100; // Specify the maximum size of the LRU cache
     private final Map<String, T> lruCache;
 
+
+    /**
+     * Constructs a new {@code Repository} with the specified CSV file path.
+     *
+     * @param csvPath The path to the CSV file.
+     */
     public Repository(String csvPath) {
         this.csvPath = csvPath;
 
@@ -27,6 +40,12 @@ public abstract class Repository<T extends IEntity> {
         };
     }
 
+    /**
+     * Reads all lines from a CSV file.
+     *
+     * @param path The path to the CSV file.
+     * @return A list of strings, each representing a line in the CSV file.
+     */
     protected List<String> readCSV(String path) {
         try {
             return Files.readAllLines(Paths.get(path));
@@ -35,6 +54,13 @@ public abstract class Repository<T extends IEntity> {
         }
     }
 
+
+    /**
+     * Creates a new entity and adds it to the repository.
+     *
+     * @param entity The entity to create.
+     * @return The created entity, or {@code null} if it already exists.
+     */
     public T create(T entity) {
         for (T t : entities) {
             if (t.equals(entity)) {
@@ -46,6 +72,12 @@ public abstract class Repository<T extends IEntity> {
         return entity;
     }
 
+    /**
+     * Retrieves an entity by its unique ID.
+     *
+     * @param id The ID of the entity to retrieve.
+     * @return The entity with the specified ID, or {@code null} if not found.
+     */
     public T read(String id) {
         // Check the LRU cache first
         if (lruCache.containsKey(id)) {
@@ -70,10 +102,23 @@ public abstract class Repository<T extends IEntity> {
         return this.getByFilter((T entry) -> entry.getId().equals(id));
     }
 
+    /**
+     * Retrieves all entities matching a specific filter.
+     *
+     * @param predicate The predicate to filter entities.
+     * @return A list of entities matching the filter.
+     */
     public List<T> getByFilter(Predicate<T> predicate) {
         return this.entities.stream().filter(predicate).toList();
     }
 
+
+    /**
+     * Updates an existing entity.
+     *
+     * @param entity The entity to update.
+     * @return The updated entity, or {@code null} if not found.
+     */
     public T update(T entity) {
         String id = entity.getId();
         for (int i = 0; i < entities.size(); i++) {
@@ -87,6 +132,12 @@ public abstract class Repository<T extends IEntity> {
         return null;
     }
 
+    /**
+     * Deletes an entity from the repository.
+     *
+     * @param item The entity to delete.
+     * @return The deleted entity, or {@code null} if not found.
+     */
     public T delete(T item) {
         boolean removed = entities.removeIf(e -> e.getId().equals(item.getId()));
         if (removed) {
@@ -97,12 +148,28 @@ public abstract class Repository<T extends IEntity> {
         return null;
     }
 
+    /**
+     * Retrieves all entities in the repository.
+     *
+     * @return A list of all entities.
+     */
     public List<T> getAll() {
         return new ArrayList<>(entities);
     }
 
+    /**
+     * Converts a CSV line into an entity.
+     *
+     * @param csv The CSV line.
+     * @return The corresponding entity.
+     */
     protected abstract T fromCSV(String csv);
 
+    /**
+     * Generates a new unique ID for an entity based on the last ID in the repository.
+     *
+     * @return A new unique ID.
+     */
     protected String getLastId() {
         if (entities == null || entities.isEmpty()) {
             return "0";
@@ -113,6 +180,11 @@ public abstract class Repository<T extends IEntity> {
         return entities.get(lastEntry).getId();
     }
 
+    /**
+     * Retrieves the last ID from the list of entities.
+     *
+     * @return The last ID as a string.
+     */
     public String generateId() {
         String lastId = this.getLastId();
         int i;
@@ -127,8 +199,18 @@ public abstract class Repository<T extends IEntity> {
         return String.format("%s%03d", prefix, number);
     }
 
+    /**
+     * Gets the header for the CSV file.
+     *
+     * @return The header as a string.
+     */
     protected abstract String getHeader();
 
+    /**
+     * Loads entities from the CSV file into memory.
+     *
+     * @return {@code true} if successful, {@code false} otherwise.
+     */
     public boolean load() {
         try {
             // Check if the file exists
@@ -169,6 +251,11 @@ public abstract class Repository<T extends IEntity> {
     }
 
 
+    /**
+     * Saves all entities to the CSV file.
+     *
+     * @return {@code true} if successful, {@code false} otherwise.
+     */
     public boolean store() {
         // Write to a temporary file to ensure atomicity
         String tempFilePath = csvPath + ".tmp";
@@ -224,6 +311,9 @@ public abstract class Repository<T extends IEntity> {
         return false;
     }
 
+    /**
+     * Displays all entities in the repository.
+     */
     public void display() {
         if (entities.size() <= 0) {
             System.out.println("No entities found.");

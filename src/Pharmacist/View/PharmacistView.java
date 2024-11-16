@@ -31,7 +31,7 @@ public class PharmacistView {
 
             switch (choice) {
                 case 1:
-                    viewPrescriptionDetails();
+                    viewAppointmentOutcomeRecord();
                     break;
                 case 2:
                     updatePrescriptionStatus();
@@ -54,10 +54,14 @@ public class PharmacistView {
     }
 
     // View prescription details by patientId
-    public void viewPrescriptionDetails() {
+    public void viewAppointmentOutcomeRecord() {
         List<AppointmentOutcome> appointments = AppointmentController.getAppointmentOutcomeNotDispensed();
+        if (appointments.isEmpty()){
+            System.out.println("No appointment outcome record found.");
+            return;
+        }
         for (AppointmentOutcome appointment : appointments) {
-            appointment.prettyPrint();
+            if (appointment != null) appointment.prettyPrint();
         }
     }
 
@@ -77,14 +81,19 @@ public class PharmacistView {
         // Display all prescriptions with index
         System.out.println("Available Prescriptions:");
         for (int i = 0; i < prescriptions.size(); i++) {
-            System.out.println((i + 1) + ". " + prescriptions.get(i).toString()); // Assumes `toString` is informative
+            System.out.println((i + 1) + ". " + prescriptions.get(i).toString());
         }
 
         // Ask for a valid index
         int index = getValidatedIntInput(scanner,
-                "Enter the index of the prescription to update: ",
+                "Enter the index of the prescription to update:  (0 to quit)",
                 1,
                 prescriptions.size());
+
+        if (index == 0){
+            System.out.println("Quitting");
+            return;
+        }
 
         // Get the selected prescription
         Prescription selectedPrescription = prescriptions.get(index - 1);

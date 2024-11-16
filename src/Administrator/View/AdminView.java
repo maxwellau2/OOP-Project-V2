@@ -8,7 +8,6 @@ import Inventory.Controller.InventoryController;
 import Inventory.Model.Inventory;
 import Pharmacist.Model.Pharmacist;
 import Pharmacist.Repository.PharmacistRepository;
-import Staff.Controller.StaffActions;
 import Staff.Model.Staff;
 import Staff.Repository.StaffRepository;
 import User.Controller.UserController;
@@ -70,14 +69,87 @@ public class AdminView {
         // Add or delete staff
         System.out.println("\n1. Add Staff");
         System.out.println("2. Delete Staff");
+        System.out.println("3. Update Staff");
         System.out.println("0. Exit");
-        int choice = getValidatedIntInput(scanner, "Choose an option: ", 0, 2);
+        int choice = getValidatedIntInput(scanner, "Choose an option: ", 0, 3);
         switch (choice) {
             case 1 -> addStaff();
-            case 2 -> deleteStaff(staffIds);
+            case 2 -> deleteStaff();
+            case 3 -> updateStaff();
             case 0 -> System.out.println("Quitting...\n");
         }
     }
+
+    private void updateStaff() {
+        System.out.println("=== Update Staff ===");
+
+        // Retrieve all staff members, excluding the current admin
+        List<Staff> allStaff = AdminActions.getAllStaff();
+        allStaff.removeIf(staff -> staff.getId().equalsIgnoreCase(this.admin.getId()));
+
+        if (allStaff.isEmpty()) {
+            System.out.println("No staff available for updating.");
+            return;
+        }
+
+        // Display the list of staff members with their indices
+        System.out.println("Select a staff member to update:");
+        for (int i = 0; i < allStaff.size(); i++) {
+            System.out.println((i + 1) + ". " + allStaff.get(i).toString());
+        }
+
+        // Ask user to select a staff member by index
+        int selectedIndex = getValidatedIntInput(scanner,
+                "Enter the index of the staff member to update (or 0 to exit): ", 0, allStaff.size()) - 1;
+
+        if (selectedIndex == -1) {
+            System.out.println("Exiting staff update process.");
+            return;
+        }
+
+        Staff selectedStaff = allStaff.get(selectedIndex);
+
+        System.out.println("Selected Staff: ");
+        selectedStaff.prettyPrint();
+
+        // Update staff attributes
+        System.out.println("\n=== Update Attributes ===");
+        System.out.println("Enter 0 to keep the current value.");
+
+        String newName = getValidatedStringInput(scanner,
+                "Enter new name for the staff member: ", 30);
+        if (newName.equals("0")) {
+            newName = selectedStaff.getName();
+        }
+
+        String newGender = getValidatedStringInput(scanner,
+                "Enter new gender (male/female): ", List.of("male", "female", "0"));
+        if (newGender.equals("0")) {
+            newGender = selectedStaff.getGender();
+        }
+
+        int newAge = getValidatedIntInput(scanner,
+                "Enter new age (0 to keep unchanged): ", 0, 100);
+        if (newAge == 0) {
+            newAge = selectedStaff.getAge();
+        }
+
+        // Apply updates to the staff member
+        selectedStaff.setName(newName);
+        selectedStaff.setGender(newGender);
+        selectedStaff.setAge(newAge);
+
+        // Update the staff in the repository
+        Staff updatedStaff = AdminActions.updateStaff(selectedStaff);
+
+        if (updatedStaff != null) {
+            System.out.println("Staff updated successfully:");
+            updatedStaff.prettyPrint();
+        } else {
+            System.out.println("Failed to update staff. Please try again.");
+        }
+    }
+
 
     // Add new staff member
     public void addStaff() {
@@ -136,21 +208,55 @@ public class AdminView {
 
 
     // Delete a staff member by ID
-    public void deleteStaff(List<String> staffIds) {
+    public void deleteStaff() {
         System.out.println("=== Delete Staff ===");
-        System.out.print("Enter Staff ID to delete: ");
-        String staffId = getValidatedStringInput(scanner, "Enter Staff ID: ", staffIds);
-        Staff staffToDelete = StaffActions.getStaffById(staffId);
-        if (staffToDelete != null){
-            System.out.println("Staff not found");
+
+        // Retrieve all staff members, excluding the current admin
+        List<Staff> allStaff = AdminActions.getAllStaff();
+        allStaff.removeIf(staff -> staff.getId().equalsIgnoreCase(this.admin.getId()));
+
+        if (allStaff.isEmpty()) {
+            System.out.println("No staff available for deletion (cannot delete yourself).");
+            return;
         }
-        boolean success = getStaffRepoInstance().deleteStaffById(staffId);
-        if (success) {
-            System.out.println("Staff member with ID " + staffId + " has been deleted.");
+
+        // Display all staff members with their indices
+        System.out.println("Select a staff member to delete:");
+        for (int i = 0; i < allStaff.size(); i++) {
+            System.out.println((i + 1) + ". " + allStaff.get(i).toString());
+        }
+
+        // Ask the user to select a staff member by index
+        int selectedIndex = getValidatedIntInput(scanner,
+                "Enter the index of the staff member to delete (or 0 to exit): ", 0, allStaff.size()) - 1;
+
+        if (selectedIndex == -1) {
+            System.out.println("Exiting staff deletion process.");
+            return;
+        }
+
+        Staff selectedStaff = allStaff.get(selectedIndex);
+
+        System.out.println("Selected Staff for Deletion: ");
+        selectedStaff.prettyPrint();
+
+        // Confirm deletion
+        String confirmation = getValidatedStringInput(scanner,
+                "Are you sure you want to delete this staff member? (yes/no): ", List.of("yes", "no"));
+
+        if (confirmation.equalsIgnoreCase("yes")) {
+            boolean success = AdminActions.deleteStaff(selectedStaff);
+
+            if (success) {
+                System.out.println("Staff member with ID " + selectedStaff.getId() + " has been deleted.");
+            } else {
+                System.out.println("Failed to delete staff member with ID " + selectedStaff.getId() + ". Please try again.");
+            }
         } else {
-            System.out.println("Staff member with ID " + staffId + " not found.");
+            System.out.println("Deletion canceled.");
         }
     }
+
 
     // View appointments details
     public void viewAppointmentsDetails() {
@@ -283,8 +389,8 @@ public class AdminView {
 
         Inventory selectedItem = lowStockItems.get(selectedIndex);
 
-        // Approve restock request and set stock level to 10 * low stock alert level
-        selectedItem.setQuantity(selectedItem.getLowStockAlert() * 10);
+        // Approve restock request and set stock level to 10 * low stock alert level + original
+        selectedItem.setQuantity(selectedItem.getLowStockAlert() * 10 + selectedItem.getQuantity());
         selectedItem.setRestockRequested("approved"); // Mark as approved
 
         // Update inventory

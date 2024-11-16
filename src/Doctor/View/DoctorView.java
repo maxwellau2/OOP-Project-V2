@@ -242,6 +242,10 @@ public class DoctorView {
     public void viewUpcomingAppointments() {
         System.out.println("=== View Upcoming Appointments ===");
         List<Appointment> appointments = AppointmentController.getAppointmentByDoctor(doctor.getId(), LocalDateTime.now().withHour(0), 3);
+        if (appointments.isEmpty()){
+            System.out.println("No upcoming appointments ");
+            return;
+        }
         for (Appointment appointment : appointments) {
             appointment.prettyPrint();
         }
@@ -251,42 +255,45 @@ public class DoctorView {
     public void recordAppointmentOutcome() {
         System.out.print("=== Record Appointment Outcome ===\n");
 
-        // Step 1: Ask for the appointment ID
-        String appointmentId = getValidatedStringInput(scanner, "Enter the appointment ID: ", 50);
-
-        // Step 2: Check if the appointment exists
-        Appointment selectedAppointment = AppointmentController.getAppointmentById(appointmentId);
-
-        if (selectedAppointment == null) {
-            System.out.println("No appointment found with ID: " + appointmentId);
+        // Step 1: Get a list of confirmed appointments
+        List<Appointment> confirmedAppointments = AppointmentController.getAppointmentsByDoctorAndStatus(doctor.getId(), "confirmed");
+        if (confirmedAppointments.isEmpty()) {
+            System.out.println("No confirmed appointments available for recording outcomes.");
             return;
         }
 
-        // Ensure the appointment is eligible for outcome recording
-        if (!selectedAppointment.getStatus().equalsIgnoreCase("Confirmed")) {
-            System.out.println("Appointment is not marked as 'Confirmed'. Cannot record outcome.");
-            return;
+        // Step 2: Display the list of confirmed appointments
+        System.out.println("Select an appointment from the list below:");
+        for (int i = 0; i < confirmedAppointments.size(); i++) {
+            System.out.print((i + 1) + ". ");
+            confirmedAppointments.get(i).prettyPrint(); // Assuming prettyPrint displays appointment details
         }
 
-        // Step 3: Record consultation notes
+        // Step 3: Let the user select an appointment by index
+        int selectedIndex = getValidatedIntInput(scanner, "Enter the index of the appointment: ", 1, confirmedAppointments.size()) - 1;
+        Appointment selectedAppointment = confirmedAppointments.get(selectedIndex);
+
+        // Step 4: Record consultation notes
         String consultationNotes = getValidatedStringInput(scanner, "Enter consultation notes: ", 300);
 
-        // Step 4: Ask if medication is prescribed
-        String prescribeMedication = getValidatedStringInput(scanner, "Would you like to prescribe medication? (yes/no): ", 10);
+        String services = getValidatedStringInput(scanner, "Enter services provided: ", 30);
+
+        // Step 5: Ask if medication is prescribed
+        String prescribeMedication = getValidatedStringInput(scanner, "Would you like to prescribe medication? (yes/no): ", List.of("yes", "no"));
         String medication = "None";
         String dosage = "None";
 
         if (prescribeMedication.equalsIgnoreCase("yes")) {
-            medication = getValidatedStringInput(scanner, "Enter prescribed medication: " + InventoryController.getUniqueInventoryItems().toString() , InventoryController.getUniqueInventoryItems());
+            medication = getValidatedStringInput(scanner, "Enter prescribed medication (from inventory): " + InventoryController.getUniqueInventoryItems(), InventoryController.getUniqueInventoryItems());
             dosage = getValidatedStringInput(scanner, "Enter dosage: ", 100);
 
-            // Step 5: Create a new prescription
+            // Step 6: Create a new prescription
             Prescription newPrescription = PrescriptionActions.createNewPendingPrescription(
                     selectedAppointment.getDoctorId(),
                     selectedAppointment.getPatientId(),
                     medication,
                     dosage,
-                    appointmentId
+                    selectedAppointment.getId()
             );
 
             // Add the prescription to the repository
@@ -299,7 +306,7 @@ public class DoctorView {
             System.out.println("No medication prescribed.");
         }
 
-        // Step 6: Mark the appointment as done
+        // Step 7: Mark the appointment as done
         selectedAppointment.setStatus("Completed");
         if (AppointmentController.updateAppointment(selectedAppointment) != null) {
             System.out.println("Appointment marked as Completed.");
@@ -308,12 +315,12 @@ public class DoctorView {
             return;
         }
 
-        // Step 7: Create a new AppointmentOutcome object
+        // Step 8: Create a new AppointmentOutcome object
         AppointmentOutcome newOutcome = new AppointmentOutcome(
                 selectedAppointment.getId(),
                 selectedAppointment.getPatientId(),
                 selectedAppointment.getDoctorId(),
-                "Completed",
+                services,
                 medication,
                 consultationNotes
         );
@@ -325,4 +332,5 @@ public class DoctorView {
             System.out.println("Failed to record appointment outcome. Please try again.");
         }
     }
+
 }

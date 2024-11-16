@@ -99,7 +99,8 @@ public class AppointmentController {
     public static List<Appointment> getAppointmentByDoctor(String doctorId, LocalDateTime startDate, Integer days) {
         return getAppointmentRepository().getByFilter(app -> (app.getDoctorId().equals(doctorId)
                 && app.getDate().isAfter(startDate)
-                && app.getDate().isBefore(startDate.plusDays(days))) );
+                && app.getDate().isBefore(startDate.plusDays(days)))
+                && app.getStatus().equalsIgnoreCase("confirmed") );
     }
 
     public static List<Appointment> getAppointmentByPatientId(String patientId){
@@ -122,7 +123,7 @@ public class AppointmentController {
 
     public static List<AppointmentOutcome> getAppointmentOutcomeNotDispensed(){
         List<Prescription> prescriptions = getPrescriptionRepository().getByFilter(p -> p.getStatus().equals("pending"));
-        System.out.println(prescriptions);
+//        System.out.println(prescriptions);
         List<String> appointmentIds = prescriptions.stream().map(Prescription::getAppointmentId).toList();
         List<AppointmentOutcome> appointmentOutcomes = new ArrayList<>();
         for (String appointmentId : appointmentIds) {
@@ -141,4 +142,8 @@ public static Appointment createPendingAppointmentObject(String patientId, Strin
             "Pending"
     );
 }
+
+    public static List<Appointment> getAppointmentsByDoctorAndStatus(String id, String status) {
+        return getAppointmentRepository().getByFilter(appointment -> appointment.getDoctorId().equals(id) && appointment.getStatus().equalsIgnoreCase(status));
+    }
 }

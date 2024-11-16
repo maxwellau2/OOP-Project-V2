@@ -21,8 +21,7 @@ public class InventoryController {
 
     public static List<Inventory> getLowStockInventoryPending() {
         return getInventoryRepoInstance().getByFilter(inventory ->
-                (inventory.getQuantity() < inventory.getLowStockAlert()) &&
-                        "Pending".equalsIgnoreCase(inventory.getRestockRequested()));
+                ("Pending".equalsIgnoreCase(inventory.getRestockRequested())));
     }
 
     public static Inventory updateInventory(Inventory inventory) {

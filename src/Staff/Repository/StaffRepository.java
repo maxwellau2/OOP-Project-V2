@@ -27,6 +27,13 @@ public class StaffRepository extends Repository<Staff> {
     }
 
     @Override
+    public Staff delete(Staff item) {
+        if (deleteStaffById(item.getId()))
+            return item;
+        return null;
+    }
+
+    @Override
     protected Staff fromCSV(String csv) {
         String[] values = csv.split(",");
         int age = Integer.parseInt(values[4]);
@@ -113,6 +120,8 @@ public class StaffRepository extends Repository<Staff> {
 
         // Reload the staff table
         this.store();
+        // delete user by ID oso
+        getUserRepository().deleteById(staffToDelete.getId());
         return true;
     }
 

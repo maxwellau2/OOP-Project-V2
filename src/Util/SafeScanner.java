@@ -1,6 +1,5 @@
 package Util;
 
-
 import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
@@ -42,12 +41,14 @@ public class SafeScanner {
 
         while (!valid) {
             System.out.print(prompt);
-            if (input.isEmpty())  input = scanner.nextLine().trim(); // Get the line and trim spaces
+            input = scanner.nextLine().trim(); // Get the line and trim spaces
 
             if (input.isEmpty()) {
                 System.out.println("Invalid input. Please enter a non-empty string.");
             } else if (input.length() > maxLength) {
                 System.out.println("Input is too long. Maximum length allowed is " + maxLength + " characters.");
+            } else if (input.contains(",")) {
+                System.out.println("Invalid input. Commas are not allowed.");
             } else {
                 valid = true;
             }
@@ -68,6 +69,8 @@ public class SafeScanner {
                 System.out.println("Invalid input. Please enter a non-empty string.");
             } else if (!validInputs.contains(input)) {
                 System.out.println("Invalid input. Accepted values are: " + validInputs);
+            } else if (input.contains(",")) {
+                System.out.println("Invalid input. Commas are not allowed.");
             } else {
                 valid = true;
             }
@@ -131,6 +134,7 @@ public class SafeScanner {
         System.out.println(); // Move to the next line
         return password.toString().trim();
     }
+
     public static String readPasswordMasked(Scanner scanner, String prompt) {
         System.out.print(prompt);
 
