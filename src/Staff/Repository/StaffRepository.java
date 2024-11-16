@@ -89,33 +89,34 @@ public class StaffRepository extends Repository<Staff> {
 
         // Determine the role and delete from the appropriate repository
         switch (staffToDelete.getRole().toLowerCase()) {
-            case "doctor":
+            case "doctor" -> {
                 boolean doctorDeleted = getDoctorRepository().deleteById(id);
                 if (!doctorDeleted) {
                     System.out.println("Failed to delete doctor with ID: " + id);
                     return false;
                 }
-                break;
+            }
 
-            case "pharmacist":
+            case "pharmacist" -> {
                 boolean pharmacistDeleted = getPharmacistRepository().deleteById(id);
                 if (!pharmacistDeleted) {
                     System.out.println("Failed to delete pharmacist with ID: " + id);
                     return false;
                 }
-                break;
+            }
 
-            case "admin":
+            case "admin" -> {
                 boolean adminDeleted = getAdminRepository().deleteById(id);
                 if (!adminDeleted) {
                     System.out.println("Failed to delete admin with ID: " + id);
                     return false;
                 }
-                break;
+            }
 
-            default:
+            default -> {
                 System.out.println("Invalid staff role: " + staffToDelete.getRole());
                 return false;
+            }
         }
 
         // Reload the staff table

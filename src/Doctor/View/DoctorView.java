@@ -15,15 +15,13 @@ import Patient.Controller.PatientController;
 import Patient.Model.Patient;
 import Prescription.Controller.PrescriptionActions;
 import Prescription.Model.Prescription;
-
+import static Util.SafeScanner.getValidatedIntInput;
+import static Util.SafeScanner.getValidatedStringInput;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.Scanner;
-
-import static Util.SafeScanner.getValidatedIntInput;
-import static Util.SafeScanner.getValidatedStringInput;
 
 public class DoctorView {
     private Doctor doctor;
@@ -50,33 +48,15 @@ public class DoctorView {
             choice = getValidatedIntInput(scanner, "Enter your choice: ", 0, 7);
 
             switch (choice) {
-                case 1:
-                    viewPatientMedicalRecords();
-                    break;
-                case 2:
-                    updatePatientMedicalRecords();
-                    break;
-                case 3:
-                    viewPersonalSchedule();
-                    break;
-                case 4 :
-                    setAppointmentAvailability();
-                    break;
-                case 5:
-                    handleAppointmentRequests();
-                    break;
-                case 6:
-                    viewUpcomingAppointments();
-                    break;
-                case 7:
-                    recordAppointmentOutcome();
-                    break;
-                case 0:
-                    System.out.println("Exiting the Doctor Menu.");
-                    break;
-                default:
-                    System.out.println("Invalid choice. Please select a valid option.");
-                    break;
+                case 1 -> viewPatientMedicalRecords();
+                case 2 -> updatePatientMedicalRecords();
+                case 3 -> viewPersonalSchedule();
+                case 4 -> setAppointmentAvailability();
+                case 5 -> handleAppointmentRequests();
+                case 6 -> viewUpcomingAppointments();
+                case 7 -> recordAppointmentOutcome();
+                case 0 -> System.out.println("Exiting the Doctor Menu.");
+                default -> System.out.println("Invalid choice. Please select a valid option.");
             }
         } while (choice != 0);
 
