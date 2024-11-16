@@ -23,7 +23,7 @@ public class PharmacistRepository extends Repository<Pharmacist> {
     @Override
     protected Pharmacist fromCSV(String csvLine){
         String[] data = csvLine.split(",");
-        return new Pharmacist(data[0], data[1], Integer.valueOf(data[2]), data[3], data[4]);
+        return new Pharmacist(data[0], data[1], Integer.valueOf(data[2]), data[3]);
     }
 
     @Override

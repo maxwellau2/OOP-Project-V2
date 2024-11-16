@@ -10,23 +10,25 @@ public class Prescription implements IEntity {
     private String medicationName;
     private String dosage;
     private String status; // e.g., "pending", "dispensed", etc.
+    private String appointmentId;
 
-
-    public Prescription(String id, String doctorId, String patientId, String medicationName, String dosage, String status) {
+    public Prescription(String id, String doctorId, String patientId, String medicationName, String dosage, String status, String appointmentId) {
         this.id = id;
         this.doctorId = doctorId;
         this.patientId = patientId;
         this.medicationName = medicationName;
         this.dosage = dosage;
         this.status = status;
+        this.appointmentId = appointmentId;
     }
-    public Prescription(String doctorId, String patientId, String medicationName, String dosage, String status) {
+    public Prescription(String doctorId, String patientId, String medicationName, String dosage, String status, String appointmentId) {
         this.id = null;
         this.doctorId = doctorId;
         this.patientId = patientId;
         this.medicationName = medicationName;
         this.dosage = dosage;
         this.status = status;
+        this.appointmentId = appointmentId;
     }
 
     @Override
@@ -81,11 +83,28 @@ public class Prescription implements IEntity {
     @Override
     public String toString() {
         return "Prescription{prescriptionId='" + id + "', doctorId='" + doctorId + "', patientId='" + patientId +
-                "', medicationName='" + medicationName + "', dosage='" + dosage + "', status='" + status + "'}";
+                "', medicationName='" + medicationName + "', dosage='" + dosage + "', status='" + status + "', appointmentId='" + appointmentId + "'}";
     }
 
     @Override
     public String toCSV() {
-        return String.join(",", id, doctorId, patientId, medicationName, dosage, status);
+        return String.join(",", id, doctorId, patientId, medicationName, dosage, status, appointmentId);
     }
+
+    public String getAppointmentId() {
+        return appointmentId;
+    }
+
+    public void prettyPrint() {
+        System.out.println("=====================================");
+        System.out.println("Prescription ID  : " + (id != null ? id : "Not Assigned"));
+        System.out.println("Appointment ID   : " + appointmentId);
+        System.out.println("Doctor ID        : " + doctorId);
+        System.out.println("Patient ID       : " + patientId);
+        System.out.println("Medication Name  : " + medicationName);
+        System.out.println("Dosage           : " + dosage);
+        System.out.println("Status           : " + status);
+        System.out.println("=====================================");
+    }
+
 }

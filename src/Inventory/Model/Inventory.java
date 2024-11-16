@@ -17,12 +17,10 @@ public class Inventory implements IEntity {
         this.restockRequested = restockRequested;
     }
 
-
     @Override
     public String getId() {
         return id;
     }
-
 
     public void setId(String id) {
         this.id = id;
@@ -61,11 +59,28 @@ public class Inventory implements IEntity {
     }
 
     @Override
-    public String toString(){
-        return "Inventory {id=" + id + ", medicationName=" + medicationName + ", quantity=" + quantity + ", lowStockAlert=" + lowStockAlert +"restockRequested=" + restockRequested + "}";
+    public String toString() {
+        return "Inventory {" +
+                "id='" + id + '\'' +
+                ", medicationName='" + medicationName + '\'' +
+                ", quantity=" + quantity +
+                ", lowStockAlert=" + lowStockAlert +
+                ", restockRequested=" + restockRequested +
+                '}';
     }
+
     @Override
     public String toCSV() {
         return String.join(",", id, medicationName, String.valueOf(quantity), String.valueOf(lowStockAlert), String.valueOf(restockRequested));
+    }
+
+    public void prettyPrint() {
+        System.out.println("=== Inventory Item ===");
+        System.out.println("ID                : " + id);
+        System.out.println("Medication Name   : " + medicationName);
+        System.out.println("Quantity          : " + quantity);
+        System.out.println("Low Stock Alert   : " + lowStockAlert);
+        System.out.println("Restock Requested : " + (restockRequested ? "Yes" : "No"));
+        System.out.println("======================");
     }
 }

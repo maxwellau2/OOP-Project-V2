@@ -15,13 +15,12 @@ import User.Model.UserRole;
 import User.View.UserActions;
 import java.util.Scanner;
 
-//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
-// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 public class Main {
     public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
+
         // part 1: get credentials
         System.out.print("Enter your Hospital ID: ");
+        Scanner scanner = new Scanner(System.in);
         String hospitalId = scanner.nextLine();
 
         System.out.print("Enter your Password: ");
@@ -29,23 +28,13 @@ public class Main {
 
         User user = UserActions.login(hospitalId, password);
         if (user != null) {
-            System.out.println("Successfully logged in as" + user.getRole());
+            System.out.println("Successfully logged in as " + user.getRole());
         } else {
             System.out.println("Invalid credentials. Access denied.");
             return;
         }
-        // check if they logged in before
-//        if (user.getLastLogin() == null){
-//            System.out.println("You have not logged in before! Change your password!");
-//            String newPassword = scanner.nextLine();
-//            User u = UserActions.updatePassword(user, newPassword);
-//            if (u != null) {
-//                System.out.println("You have successfully changed password!");
-//            }
-//        }
-//        user = UserActions.updateLastLoginToNow(user);
 
-        // look at role
+        // Look at role
         UserRole role = UserRole.fromString(user.getRole());
         switch (role) {
             case PATIENT -> handlePatientRole(user);
@@ -80,24 +69,23 @@ public class Main {
 
     private static void handleAdminRole(User user) {
         Admin admin = AdminActions.createAdminFromUser(user);
-        if (admin != null){
+        if (admin != null) {
             System.out.println("Welcome Administrator.");
             AdminView adminView = new AdminView();
             adminView.displayMenu();
+        } else {
+            System.out.println("Administrator profile creation failed.");
         }
-        else System.out.println("Administrator profile creation failed");
     }
 
     private static void handlePharmacistRole(User user) {
         Pharmacist pharmacist = PharmacistActions.createPharmacistFromUser(user);
-        if (pharmacist != null){
-            System.out.println("Welcome Pharmacist.");
+        if (pharmacist != null) {
+            System.out.println("Welcome " + pharmacist.getName());
             PharmacistView pharmacistView = new PharmacistView();
-            pharmacistView.displayMenu();            
+            pharmacistView.displayMenu();
+        } else {
+            System.out.println("Pharmacist profile creation failed.");
         }
-        else System.out.println("Pharmacist profile creation failed.");
     }
-
-
-    
 }

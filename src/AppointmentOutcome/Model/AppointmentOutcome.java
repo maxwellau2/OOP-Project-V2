@@ -25,7 +25,7 @@ public class AppointmentOutcome implements IEntity {
 
     @Override
     public String toCSV() {
-        return appointmentId + "," + patientId + "," + services + "," + medication + "," + consultationNotes;
+        return appointmentId + "," + patientId + "," + doctorId + "," + services + "," + medication + "," + consultationNotes;
     }
 
     public String getAppointmentId() {
@@ -72,4 +72,16 @@ public class AppointmentOutcome implements IEntity {
     public void setDoctorId(String doctorId) {
         this.doctorId = doctorId;
     }
+
+    public void prettyPrint() {
+        System.out.println("=== Appointment Outcome ===");
+        System.out.println("Appointment ID: " + appointmentId);
+        System.out.println("Patient ID    : " + patientId);
+        System.out.println("Doctor ID     : " + doctorId);
+        System.out.println("Services      : " + services);
+        System.out.println("Medication    : " + medication);
+        System.out.println("Notes         : " + consultationNotes);
+        System.out.println("===========================");
+    }
+
 }

@@ -1,21 +1,28 @@
 package Doctor.View;
 
+import Appointment.Controller.AppointmentController;
+import Appointment.Model.Appointment;
+import AppointmentOutcome.Controller.AppointmentOutcomeController;
+import AppointmentOutcome.Model.AppointmentOutcome;
+import Doctor.Controller.DoctorController;
+import Doctor.Model.Doctor;
+import Inventory.Controller.InventoryController;
+import Leaves.Controller.LeavesController;
+import Leaves.Model.Leave;
+import MedicalRecord.Model.MedicalRecord;
+import Patient.Controller.PatientActions;
+import Patient.Model.Patient;
+import Prescription.Controller.PrescriptionActions;
+import Prescription.Model.Prescription;
+
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.Scanner;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
-import Appointment.Controller.AppointmentController;
-import Appointment.Model.Appointment;
-import Leaves.Controller.LeavesController;
-import Leaves.Model.Leave;
-import Patient.Model.Patient;
-import Doctor.Controller.DoctorController;
-import Doctor.Model.Doctor;
-import MedicalRecord.Model.MedicalRecord;
-import Patient.Controller.PatientActions;
+
 import static Util.SafeScanner.getValidatedIntInput;
+import static Util.SafeScanner.getValidatedStringInput;
 
 public class DoctorView {
     private Doctor doctor;
@@ -39,9 +46,7 @@ public class DoctorView {
             System.out.println("7. Record Appointment Outcome");
             System.out.println("0. Exit");
 
-            choice = getValidatedIntInput(scanner,"Enter your choice: ", 0, 7);
-            scanner.nextLine(); // Clear the buffer after an integer input
-
+            choice = getValidatedIntInput(scanner, "Enter your choice: ", 0, 7);
 
             switch (choice) {
                 case 1:
@@ -53,7 +58,7 @@ public class DoctorView {
                 case 3:
                     viewPersonalSchedule();
                     break;
-                case 4:
+                case 4 :
                     setAppointmentAvailability();
                     break;
                 case 5:
@@ -70,71 +75,60 @@ public class DoctorView {
                     break;
                 default:
                     System.out.println("Invalid choice. Please select a valid option.");
+                    break;
             }
         } while (choice != 0);
 
         scanner.close();
     }
 
-    // Test Case 9: View Patient Medical Records
+    // Test case 9
     public void viewPatientMedicalRecords() {
         System.out.println("=== View Patient Medical Records ===");
         List<MedicalRecord> records = DoctorController.viewPatientRecord(doctor);
-        if (records != null && records.isEmpty()) {
+        if (records.isEmpty()) {
             System.out.println("There are no patient medical records under you.");
-        } else{
+        } else {
             for (MedicalRecord record : records) {
                 record.prettyPrintMedicalRecord();
             }
         }
-        // Logic to be implemented
     }
 
-    // Test Case 10: Update Patient Medical Records
+    // Test case 10
     public void updatePatientMedicalRecords() {
         System.out.println("=== Update Patient Medical Records ===");
 
-        // Step 1: Prompt the doctor to enter the patient ID
-        System.out.print("Enter Patient ID: ");
-        String patientId = scanner.nextLine();
+        String patientId = getValidatedStringInput(scanner, "Enter Patient ID: ", 20);
 
-        // Step 2: Check if the patient exists (optional step to verify)
         Patient patient = PatientActions.getPatientById(patientId);
         if (patient == null) {
             System.out.println("No patient found with ID: " + patientId);
             return;
         }
 
-        // Step 3: Prompt the doctor to enter the new medical record details
-        System.out.print("Enter Diagnosis: ");
-        String diagnosis = scanner.nextLine();
+        String diagnosis = getValidatedStringInput(scanner, "Enter Diagnosis: ", 100);
+        String treatmentPlan = getValidatedStringInput(scanner, "Enter Treatment Plan: ", 100);
 
-        System.out.print("Enter Treatment Plan: ");
-        String treatmentPlan = scanner.nextLine();
-
-        // Step 4: Create a new MedicalRecord object
         MedicalRecord newRecord = MedicalRecord.createNewMedicalRecordToday(patientId, doctor.getId(), diagnosis, treatmentPlan);
         MedicalRecord record = DoctorController.addPatientRecord(newRecord);
-        // null check
         if (record != null) {
             System.out.println("Patient Medical Records updated successfully.");
-            return;
+        } else {
+            System.out.println("Patient Medical Records update failed.");
         }
-        System.out.println("Patient Medical Records update failed.");
     }
 
-
-    // Stub for Test Case 11: View Personal Schedule
+    // Test case 11
     public void viewPersonalSchedule() {
         System.out.println("=== View Personal Schedule ===");
-        // call Appointment controller stuff
         List<Appointment> appointments = AppointmentController.getAppointmentByDoctor(doctor.getId(), LocalDateTime.now().toLocalDate().atStartOfDay(), 3);
         for (Appointment appointment : appointments) {
             appointment.prettyPrint();
         }
     }
 
-    // Stub for Test Case 12: Set Availability for Appointments
+    // Test case 12
     public void setAppointmentAvailability() {
         System.out.println("=== Set Availability for Appointments ===");
 
@@ -144,7 +138,6 @@ public class DoctorView {
             System.out.println("2. Remove Leave");
             System.out.println("0. Back to Main Menu");
             int choice = getValidatedIntInput(scanner, "Choose an option: ", 0, 2);
-            scanner.nextLine(); // Clear the buffer after an integer input
 
             switch (choice) {
                 case 1 -> addLeave();
@@ -158,14 +151,12 @@ public class DoctorView {
     private void addLeave() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
-        System.out.println("Enter the leave name (e.g., Vacation, Conference): ");
-        String leaveName = scanner.nextLine();
+        String leaveName = getValidatedStringInput(scanner, "Enter the leave name (e.g., Vacation, Conference): ", 50);
 
         LocalDateTime start;
         while (true) {
-            System.out.print("Enter leave start date and time (yyyy-MM-dd HH:mm): ");
-            String startDateTimeStr = scanner.nextLine();
             try {
+                String startDateTimeStr = getValidatedStringInput(scanner, "Enter leave start date and time (yyyy-MM-dd HH:mm): ", 16);
                 start = LocalDateTime.parse(startDateTimeStr, formatter);
                 break;
             } catch (DateTimeParseException e) {
@@ -175,9 +166,8 @@ public class DoctorView {
 
         LocalDateTime end;
         while (true) {
-            System.out.print("Enter leave end date and time (yyyy-MM-dd HH:mm): ");
-            String endDateTimeStr = scanner.nextLine();
             try {
+                String endDateTimeStr = getValidatedStringInput(scanner, "Enter leave end date and time (yyyy-MM-dd HH:mm): ", 16);
                 end = LocalDateTime.parse(endDateTimeStr, formatter);
                 break;
             } catch (DateTimeParseException e) {
@@ -185,17 +175,14 @@ public class DoctorView {
             }
         }
 
-        // Create a new leave using the LeavesController
         Leave newLeave = LeavesController.createLeave(doctor.getId(), leaveName, start, end);
 
-        // Add the leave to the repository
         if (LeavesController.addLeave(newLeave) != null) {
             System.out.println("Leave added successfully.");
         } else {
             System.out.println("Failed to add leave.");
         }
     }
-
 
     private void removeLeave() {
         System.out.println("Existing leaves:");
@@ -220,23 +207,121 @@ public class DoctorView {
         }
     }
 
-
-    // Stub for Test Case 13: Accept or Decline Appointment Requests
+    // Test case 13
     public void handleAppointmentRequests() {
         System.out.println("=== Accept or Decline Appointment Requests ===");
-        // Logic to be implemented
+
+        List<Appointment> appointments = AppointmentController.getAppointmentByDoctorAndStatus(doctor.getId(), "Pending");
+
+        if (appointments.isEmpty()) {
+            System.out.println("No pending appointment requests.");
+            return;
+        }
+
+        for (Appointment appointment : appointments) {
+            appointment.prettyPrint();
+
+            int choice = getValidatedIntInput(scanner, "Enter 1 to Accept or 2 to Decline this appointment: ", 1, 2);
+
+            if (choice == 1) {
+                appointment.setStatus("Confirmed");
+                System.out.println("Appointment accepted.");
+            } else {
+                appointment.setStatus("Cancelled");
+                System.out.println("Appointment declined.");
+            }
+
+            AppointmentController.updateAppointment(appointment);
+        }
+
+        System.out.println("All pending appointment requests have been handled.");
     }
 
-    // Stub for Test Case 14: View Upcoming Appointments
+    // Test case 14
     public void viewUpcomingAppointments() {
         System.out.println("=== View Upcoming Appointments ===");
-        // Logic to be implemented
+        List<Appointment> appointments = AppointmentController.getAppointmentByDoctor(doctor.getId(), LocalDateTime.now().withHour(0), 3);
+        for (Appointment appointment : appointments) {
+            appointment.prettyPrint();
+        }
     }
 
-    // Stub for Test Case 15: Record Appointment Outcome
+    // Test case 15
     public void recordAppointmentOutcome() {
-        System.out.println("=== Record Appointment Outcome ===");
-        // Logic to be implemented
-    }
+        System.out.print("=== Record Appointment Outcome ===\n");
 
+        // Step 1: Ask for the appointment ID
+        String appointmentId = getValidatedStringInput(scanner, "Enter the appointment ID: ", 50);
+
+        // Step 2: Check if the appointment exists
+        Appointment selectedAppointment = AppointmentController.getAppointmentById(appointmentId);
+
+        if (selectedAppointment == null) {
+            System.out.println("No appointment found with ID: " + appointmentId);
+            return;
+        }
+
+        // Ensure the appointment is eligible for outcome recording
+        if (!selectedAppointment.getStatus().equalsIgnoreCase("Confirmed")) {
+            System.out.println("Appointment is not marked as 'Confirmed'. Cannot record outcome.");
+            return;
+        }
+
+        // Step 3: Record consultation notes
+        String consultationNotes = getValidatedStringInput(scanner, "Enter consultation notes: ", 300);
+
+        // Step 4: Ask if medication is prescribed
+        String prescribeMedication = getValidatedStringInput(scanner, "Would you like to prescribe medication? (yes/no): ", 10);
+        String medication = "None";
+        String dosage = "None";
+
+        if (prescribeMedication.equalsIgnoreCase("yes")) {
+            medication = getValidatedStringInput(scanner, "Enter prescribed medication: " + InventoryController.getUniqueInventoryItems().toString() , InventoryController.getUniqueInventoryItems());
+            dosage = getValidatedStringInput(scanner, "Enter dosage: ", 100);
+
+            // Step 5: Create a new prescription
+            Prescription newPrescription = PrescriptionActions.createNewPendingPrescription(
+                    selectedAppointment.getDoctorId(),
+                    selectedAppointment.getPatientId(),
+                    medication,
+                    dosage,
+                    appointmentId
+            );
+
+            // Add the prescription to the repository
+            if (PrescriptionActions.addPrescription(newPrescription) != null) {
+                System.out.println("Prescription created successfully.");
+            } else {
+                System.out.println("Failed to create prescription. Please try again.");
+            }
+        } else {
+            System.out.println("No medication prescribed.");
+        }
+
+        // Step 6: Mark the appointment as done
+        selectedAppointment.setStatus("Completed");
+        if (AppointmentController.updateAppointment(selectedAppointment) != null) {
+            System.out.println("Appointment marked as Completed.");
+        } else {
+            System.out.println("Failed to mark the appointment as Completed.");
+            return;
+        }
+
+        // Step 7: Create a new AppointmentOutcome object
+        AppointmentOutcome newOutcome = new AppointmentOutcome(
+                selectedAppointment.getId(),
+                selectedAppointment.getPatientId(),
+                selectedAppointment.getDoctorId(),
+                "Completed",
+                medication,
+                consultationNotes
+        );
+
+        // Add the outcome to the repository
+        if (AppointmentOutcomeController.createAppointmentOutcome(newOutcome) != null) {
+            System.out.println("Appointment outcome recorded successfully.");
+        } else {
+            System.out.println("Failed to record appointment outcome. Please try again.");
+        }
+    }
 }

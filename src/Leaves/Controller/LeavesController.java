@@ -15,10 +15,9 @@ public class LeavesController {
     public static List<Leave> getStaffLeave(String id){
         return getLeavesRepository().getByFilter(l->l.getStaffId().equals(id));
     }
-    public static List<Leave> getStaffLeave(String id, LocalDateTime start, LocalDateTime end){
+    public static List<Leave> getStaffLeave(String id, LocalDateTime start){
         return getLeavesRepository().getByFilter(l->(l.getStaffId().equals(id)
-                && l.getStart().isAfter(start)
-                && l.getEnd().isBefore(end)));
+                && l.getStart().isAfter(start)));
     }
 
     public static Leave createLeave(String staffId, String leaveName, LocalDateTime start, LocalDateTime end){

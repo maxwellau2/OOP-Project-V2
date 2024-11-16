@@ -9,15 +9,13 @@ public class Pharmacist implements IEntity {
     private String name;
     private Integer age;
     private String gender;
-    private String qualification;
     private User user = null;
 
-    public Pharmacist(String id, String name, Integer age, String gender, String qualification){
+    public Pharmacist(String id, String name, Integer age, String gender){
         this.id = id;
         this.name = name;
         this.age = age;
         this.gender = gender;
-        this.qualification = qualification;
     }
     @Override
     public String getId(){
@@ -45,13 +43,6 @@ public class Pharmacist implements IEntity {
         this.gender = gender;
     }
 
-    public String getQualification(){
-        return this.qualification;
-    }
-    public void setqualification(String qualification){
-        this.qualification = qualification;
-    }
-
     public User getUser() {
         return user;
     }
@@ -62,11 +53,11 @@ public class Pharmacist implements IEntity {
 
     @Override
     public String toString() {
-        return String.format("Pharmacist{ID: %s, Name: %s, Age: %s, Gender: %s, QUalification: %s}", id, name, age, gender, qualification);
+        return String.format("Pharmacist{ID: %s, Name: %s, Age: %s, Gender: %s}", id, name, age, gender);
     }
     @Override
     public String toCSV() {
-        return id + "," + name + "," + age + "," + gender + "," + qualification;
+        return id + "," + name + "," + age + "," + gender;
     }
 
 
