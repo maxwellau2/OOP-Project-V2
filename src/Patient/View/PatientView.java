@@ -1,21 +1,19 @@
 package Patient.View;
+import Appointment.Controller.AppointmentController;
 import Appointment.Model.Appointment;
 import AppointmentOutcome.Controller.AppointmentOutcomeController;
-import Doctor.Model.Doctor;
-import Appointment.Controller.AppointmentController;
+import AppointmentOutcome.Model.AppointmentOutcome;
 import Doctor.Controller.DoctorController;
+import Doctor.Model.Doctor;
 import MedicalRecord.Model.MedicalRecord;
 import Patient.Controller.PatientActions;
 import Patient.Model.Patient;
-import Util.TimeRangeMerger;
-import AppointmentOutcome.Model.AppointmentOutcome;
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Scanner;
-
 import static Util.RepositoryGetter.getAppointmentRepository;
 import static Util.SafeScanner.getValidatedIntInput;
 import static Util.TimeRangeMerger.mergeTimeslotsIntoRanges;
+import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Scanner;
 
 public class PatientView {
     Patient patient;
@@ -42,35 +40,16 @@ public class PatientView {
             choice = getValidatedIntInput(scanner, "Enter your choice: ", 0, 8);
 
             switch (choice) {
-                case 1:
-                    viewMedicalRecord();
-                    break;
-                case 2:
-                    updatePersonalInformation();
-                    break;
-                case 3:
-                    viewAvailableAppointmentsSlots();
-                    break;
-                case 4:
-                    scheduleAppointment();
-                    break;
-                case 5:
-                    rescheduleAppointment();
-                    break;
-                case 6:
-                    cancelAppointment();
-                    break;
-                case 7:
-                    viewScheduledAppointments();
-                    break;
-                case 8:
-                    viewPastAppointmentOutcomes();
-                    break;
-                case 0:
-                    System.out.println("Exiting the Patient Menu.");
-                    break;
-                default:
-                    System.out.println("Invalid choice. Please select a valid option.");
+                case 1 -> viewMedicalRecord();
+                case 2 -> updatePersonalInformation();
+                case 3 -> viewAvailableAppointmentsSlots();
+                case 4 -> scheduleAppointment();
+                case 5 -> rescheduleAppointment();
+                case 6 -> cancelAppointment();
+                case 7 -> viewScheduledAppointments();
+                case 8 -> viewPastAppointmentOutcomes();
+                case 0 -> System.out.println("Exiting the Patient Menu.");
+                default -> System.out.println("Invalid choice. Please select a valid option.");
             }
         } while (choice != 0);
 
@@ -113,32 +92,31 @@ public class PatientView {
         scanner.nextLine(); // Consume newline
 
         switch (choice) {
-            case 1:
+            case 1 -> {
                 System.out.print("Enter new email address: ");
                 String newEmail = scanner.nextLine();
                 patient.setEmail(newEmail);
                 System.out.println("Email updated successfully.");
-                break;
-            case 2:
+            }
+            case 2 -> {
                 System.out.print("Enter new contact number: ");
                 String newContactNumber = scanner.nextLine();
                 patient.setPhoneNumber(newContactNumber);
                 System.out.println("Contact number updated successfully.");
-                break;
-            case 3:
+            }
+            case 3 -> {
                 System.out.print("Enter new email address: ");
-                newEmail = scanner.nextLine();
+                String newEmail = scanner.nextLine();
                 patient.setEmail(newEmail);
-
                 System.out.print("Enter new contact number: ");
-                newContactNumber = scanner.nextLine();
+                String newContactNumber = scanner.nextLine();
                 patient.setPhoneNumber(newContactNumber);
-
                 System.out.println("Email and contact number updated successfully.");
-                break;
-            default:
+            }
+            default -> {
                 System.out.println("Invalid choice. Please run the program again.");
                 return patient;
+            }
         }
 
         // Display updated patient information

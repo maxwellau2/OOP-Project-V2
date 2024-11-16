@@ -1,10 +1,17 @@
 package Administrator.View;
 
 import Administrator.Controller.AdminActions;
+import Administrator.Model.Admin;
 import Appointment.Model.Appointment;
+import Doctor.Model.Doctor;
 import Inventory.Model.Inventory;
+import Pharmacist.Model.Pharmacist;
 import Staff.Model.Staff;
+import static Util.RepositoryGetter.getAdminRepository;
+import static Util.RepositoryGetter.getDoctorRepository;
+import static Util.RepositoryGetter.getPharmacistRepository;
 import static Util.SafeScanner.getValidatedIntInput;
+import static Util.SafeScanner.getValidatedStringInput;
 import java.util.List;
 import java.util.Scanner;
 
@@ -64,36 +71,61 @@ public class AdminView {
     // Add new staff member
     public void addStaff() {
         System.out.println("=== Add New Staff ===");
-        System.out.print("Enter Staff ID: ");
-        String id = scanner.nextLine();
-        System.out.print("Enter Name: ");
-        String name = scanner.nextLine();
-        System.out.print("Enter Role: ");
-        String role = scanner.nextLine();
-        System.out.print("Enter Gender: ");
-        String gender = scanner.nextLine();
-        System.out.print("Enter Age: ");
-        int age = scanner.nextInt();
-        scanner.nextLine(); // Consume newline
+        String role = getValidatedStringInput(scanner, "Enter Role: ", List.of("Doctor", "Pharmacist", "Admin"));
+        String name = getValidatedStringInput(scanner, "Enter Name: ", 20);
+        String gender = getValidatedStringInput(scanner, "Enter Gender: ", List.of("Male", "Female"));
+        int age = getValidatedIntInput(scanner, "Enter Age: ", 0,99);
+        // String id = getValidatedStringInput(scanner, "Enter Staff ID: ", 4);
 
-        Staff newStaff = new Staff(id, name, role, gender, age);
-        Staff addedStaff = AdminActions.addStaff(newStaff); 
-        System.out.println("Added staff: " + addedStaff);
-    }
+        switch (role) {
+            case "Doctor" -> {
+                String specialization = getValidatedStringInput(scanner, "Enter Specialization: ", 20);
+                Doctor newDoctor = new Doctor(getDoctorRepository().generateId(), name, age, gender,specialization);
+                Doctor addedDoctor = AdminActions.addDoctor(newDoctor);
+                System.out.println("Added staff role: " + addedDoctor);
+            }
+            case "Pharmacist" -> {
+                Pharmacist newPharmacist = new Pharmacist(getPharmacistRepository().generateId(), name, age, gender);
+                Pharmacist addedPharmacist = AdminActions.addPharmacist(newPharmacist);
+                System.out.println("Added staff role: " + addedPharmacist);
+            }
+            case "Admin" -> {
+                Admin newAdmin = new Admin(getAdminRepository().generateId(), name, gender, age);
+                Admin addedAdmin = AdminActions.addAdmin(newAdmin);
+                System.out.println("Added staff role: " + addedAdmin);
+            }
 
-    // Delete a staff member by ID
-    public void deleteStaff() {
-        System.out.println("=== Delete Staff ===");
-        System.out.print("Enter Staff ID to delete: ");
-        String staffId = scanner.nextLine();
-        Staff staffToDelete = new Staff(staffId, "", "", "", 0);
-        boolean success = AdminActions.deleteStaff(staffToDelete); 
-        if (success) {
-            System.out.println("Staff member with ID " + staffId + " has been deleted.");
-        } else {
-            System.out.println("Staff member with ID " + staffId + " not found.");
         }
     }
+
+    // Delete a staff member based on role and ID
+public void deleteStaff() {
+    System.out.println("=== Delete Staff ===");
+    String role = getValidatedStringInput(scanner, "Enter Role of staff to delete (Doctor, Pharmacist, Admin): ", List.of("Doctor", "Pharmacist", "Admin"));
+    String staffId = getValidatedStringInput(scanner, "Enter Staff ID to delete: ", 10);  // Adjust max length if needed
+
+    boolean success = false;
+
+    switch (role) {
+        case "Doctor" -> {
+            success = AdminActions.deleteDoctor(staffId);
+        }
+        case "Pharmacist" -> {
+            success = AdminActions.deletePharmacist(staffId);
+        }
+        case "Admin" -> {
+            success = AdminActions.deleteAdmin(staffId);
+        }
+        default -> System.out.println("Invalid role provided.");
+    }
+
+    if (success) {
+        System.out.println("Staff member with ID " + staffId + " has been deleted.");
+    } else {
+        System.out.println("Staff member with ID " + staffId + " not found or could not be deleted.");
+    }
+}
+
 
     // View appointments details
     public void viewAppointmentsDetails() {
@@ -107,7 +139,6 @@ public class AdminView {
             }
         }
     }
-
 
     // View and manage medication inventory 
     public void viewAndManageMedicationInventory() {
@@ -123,22 +154,23 @@ public class AdminView {
         // add functionality to update or remove items from inventory
         System.out.println("\n1. Update Stock");
         System.out.println("2. Add New Item");
-        int choice = getValidatedIntInput(scanner, "Choose an option: ", 1, 2);
+        System.out.println("3. Done and Return to Menu");
+
+        int choice = getValidatedIntInput(scanner, "Choose an option: ", 1, 3);
         switch (choice) {
             case 1 -> updateStock();
             case 2 -> addInventoryItem();
+            case 3 -> System.out.println("Returning to the previous menu...");
         }
     }
 
     // Update stock of an inventory item
     public void updateStock() {
         System.out.println("=== Update Stock ===");
-        System.out.print("Enter Medication ID to update: ");
-        String medicationId = scanner.nextLine();
-        System.out.print("Enter New Quantity: ");
+        int medicationId = getValidatedIntInput(scanner, "Enter Medication ID to update: ", 0, Integer.MAX_VALUE);
         int newQuantity = getValidatedIntInput(scanner, "Enter Quantity (valid integer): ", 0, Integer.MAX_VALUE);
 
-        boolean success = AdminActions.updateStock(medicationId, newQuantity);
+        boolean success = AdminActions.updateStock(String.valueOf(medicationId), newQuantity);
         if (success) {
             System.out.println("Stock updated successfully.");
         } else {
@@ -147,56 +179,45 @@ public class AdminView {
     }
 
     // Add new inventory item
-// Add new inventory item or update existing one
-public void addInventoryItem() {
-    System.out.println("=== Add New Inventory Item ===");
+    public void addInventoryItem() {
+        System.out.println("=== Add New Inventory Item ===");
 
-    System.out.print("Enter Medication ID: ");
-    String medicationId = scanner.nextLine();
+        int medicationId = getValidatedIntInput(scanner, "Enter Medication ID: ", 0, Integer.MAX_VALUE);
 
-    Inventory existingItem = AdminActions.getInventoryRepoInstance().getById(medicationId);
+        Inventory existingItem = AdminActions.getInventoryRepoInstance().getById(String.valueOf(medicationId));
 
-    if (existingItem != null) {
-        System.out.println("Item with this ID already exists: " + existingItem);
-        System.out.print("Would you like to update the quantity? (yes/no): ");
-        String response = scanner.nextLine();
+        if (existingItem != null) {
+            System.out.println("Item with this ID already exists: " + existingItem);
+            String response = getValidatedStringInput(scanner, "Would you like to update the quantity? (yes/no): ", List.of("yes", "no"));
 
-        if (response.equalsIgnoreCase("yes")) {
-            System.out.print("Enter New Quantity: ");
-            int newQuantity = scanner.nextInt();
-            scanner.nextLine(); // Consume newline
+            if (response.equalsIgnoreCase("yes")) {
+                int newQuantity = getValidatedIntInput(scanner, "Enter New Quantity: ", 0, Integer.MAX_VALUE);
 
-            existingItem.setQuantity(newQuantity);
-            boolean success = AdminActions.updateStock(medicationId, newQuantity);
-            if (success) {
-                System.out.println("Quantity updated successfully. New details: " + existingItem);
+                existingItem.setQuantity(newQuantity);
+                boolean success = AdminActions.updateStock(String.valueOf(medicationId), newQuantity);
+                if (success) {
+                    System.out.println("Quantity updated successfully. New details: " + existingItem);
+                } else {
+                    System.out.println("Failed to update quantity.");
+                }
             } else {
-                System.out.println("Failed to update quantity.");
+                System.out.println("No changes made to the existing inventory.");
             }
         } else {
-            System.out.println("No changes made to the existing inventory.");
-        }
-    } else {
-        System.out.print("Enter Medication Name: ");
-        String medicationName = scanner.nextLine();
-        System.out.print("Enter Quantity: ");
-        int quantity = scanner.nextInt();
-        System.out.print("Enter Low Stock Alert Level: ");
-        int lowStockAlert = scanner.nextInt();
-        System.out.print("Is Low Stock Alert? (true/false): ");
-        boolean isAvailable = scanner.nextBoolean();
-        scanner.nextLine(); // Consume newline
+            String medicationName = getValidatedStringInput(scanner, "Enter Medication Name: ", 20);
+            int quantity = getValidatedIntInput(scanner, "Enter Quantity: ", 0, Integer.MAX_VALUE);
+            int lowStockAlert = getValidatedIntInput(scanner, "Enter Low Stock Alert Level: ", 0, Integer.MAX_VALUE);
+            boolean isAvailable = getValidatedStringInput(scanner, "Is Low Stock Alert? (true/false): ", List.of("true", "false")).equalsIgnoreCase("true");
 
-        Inventory newItem = new Inventory(medicationId, medicationName, quantity, lowStockAlert, isAvailable);
-        boolean success = AdminActions.addNewInventoryItem(newItem);
-        if (success) {
-            System.out.println("New inventory item added successfully: " + newItem);
-        } else {
-            System.out.println("Failed to add new inventory item.");
+            Inventory newItem = new Inventory(String.valueOf(medicationId), medicationName, quantity, lowStockAlert, isAvailable);
+            boolean success = AdminActions.addNewInventoryItem(newItem);
+            if (success) {
+                System.out.println("New inventory item added successfully: " + newItem);
+            } else {
+                System.out.println("Failed to add new inventory item.");
+            }
         }
     }
-}
-
 
     // Approve replenishment requests
     public void approveReplenishmentRequests() {
@@ -210,16 +231,15 @@ public void addInventoryItem() {
                 if (item.isRestockRequested()) {
                     restockRequestedFound = true;
                     System.out.println("Item: " + item.getMedicationName() + " is requested to restock.");
-                    System.out.print("Approve restock request? (yes/no): ");
-                    String response = scanner.nextLine();
+                    String response = getValidatedStringInput(scanner, "Approve restock request? (yes/no): ", List.of("yes", "no"));
                     if (response.equalsIgnoreCase("yes")) {
-                        int restockQuantity = scanner.nextInt();
-                        AdminActions.updateStock(item.getId(), restockQuantity);  // Static method call corrected
+                        int restockQuantity = getValidatedIntInput(scanner, "Enter restock quantity: ", 0, Integer.MAX_VALUE);
+                        AdminActions.updateStock(item.getId(), restockQuantity);  
                         System.out.println("Restock request approved for: " + item.getMedicationName());
                     }
                 }
             }
-            if(!restockRequestedFound){
+            if (!restockRequestedFound) {
                 System.out.println("No items have been requested for a restock.");
             }
         }
