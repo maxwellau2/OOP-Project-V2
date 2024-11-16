@@ -30,7 +30,7 @@ public class InventoryController {
     }
 
     public static Inventory updateInventoryStockRequest(Inventory inventory) {
-        inventory.setRestockRequested("Requested");
+        inventory.setRestockRequested("pending");
         return getInventoryRepoInstance().update(inventory);
     }
 

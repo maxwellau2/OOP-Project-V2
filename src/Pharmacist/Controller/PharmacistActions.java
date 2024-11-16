@@ -39,7 +39,7 @@ public class PharmacistActions {
             }
         }
     }
-    public static void updatePrescriptionStatusById(String prescriptionId, String newStatus) {
+    public static boolean updatePrescriptionStatusById(String prescriptionId, String newStatus) {
         PrescriptionRepository prescriptionRepo = getPrescriptionRepository();
         Prescription prescription = prescriptionRepo.read(prescriptionId);
         if (prescription != null) {
@@ -48,7 +48,19 @@ public class PharmacistActions {
             System.out.println("Prescription status updated to: " + newStatus); //pending or dispensed
         } else {
             System.out.println("Prescription with ID " + prescriptionId + " not found.");
+            return false;
         }
+        if (!newStatus.equalsIgnoreCase("dispensed"))
+            return true;
+        // update the inventory
+        // parse the dosage as integer, remove all characters
+        String numericPart = prescription.getDosage().replaceAll("[^0-9]", "");
+        int num = 0;
+        if (!numericPart.isEmpty()){
+            num = Integer.parseInt(numericPart);
+        }
+        getInventoryRepoInstance().decreaseQuantity(prescription.getMedicationName(), num);
+        return true;
     }
     public static List<Inventory> getInventory(){
         InventoryRepository inventoryRepo = InventoryRepository.getInstance("src/Data/Medicine_List.csv");

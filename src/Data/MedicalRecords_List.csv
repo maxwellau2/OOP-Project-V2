@@ -1,12 +1,5 @@
 recordId,patientId,doctorId,diagnosis,treatment,date
 M001,P001,D001,Flu,Rest and hydration,2024-11-01T10:00:00
 M002,P002,D002,Cold,Over-the-counter medication,2024-11-02T11:30:00
-M003,P003,D003,Allergy,Antihistamines,2024-11-03T09:00:00
-M004,P004,D004,Diabetes,Insulin therapy,2024-11-04T14:30:00
-M005,P005,D001,Hypertension,Lifestyle changes and medication,2024-11-05T15:45:00
-M006,P006,D002,Asthma,Inhalers and medication,2024-11-06T08:15:00
-M007,P007,D003,Bronchitis,Bronchodilators,2024-11-07T13:20:00
-M008,P008,D004,Back Pain,Physical therapy and pain relievers,2024-11-08T16:50:00
-M009,P009,D001,Anemia,Iron supplements,2024-11-09T10:30:00
-M010,P010,D002,Migraine,Pain relief medication,2024-11-10T17:15:00
-M011,P001,D001,Covid19,Rest and MC,2024-11-13T17:40:21.7249816
+M009,P002,D001,Anemia,Iron supplements,2024-11-09T10:30:00
+M010,P001,D002,Migraine,Pain relief medication,2024-11-10T17:15:00

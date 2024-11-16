@@ -4,8 +4,8 @@ import Appointment.Controller.AppointmentController;
 import AppointmentOutcome.Model.AppointmentOutcome;
 import Inventory.Controller.InventoryController;
 import Inventory.Model.Inventory;
-import Pharmacist.Controller.PharmacistActions;
 import Prescription.Controller.PrescriptionActions;
+import Prescription.Model.Prescription;
 
 import java.util.List;
 import java.util.Scanner;
@@ -63,14 +63,55 @@ public class PharmacistView {
 
     // Update prescription
     public void updatePrescriptionStatus() {
-        String prescriptionId = getValidatedStringInput(scanner, "Enter the prescription ID to update: ", 10);
-        if (PrescriptionActions.getPrescriptionById(prescriptionId) == null){
-            System.out.println("Prescription does not exist.");
+        System.out.println("=== Update Prescription Status ===");
+
+        // Get all prescriptions
+        List<Prescription> prescriptions = PrescriptionActions.getAllPrescriptions();
+
+        // Check if there are any prescriptions
+        if (prescriptions.isEmpty()) {
+            System.out.println("No prescriptions available to update.");
             return;
         }
-        String newStatus = getValidatedStringInput(scanner, "Enter the new status (e.g., pending, dispensed): ", List.of("pending", "dispensed"));
-        PharmacistActions.updatePrescriptionStatusById(prescriptionId, newStatus);
+
+        // Display all prescriptions with index
+        System.out.println("Available Prescriptions:");
+        for (int i = 0; i < prescriptions.size(); i++) {
+            System.out.println((i + 1) + ". " + prescriptions.get(i).toString()); // Assumes `toString` is informative
+        }
+
+        // Ask for a valid index
+        int index = getValidatedIntInput(scanner,
+                "Enter the index of the prescription to update: ",
+                1,
+                prescriptions.size());
+
+        // Get the selected prescription
+        Prescription selectedPrescription = prescriptions.get(index - 1);
+
+        // Ask for a new status
+        String newStatus = getValidatedStringInput(scanner,
+                "Enter the new status (e.g., pending, dispensed): ",
+                List.of("pending", "dispensed"));
+
+        // Update the prescription status
+        Prescription updatedPrescription;
+        selectedPrescription.setStatus(newStatus);
+        if (newStatus.equalsIgnoreCase("dispensed")){
+            updatedPrescription = PrescriptionActions.dispensePrescription(selectedPrescription);
+        }
+        else{
+            updatedPrescription = PrescriptionActions.updatePrescription(selectedPrescription);
+        }
+
+        if (updatedPrescription != null) {
+            System.out.println("Prescription status updated successfully.");
+            updatedPrescription.prettyPrint(); // Assumes a `prettyPrint` method exists
+        } else {
+            System.out.println("Failed to update prescription status. Please try again.");
+        }
     }
+
 
     // View medication inventory
     public void viewMedicationInventory() {
@@ -86,7 +127,7 @@ public class PharmacistView {
 
     // Submit a restock request 
     public void submitRestockRequest() {
-        List<Inventory> inventoryList = InventoryController.getLowStockInventoryPending();
+        List<Inventory> inventoryList = InventoryController.getAllInventory();
         if (inventoryList.isEmpty()) {
             System.out.println("No medications need restock request.");
             return;

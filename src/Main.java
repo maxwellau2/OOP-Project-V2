@@ -37,20 +37,20 @@ public class Main {
             System.out.println("You are blacklisted. Good bye!");
         }
 
-        System.out.println(user);
+//        System.out.println(user);
 
-        // look at last login, if last login is null, prompt to change password
-//        if (user.getLastLogin() == null){
-//            // user never login in before
-//            String newPassword = getStrongPassword(new Scanner(System.in), "You never logged in before, Please change your password: ");
-////            String newPassword = getStrongPasswordHidden("You never logged in before, Please change your password: ");
-//            user = UserController.updatePassword(user,newPassword);
-//            if (user == null){
-//                System.out.println("Something went wrong, please try again.");
-//                return;
-//            }
-//        }
-//        user = UserController.updateLastLoginToNow(user);
+//         look at last login, if last login is null, prompt to change password
+        if (user.getLastLogin() == null){
+            // user never login in before
+            String newPassword = getStrongPassword(new Scanner(System.in), "You never logged in before, Please change your password: ");
+//            String newPassword = getStrongPasswordHidden("You never logged in before, Please change your password: ");
+            user = UserController.updatePassword(user,newPassword);
+            if (user == null){
+                System.out.println("Something went wrong, please try again.");
+                return;
+            }
+        }
+        user = UserController.updateLastLoginToNow(user);
         // Look at role
         UserRole role = UserRole.fromString(user.getRole());
         switch (role) {

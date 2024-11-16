@@ -1,6 +1,7 @@
 id,medicationName,quantity,lowStockAlert,restockRequested
-1,viagra,100,10,approved
-2,Ibuprofen,2,10,pending
-3,Amoxicillin,1000,100,Approved
-4,Plan-B,75,15,approved
-005,Doxicylin,1000,10,approved
+MED001,Viagra,94,10,approved
+MED002,Ibuprofen,2,10,pending
+MED003,Amoxicillin,1000,100,approved
+MED004,Plan-B,75,15,approved
+MED005,Doxycycline,1000,10,approved
+MED006,Xanax,1000,10,pending

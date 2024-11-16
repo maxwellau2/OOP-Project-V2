@@ -240,12 +240,12 @@ public class PatientView {
 
         // Step 2: Choose an appointment to reschedule
         System.out.print("Select the appointment number to reschedule: ");
-        int appointmentIndex = getValidatedIntInput(scanner,"Select the appointment number to reschedule: (0 to quit) ",0, appointments.size()) - 1;
+        int appointmentIndex = getValidatedIntInput(scanner,"Select the appointment number to reschedule: (0 to quit) ",0, appointments.size());
 
         if (appointmentIndex == 0){
             return;
         }
-
+        appointmentIndex --;
         Appointment selectedAppointment = appointments.get(appointmentIndex);
 
         // Step 3: Display available timeslots for the next 3 days for the selected doctor

@@ -5,13 +5,25 @@ import Prescription.Repository.PrescriptionRepository;
 
 import java.util.List;
 
-import static Util.RepositoryGetter.getPrescriptionRepository;
-import static Util.RepositoryGetter.initPrescriptionRepository;
+import static Util.RepositoryGetter.*;
 
 public class PrescriptionActions {
 
     public static Prescription createNewPrescription(String doctorId, String patientId, String medicationName, String dosage, String status){
         return new Prescription(getPrescriptionRepository().generateId(), doctorId, patientId, medicationName, dosage, status);
+    }
+
+    public static Prescription updatePrescription(Prescription prescription){
+        return getPrescriptionRepository().update(prescription);
+    }
+
+    public static Prescription dispensePrescription(Prescription prescription){
+        // look up the inventory list
+        String numericDosage = prescription.getDosage().replaceAll("[^0-9]", "");
+        int numeric = 0;
+        if (!numericDosage.isEmpty()) numeric = Integer.parseInt(numericDosage);
+        getInventoryRepoInstance().decreaseQuantity(prescription.getMedicationName(),numeric);
+        return updatePrescription(prescription);
     }
 
     public static Prescription getPrescriptionById(String id){

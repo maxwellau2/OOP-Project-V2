@@ -40,6 +40,17 @@ public class InventoryRepository extends Repository<Inventory> {
         update(item);
     }
 
+    public boolean decreaseQuantity(String medicationName, int quantity) {
+        Inventory item = getItemByName(medicationName);
+        if (item != null) {
+            item.setQuantity(item.getQuantity()-quantity);
+            update(item);
+            store();
+            return true;
+        }
+        return false;
+    }
+
     @Override
     protected Inventory fromCSV(String csvLine) {
         String[] values = csvLine.split(",");

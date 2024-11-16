@@ -42,7 +42,7 @@ public class SafeScanner {
 
         while (!valid) {
             System.out.print(prompt);
-            input = scanner.nextLine().trim(); // Get the line and trim spaces
+            if (input.isEmpty())  input = scanner.nextLine().trim(); // Get the line and trim spaces
 
             if (input.isEmpty()) {
                 System.out.println("Invalid input. Please enter a non-empty string.");

@@ -1,5 +1,5 @@
 prescriptionId,doctorId,patientId,medicationName,dosage,status,appointmentId
-1,D001,POO1,ibuprofen,3,dispensed,A005
-123,D002,P001,xanax,3mg,dispensed,A006
-123,D002,P001,xanax,3mg,pending,A007
-124,D001,P009,viagra,3mg,pending,A009
+1,D001,POO1,Ibuprofen,3,dispensed,A005
+123,D002,P001,Xanax,3,pending,A006
+124,D001,P009,Viagra,3,dispensed,A009
+125,D002,P001,Xanax,100,pending,001
