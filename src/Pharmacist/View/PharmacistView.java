@@ -1,21 +1,17 @@
 package Pharmacist.View;
 
 import Appointment.Controller.AppointmentController;
-import Appointment.Model.Appointment;
 import AppointmentOutcome.Model.AppointmentOutcome;
 import Inventory.Model.Inventory;
 import Pharmacist.Controller.PharmacistActions;
+import Prescription.Controller.PrescriptionActions;
 import static Util.SafeScanner.getValidatedIntInput;
 import static Util.SafeScanner.getValidatedStringInput;
-
 import java.util.List;
 import java.util.Scanner;
 
-import Prescription.Controller.PrescriptionActions;
-
 public class PharmacistView {
     private Scanner scanner = new Scanner(System.in);
-    private PharmacistActions pharmacistActions = new PharmacistActions();
 
     public void displayMenu() {
         int choice;
@@ -31,23 +27,12 @@ public class PharmacistView {
             choice = getValidatedIntInput(scanner, "Enter your choice: ", 0, 4);
 
             switch (choice) {
-                case 1:
-                    viewPrescriptionDetails();
-                    break;
-                case 2:
-                    updatePrescriptionStatus();
-                    break;
-                case 3:
-                    viewMedicationInventory();
-                    break;
-                case 4:
-                    submitRestockRequest();
-                    break;
-                case 0:
-                    System.out.println("Exiting the Pharmacist Menu.");
-                    break;
-                default:
-                    System.out.println("Invalid choice. Please select a valid option.");
+                case 1 -> viewPrescriptionDetails();
+                case 2 -> updatePrescriptionStatus();
+                case 3 -> viewMedicationInventory();
+                case 4 -> submitRestockRequest();
+                case 0 -> System.out.println("Exiting the Pharmacist Menu.");
+                default -> System.out.println("Invalid choice. Please select a valid option.");
             }
         } while (choice != 0);
 
@@ -89,6 +74,6 @@ public class PharmacistView {
     public void submitRestockRequest() {
         System.out.print("Enter the medication name to check and request restock: ");
         String medicationName = scanner.nextLine();
-        pharmacistActions.requestRestock(medicationName);
+        PharmacistActions.requestRestock(medicationName);
     }
 }

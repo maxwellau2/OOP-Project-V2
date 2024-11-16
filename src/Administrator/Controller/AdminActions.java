@@ -54,21 +54,36 @@ public class AdminActions{
     }
     public static boolean deleteStaff(Staff staff) {
         StaffRepository repo = getStaffRepoInstance();
-        if (repo.delete(staff) == null){
-            return false;
-        }
-        return true;
+        return repo.delete(staff) != null;
     }
     public static List<Appointment> getAllAppointments() {
         return getAppointmentRepoInstance().getAll();
     }
-    public static boolean updateStock(Inventory item){
+    public static boolean updateStock(String medicationId, int newQuantity) {
         InventoryRepository repo = getInventoryRepoInstance();
-        if (repo.update(item) == null){
+
+        Inventory existingItem = repo.getById(medicationId);
+
+        if (existingItem != null) {
+            existingItem.setQuantity(newQuantity);
+            repo.update(existingItem);
+            return true;
+        } else {
+            System.out.println("No inventory item found with ID: " + medicationId);
             return false;
         }
+    }
+
+    public static boolean addNewInventoryItem(Inventory newItem) {
+        InventoryRepository repo = getInventoryRepoInstance();
+        if (repo.getById(newItem.getId()) != null) {
+            System.out.println("An item with this ID already exists. Cannot add a duplicate.");
+            return false;
+        }
+        repo.create(newItem);
         return true;
     }
+    
     public static Admin createAdminFromUser(User user) {
         // Create an Admin from the User
         Admin admin = getAdminRepository().read(user.getId());

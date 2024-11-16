@@ -20,6 +20,13 @@ public class InventoryRepository extends Repository<Inventory> {
         }
         return instance;
     }
+    // Get inventory item by its ID
+    public Inventory getById(String id) {
+        return entities.stream()
+                .filter(item -> item.getId().equals(id))
+                .findFirst()
+                .orElse(null);
+    }
 
     public Inventory getItemByName(String medicationName) {
         return entities.stream()

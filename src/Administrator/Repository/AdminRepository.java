@@ -29,8 +29,7 @@ public class AdminRepository extends Repository<Admin> {
         String name = values[1];
         String gender = values[2];
         int age = Integer.parseInt(values[3]);
-        String phoneNumber = values[4];
-        return new Admin(id, name, gender, age, phoneNumber);
+        return new Admin(id, name, gender, age);
     }
 
     @Override
