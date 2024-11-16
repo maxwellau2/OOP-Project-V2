@@ -1,4 +1,4 @@
-import Administrator.Controller.AdminActions;
+import Administrator.Controller.AdminController;
 import Administrator.Model.Admin;
 import Administrator.View.AdminView;
 import Doctor.Controller.DoctorController;
@@ -7,7 +7,7 @@ import Doctor.View.DoctorView;
 import Patient.Controller.PatientController;
 import Patient.Model.Patient;
 import Patient.View.PatientView;
-import Pharmacist.Controller.PharmacistActions;
+import Pharmacist.Controller.PharmacistController;
 import Pharmacist.Model.Pharmacist;
 import Pharmacist.View.PharmacistView;
 import User.Model.User;
@@ -18,6 +18,11 @@ import java.util.Scanner;
 
 import static Util.SafeScanner.*;
 
+
+/**
+ * Main class for the hospital management system.
+ * It handles user authentication, role-based redirection, and initializes the respective views.
+ */
 public class Main {
     public static void main(String[] args) {
         // Part 1: Get credentials
@@ -62,6 +67,11 @@ public class Main {
         }
     }
 
+    /**
+     * Handles redirection for users with the Patient role.
+     *
+     * @param user the logged-in user
+     */
     private static void handlePatientRole(User user) {
         Patient patient = PatientController.createPatientFromUser(user);
         if (patient != null) {
@@ -73,6 +83,11 @@ public class Main {
         }
     }
 
+    /**
+     * Handles redirection for users with the Doctor role.
+     *
+     * @param user the logged-in user
+     */
     private static void handleDoctorRole(User user) {
         Doctor doctor = DoctorController.createDoctorFromUser(user);
         if (doctor != null) {
@@ -84,8 +99,13 @@ public class Main {
         }
     }
 
+    /**
+     * Handles redirection for users with the Administrator role.
+     *
+     * @param user the logged-in user
+     */
     private static void handleAdminRole(User user) {
-        Admin admin = AdminActions.createAdminFromUser(user);
+        Admin admin = AdminController.createAdminFromUser(user);
         if (admin != null) {
             System.out.println("Welcome Administrator.");
             AdminView adminView = new AdminView(admin);
@@ -95,8 +115,14 @@ public class Main {
         }
     }
 
+
+    /**
+     * Handles redirection for users with the Pharmacist role.
+     *
+     * @param user the logged-in user
+     */
     private static void handlePharmacistRole(User user) {
-        Pharmacist pharmacist = PharmacistActions.createPharmacistFromUser(user);
+        Pharmacist pharmacist = PharmacistController.createPharmacistFromUser(user);
         if (pharmacist != null) {
             System.out.println("Welcome " + pharmacist.getName());
             PharmacistView pharmacistView = new PharmacistView();

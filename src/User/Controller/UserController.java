@@ -6,22 +6,46 @@ import User.Repository.UserRepository;
 import java.time.LocalDateTime;
 
 import static Util.PasswordUtils.hashPassword;
+import static Util.RepositoryGetter.getUserRepository;
 
+
+/**
+ * Controller for managing user-related operations.
+ * Provides methods for creating, updating, deleting, and authenticating users.
+ */
 public class UserController {
 
-    public static UserRepository getUserRepository(){
-        return UserRepository.getInstance("src/Data/User_List.csv");
-
-    }
-
+    /**
+     * Deletes a user by their hospital ID.
+     *
+     * @param id The hospital ID of the user to be deleted.
+     * @return {@code true} if the user was successfully deleted, otherwise {@code false}.
+     */
     public static boolean deleteUser(String id){
         return getUserRepository().deleteById(id);
     }
 
+
+    /**
+     * Creates a new user with the specified hospital ID and role.
+     * The default password for the new user is "password".
+     *
+     * @param hospitalId The hospital ID for the new user.
+     * @param role       The role of the new user.
+     * @return The newly created {@link User} object.
+     */
     public static User createNewUser(String hospitalId, String role){
         return getUserRepository().create(new User(hospitalId,hashPassword("password"),role));
     }
 
+
+    /**
+     * Authenticates a user based on their hospital ID and password.
+     *
+     * @param hospitalId The hospital ID of the user attempting to log in.
+     * @param password   The password provided by the user.
+     * @return The {@link User} object if authentication is successful, otherwise {@code null}.
+     */
     public static User login(String hospitalId, String password){
         UserRepository repo = getUserRepository();
         User foundUser = repo.read(hospitalId);
@@ -47,6 +71,15 @@ public class UserController {
         return foundUser;
     }
 
+
+    /**
+     * Updates the password of the specified user.
+     *
+     * @param user     The user whose password is to be updated.
+     * @param password The new password.
+     * @return The updated {@link User} object, or {@code null} if the user was not found.
+     */
+
     public static User updatePassword(User user, String password){
         //UserRepository repo = getUserRepository();
         if (user == null) {
@@ -59,6 +92,13 @@ public class UserController {
         return user;
     }
 
+
+    /**
+     * Updates the last login time of the specified user to the current time.
+     *
+     * @param user The user whose last login time is to be updated.
+     * @return The updated {@link User} object.
+     */
     public static User updateLastLoginToNow(User user){
         user.setLastLogin(LocalDateTime.now());
         UserRepository repo = getUserRepository();
@@ -66,12 +106,4 @@ public class UserController {
         return res;
     }
 
-    public void viewProfile(User user){
-        System.out.println("====User Profile===");
-        System.out.println(user);
-    }
-
-    public static boolean deleteUseById(String id){
-        return getUserRepository().deleteById(id);
-    }
 }

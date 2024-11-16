@@ -3,8 +3,19 @@ package Util;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
+/**
+ * Utility class for password hashing using the SHA-256 algorithm.
+ * Provides a secure way to hash passwords for storage and verification.
+ */
 public class PasswordUtils {
 
+    /**
+     * Hashes a password using the SHA-256 algorithm.
+     *
+     * @param password The password to be hashed.
+     * @return The hashed password as a hexadecimal string.
+     * @throws RuntimeException If the SHA-256 algorithm is not available.
+     */
     public static String hashPassword(String password) {
         try {
             // more info found here: https://www.baeldung.com/sha-256-hashing-java

@@ -25,14 +25,29 @@ import java.util.Scanner;
 import static Util.SafeScanner.getValidatedIntInput;
 import static Util.SafeScanner.getValidatedStringInput;
 
+
+/**
+ * DoctorView class provides the user interface and menu for doctor operations.
+ * Allows doctors to view and manage appointments, medical records, availability, and outcomes.
+ */
 public class DoctorView {
     private Doctor doctor;
     private Scanner scanner = new Scanner(System.in);
 
+    /**
+     * Constructor for DoctorView.
+     *
+     * @param doctor The Doctor entity representing the logged-in doctor.
+     */
     public DoctorView(Doctor doctor) {
         this.doctor = doctor;
     }
 
+
+    /**
+     * Displays the main menu for the doctor.
+     * Allows navigation to various operations.
+     */
     public void displayMenu() {
         int choice;
 
@@ -84,6 +99,10 @@ public class DoctorView {
     }
 
     // Test case 9
+    /**
+     * Displays all medical records assigned to the logged-in doctor.
+     * Retrieves records using DoctorController.
+     */
     public void viewPatientMedicalRecords() {
         System.out.println("=== View Patient Medical Records ===");
         List<MedicalRecord> records = DoctorController.viewPatientRecord(doctor);
@@ -97,6 +116,10 @@ public class DoctorView {
     }
 
     // Test case 10
+    /**
+     * Allows the doctor to update medical records for a specific patient.
+     * Includes diagnosis and treatment plan updates.
+     */
     public void updatePatientMedicalRecords() {
         System.out.println("=== Update Patient Medical Records ===");
 
@@ -121,6 +144,10 @@ public class DoctorView {
     }
 
     // Test case 11
+    /**
+     * Displays the doctor's schedule for the next three days.
+     * Includes confirmed appointments and pending requests.
+     */
     public void viewPersonalSchedule() {
         System.out.println("=== View Personal Schedule ===");
         List<Appointment> appointments = AppointmentController.getAppointmentByDoctor(doctor.getId(), LocalDateTime.now().toLocalDate().atStartOfDay(), 3);
@@ -130,6 +157,10 @@ public class DoctorView {
     }
 
     // Test case 12
+    /**
+     * Manages the doctor's availability for appointments.
+     * Includes options to add or remove leave.
+     */
     public void setAppointmentAvailability() {
         System.out.println("=== Set Availability for Appointments ===");
 
@@ -149,6 +180,10 @@ public class DoctorView {
         }
     }
 
+    /**
+     * Adds a new leave for the doctor.
+     * Prompts the doctor to enter leave details such as start and end times.
+     */
     private void addLeave() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 
@@ -185,6 +220,10 @@ public class DoctorView {
         }
     }
 
+    /**
+     * Removes an existing leave for the doctor.
+     * Displays a list of leaves and allows selection by index.
+     */
     private void removeLeave() {
         System.out.println("Existing leaves:");
         List<Leave> leaves = LeavesController.getStaffLeave(doctor.getId());
@@ -209,6 +248,10 @@ public class DoctorView {
     }
 
     // Test case 13
+    /**
+     * Handles pending appointment requests for the doctor.
+     * Allows the doctor to accept or decline requests.
+     */
     public void handleAppointmentRequests() {
         System.out.println("=== Accept or Decline Appointment Requests ===");
 
@@ -239,6 +282,10 @@ public class DoctorView {
     }
 
     // Test case 14
+    /**
+     * Displays the doctor's upcoming appointments.
+     * Includes confirmed appointments within the next three days.
+     */
     public void viewUpcomingAppointments() {
         System.out.println("=== View Upcoming Appointments ===");
         List<Appointment> appointments = AppointmentController.getAppointmentByDoctor(doctor.getId(), LocalDateTime.now().withHour(0), 3);
@@ -252,6 +299,10 @@ public class DoctorView {
     }
 
     // Test case 15
+    /**
+     * Records the outcome of a confirmed appointment.
+     * Includes consultation notes, services provided, and optional prescription.
+     */
     public void recordAppointmentOutcome() {
         System.out.print("=== Record Appointment Outcome ===\n");
 

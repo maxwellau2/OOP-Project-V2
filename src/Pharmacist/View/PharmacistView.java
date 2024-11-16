@@ -1,6 +1,6 @@
 package Pharmacist.View;
 
-import Appointment.Controller.AppointmentController;
+import AppointmentOutcome.Controller.AppointmentOutcomeController;
 import AppointmentOutcome.Model.AppointmentOutcome;
 import Inventory.Controller.InventoryController;
 import Inventory.Model.Inventory;
@@ -13,9 +13,20 @@ import java.util.Scanner;
 import static Util.SafeScanner.getValidatedIntInput;
 import static Util.SafeScanner.getValidatedStringInput;
 
+
+/**
+ * The PharmacistView class provides a user interface for pharmacists
+ * to interact with the system. It includes options for viewing appointment
+ * outcomes, updating prescription statuses, managing medication inventory,
+ * and submitting restock requests.
+ */
 public class PharmacistView {
     private Scanner scanner = new Scanner(System.in);
 
+
+    /**
+     * Displays the main menu for the pharmacist.
+     */
     public void displayMenu() {
         int choice;
 
@@ -54,8 +65,11 @@ public class PharmacistView {
     }
 
     // View prescription details by patientId
+    /**
+     * Displays appointment outcome records that are yet to be dispensed.
+     */
     public void viewAppointmentOutcomeRecord() {
-        List<AppointmentOutcome> appointments = AppointmentController.getAppointmentOutcomeNotDispensed();
+        List<AppointmentOutcome> appointments = AppointmentOutcomeController.getAppointmentOutcomeNotDispensed();
         if (appointments.isEmpty()){
             System.out.println("No appointment outcome record found.");
             return;
@@ -66,6 +80,9 @@ public class PharmacistView {
     }
 
     // Update prescription
+    /**
+     * Allows the pharmacist to update the status of a prescription.
+     */
     public void updatePrescriptionStatus() {
         System.out.println("=== Update Prescription Status ===");
 
@@ -123,6 +140,9 @@ public class PharmacistView {
 
 
     // View medication inventory
+    /**
+     * Displays all medications in the inventory.
+     */
     public void viewMedicationInventory() {
         List<Inventory> inventoryList = InventoryController.getAllInventory();
         if (inventoryList.isEmpty()) {
@@ -134,7 +154,10 @@ public class PharmacistView {
         }
     }
 
-    // Submit a restock request 
+    // Submit a restock request
+    /**
+     * Allows the pharmacist to submit a restock request for a medication.
+     */
     public void submitRestockRequest() {
         List<Inventory> inventoryList = InventoryController.getAllInventory();
         if (inventoryList.isEmpty()) {

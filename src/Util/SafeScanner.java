@@ -4,8 +4,22 @@ import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Scanner;
 
+
+/**
+ * Utility class for safe and validated input handling from the console.
+ * Provides methods to ensure robust input validation for integers, strings, and passwords.
+ */
 public class SafeScanner {
 
+    /**
+     * Prompts the user for an integer input within a specified range.
+     *
+     * @param scanner Scanner instance to read input.
+     * @param prompt  The message to prompt the user.
+     * @param min     The minimum allowed value.
+     * @param max     The maximum allowed value.
+     * @return A validated integer input within the range.
+     */
     public static int getValidatedIntInput(Scanner scanner, String prompt, int min, int max) {
         int input = -1;
         boolean valid = false;
@@ -35,6 +49,15 @@ public class SafeScanner {
         return input;
     }
 
+
+    /**
+     * Prompts the user for a string input with validation for length and illegal characters.
+     *
+     * @param scanner   Scanner instance to read input.
+     * @param prompt    The message to prompt the user.
+     * @param maxLength The maximum allowed length of the string.
+     * @return A validated string input.
+     */
     public static String getValidatedStringInput(Scanner scanner, String prompt, int maxLength) {
         String input = "";
         boolean valid = false;
@@ -57,6 +80,15 @@ public class SafeScanner {
         return input;
     }
 
+
+    /**
+     * Prompts the user for a string input from a predefined list of valid options.
+     *
+     * @param scanner     Scanner instance to read input.
+     * @param prompt      The message to prompt the user.
+     * @param validInputs A list of valid string inputs.
+     * @return A validated string input matching one of the valid options.
+     */
     public static String getValidatedStringInput(Scanner scanner, String prompt, List<String> validInputs) {
         String input = "";
         boolean valid = false;
@@ -79,6 +111,14 @@ public class SafeScanner {
         return input;
     }
 
+
+    /**
+     * Prompts the user to input a strong password.
+     *
+     * @param scanner Scanner instance to read input.
+     * @param prompt  The message to prompt the user.
+     * @return A validated strong password.
+     */
     public static String getStrongPassword(Scanner scanner, String prompt) {
         String password = "";
         boolean valid = false;
@@ -94,6 +134,13 @@ public class SafeScanner {
         return password;
     }
 
+
+    /**
+     * Validates the password against strength criteria.
+     *
+     * @param password The password to validate.
+     * @return True if the password meets all strength criteria; otherwise, false.
+     */
     private static boolean validatePassword(String password) {
         if (password.length() < 8) {
             System.out.println("Password must be at least 8 characters long.");
@@ -114,6 +161,13 @@ public class SafeScanner {
         return true;
     }
 
+
+    /**
+     * Reads a password input from the console, masking the input.
+     *
+     * @param scanner Scanner instance to read input.
+     * @return The entered password as a string.
+     */
     public static String readPasswordMasked(Scanner scanner) {
         StringBuilder password = new StringBuilder();
         try {
@@ -135,6 +189,14 @@ public class SafeScanner {
         return password.toString().trim();
     }
 
+
+    /**
+     * Reads a password input from the console with a prompt, masking the input.
+     *
+     * @param scanner Scanner instance to read input.
+     * @param prompt  The message to prompt the user.
+     * @return The entered password as a string.
+     */
     public static String readPasswordMasked(Scanner scanner, String prompt) {
         System.out.print(prompt);
 

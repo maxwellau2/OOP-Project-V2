@@ -13,12 +13,29 @@ import java.util.List;
 import static Util.RepositoryGetter.*;
 
 
-public class PharmacistActions {
+/**
+ * Controller class for managing actions related to {@link Pharmacist}.
+ * Provides methods for interacting with pharmacist, prescription, and inventory repositories.
+ */
+public class PharmacistController {
+
+    /**
+     * Retrieves the singleton instance of the {@link PharmacistRepository}.
+     *
+     * @return The {@link PharmacistRepository} instance.
+     */
     public PharmacistRepository getPharmacistrRepository() {
         return PharmacistRepository.getInstance("src/Data/Pharmacist_List.csv");
     }
 
-        public static Pharmacist createPharmacistFromUser(User user) {
+
+    /**
+     * Creates a {@link Pharmacist} from a given {@link User}.
+     *
+     * @param user The user object containing pharmacist details.
+     * @return A {@link Pharmacist} object or null if not found.
+     */
+    public static Pharmacist createPharmacistFromUser(User user) {
         Pharmacist pharmacist = getPharmacistRepository().read(user.getId());
         if (pharmacist == null) {
             System.out.println("Pharmacist not found");
@@ -28,6 +45,12 @@ public class PharmacistActions {
         return pharmacist;
     }
 
+
+    /**
+     * Displays the details of prescriptions for a given patient ID.
+     *
+     * @param patientId The ID of the patient.
+     */
     public static void viewPrescriptionDetails(String patientId) {
         PrescriptionRepository prescriptionRepo = PrescriptionRepository.getInstance("src/Data/Prescription_List.csv");
         List<Prescription> prescriptions = prescriptionRepo.getByPatientId(patientId);
@@ -39,6 +62,14 @@ public class PharmacistActions {
             }
         }
     }
+
+    /**
+     * Updates the status of a prescription by its ID.
+     *
+     * @param prescriptionId The ID of the prescription to update.
+     * @param newStatus      The new status to set (e.g., pending, dispensed).
+     * @return True if the update was successful, false otherwise.
+     */
     public static boolean updatePrescriptionStatusById(String prescriptionId, String newStatus) {
         PrescriptionRepository prescriptionRepo = getPrescriptionRepository();
         Prescription prescription = prescriptionRepo.read(prescriptionId);
@@ -62,11 +93,22 @@ public class PharmacistActions {
         getInventoryRepoInstance().decreaseQuantity(prescription.getMedicationName(), num);
         return true;
     }
+
+    /**
+     * Retrieves all inventory items.
+     *
+     * @return A list of {@link Inventory} objects.
+     */
     public static List<Inventory> getInventory(){
         InventoryRepository inventoryRepo = InventoryRepository.getInstance("src/Data/Medicine_List.csv");
         return inventoryRepo.getAll();
     }
 
+    /**
+     * Requests a restock for a specified medication if its quantity is below the low stock alert.
+     *
+     * @param medicationName The name of the medication.
+     */
     public static void requestRestock(String medicationName) {
         InventoryRepository inventoryRepo = getInventoryRepoInstance();
         Inventory item = inventoryRepo.getItemByName(medicationName);
@@ -79,6 +121,12 @@ public class PharmacistActions {
         }
     }
 
+    /**
+     * Deletes a pharmacist by their ID.
+     *
+     * @param id The ID of the pharmacist to delete.
+     * @return True if the pharmacist was successfully deleted, false otherwise.
+     */
     public static boolean deletePharmacistById(String id){
         return getPharmacistRepository().deleteById(id);
     }
