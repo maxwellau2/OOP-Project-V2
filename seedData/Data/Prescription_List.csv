@@ -1,0 +1,3 @@
+prescriptionId,doctorId,patientId,medicationName,dosage,status,appointmentId
+PRE001,D001,POO1,Xanax,3,dispensed,APP001
+PRE002,D002,P001,Plan-B,3,dispensed,APP002

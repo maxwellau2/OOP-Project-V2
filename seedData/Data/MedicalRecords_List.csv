@@ -1,0 +1,6 @@
+recordId,patientId,doctorId,diagnosis,treatment,date
+M001,P001,D001,Flu,Rest and hydration,2024-11-01T10:00:00
+M002,P002,D002,Cold,Over-the-counter medication,2024-11-02T11:30:00
+M009,P002,D001,Anemia,Iron supplements,2024-11-09T10:30:00
+M010,P001,D002,Migraine,Pain relief medication,2024-11-10T17:15:00
+M011,P001,D002,Eye Cancer,Chemo Therapy,2024-11-16T22:07:11.7046358
