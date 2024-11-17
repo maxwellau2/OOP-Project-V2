@@ -433,6 +433,9 @@ public class AdminView {
 
         // Approve restock request and set stock level to 10 * low stock alert level + original
         selectedItem.setQuantity(selectedItem.getLowStockAlert() * 10 + selectedItem.getQuantity());
+        while (selectedItem.getQuantity() < 10){
+            selectedItem.setQuantity(selectedItem.getLowStockAlert() * 10 + selectedItem.getQuantity());
+        }
         selectedItem.setRestockRequested("approved"); // Mark as approved
 
         // Update inventory

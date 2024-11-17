@@ -52,8 +52,11 @@ public class PrescriptionController {
         String numericDosage = prescription.getDosage().replaceAll("[^0-9]", "");
         int numeric = 0;
         if (!numericDosage.isEmpty()) numeric = Integer.parseInt(numericDosage);
-        getInventoryRepoInstance().decreaseQuantity(prescription.getMedicationName(),numeric);
-        return updatePrescription(prescription);
+        if (numeric < getInventoryRepoInstance().getItemByName(prescription.getMedicationName()).getQuantity()){
+            getInventoryRepoInstance().decreaseQuantity(prescription.getMedicationName(),numeric);
+            return updatePrescription(prescription);
+        }
+        return null;
     }
 
 
