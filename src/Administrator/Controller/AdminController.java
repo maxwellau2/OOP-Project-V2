@@ -87,6 +87,26 @@ public class AdminController {
         if (repo.delete(staff) == null){
             return false;
         }
+        switch(staff.getRole().toLowerCase()){
+            case "admin":
+                Admin a = getAdminRepository().read(staff.getId());
+                if (a == null){
+                    return true;
+                }
+                return getAdminRepository().delete(a) != null;
+            case "doctor":
+                Doctor d = getDoctorRepository().read(staff.getId());
+                if (d == null){
+                    return true;
+                }
+                return getDoctorRepository().delete(d) != null;
+            case "pharmacist":
+                Pharmacist p = getPharmacistRepository().read(staff.getId());
+                if (p == null){
+                    return true;
+                }
+                return getPharmacistRepository().delete(p) != null;
+        }
         return true;
     }
 
