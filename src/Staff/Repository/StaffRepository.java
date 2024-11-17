@@ -41,6 +41,7 @@ public class StaffRepository extends Repository<Staff> {
         if (instance == null){
             instance = new StaffRepository(csvPath);
         }
+        instance.load();
         return instance;
     }
 

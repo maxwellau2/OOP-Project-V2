@@ -1,7 +1,6 @@
 package Leaves.Controller;
 
 import Leaves.Model.Leave;
-import Leaves.Repository.LeavesRepository;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -42,7 +41,7 @@ public class LeavesController {
      * @return A list of `Leave` objects for the staff member starting after the given date.
      */
     public static List<Leave> getStaffLeave(String id, LocalDateTime start) {
-        return getLeavesRepository().getByFilter(l -> (l.getStaffId().equals(id) && l.getStart().isAfter(start)));
+        return getLeavesRepository().getByFilter(l -> (l.getStaffId().equals(id) && l.getEnd().isAfter(start)));
     }
 
     /**

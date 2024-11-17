@@ -2,8 +2,10 @@ package Administrator.Controller;
 
 import Administrator.Model.Admin;
 import Appointment.Model.Appointment;
+import Doctor.Model.Doctor;
 import Inventory.Model.Inventory;
 import Inventory.Repository.InventoryRepository;
+import Pharmacist.Model.Pharmacist;
 import Staff.Model.Staff;
 import Staff.Repository.StaffRepository;
 import User.Model.User;
@@ -11,7 +13,6 @@ import User.Model.User;
 import java.util.List;
 
 import static Util.RepositoryGetter.*;
-
 /**
  * A controller class that provides various administrative actions for managing staff, appointments, inventory, and admin-related operations.
  */
@@ -45,7 +46,33 @@ public class AdminController {
      */
     public static Staff updateStaff(Staff staff){
         StaffRepository repo = getStaffRepoInstance();
-        repo.update(staff);
+        staff = repo.update(staff);
+        // update according to the role
+        switch(staff.getRole().toLowerCase()){
+            case "admin":
+                Admin a = getAdminRepository().read(staff.getId());
+                a.setAge(staff.getAge());
+                a.setName(staff.getName());
+                a.setGender(staff.getGender());
+                getAdminRepository().update(a);
+                break;
+            case "doctor":
+                Doctor d = getDoctorRepository().read(staff.getId());
+                d.setAge(staff.getAge());
+                d.setName(staff.getName());
+                d.setGender(staff.getGender());
+                getDoctorRepository().update(d);
+                break;
+            case "pharmacist":
+                Pharmacist p = getPharmacistRepository().read(staff.getId());
+                p.setAge(staff.getAge());
+                p.setName(staff.getName());
+                p.setGender(staff.getGender());
+                getPharmacistRepository().update(p);
+                break;
+            default:
+                break;
+        }
         return staff;
     }
 
@@ -59,6 +86,26 @@ public class AdminController {
         StaffRepository repo = getStaffRepoInstance();
         if (repo.delete(staff) == null){
             return false;
+        }
+        switch(staff.getRole().toLowerCase()){
+            case "admin":
+                Admin a = getAdminRepository().read(staff.getId());
+                if (a == null){
+                    return true;
+                }
+                return getAdminRepository().delete(a) != null;
+            case "doctor":
+                Doctor d = getDoctorRepository().read(staff.getId());
+                if (d == null){
+                    return true;
+                }
+                return getDoctorRepository().delete(d) != null;
+            case "pharmacist":
+                Pharmacist p = getPharmacistRepository().read(staff.getId());
+                if (p == null){
+                    return true;
+                }
+                return getPharmacistRepository().delete(p) != null;
         }
         return true;
     }

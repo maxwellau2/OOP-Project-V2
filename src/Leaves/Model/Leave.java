@@ -148,4 +148,19 @@ public class Leave implements IEntity {
                 ", start: " + this.start +
                 ", end: " + this.end + " }";
     }
+
+    /**
+     * Prints the leave details in a formatted, human-readable manner.
+     */
+    public void prettyPrint() {
+        System.out.println("Leave Details:");
+        System.out.println("==============");
+        System.out.println("Leave ID    : " + this.leaveId);
+        System.out.println("Staff ID    : " + this.staffId);
+        System.out.println("Leave Name  : " + this.leaveName);
+        System.out.println("Start Time  : " + this.start);
+        System.out.println("End Time    : " + this.end);
+        System.out.println("==============");
+    }
+
 }

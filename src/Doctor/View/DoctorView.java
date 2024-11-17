@@ -148,15 +148,26 @@ public class DoctorView {
         while (continueSettingAvailability) {
             System.out.println("1. Add Leave");
             System.out.println("2. Remove Leave");
+            System.out.println("3. View Upcoming Leaves");
             System.out.println("0. Back to Main Menu");
-            int choice = getValidatedIntInput(scanner, "Choose an option: ", 0, 2);
+            int choice = getValidatedIntInput(scanner, "Choose an option: ", 0, 3);
 
             switch (choice) {
                 case 1 -> addLeave();
                 case 2 -> removeLeave();
+                case 3 -> viewLeaves();
                 case 0 -> continueSettingAvailability = false;
                 default -> System.out.println("Invalid choice. Please select a valid option.");
             }
+        }
+    }
+
+    private void viewLeaves() {
+        System.out.println("=== View Leaves ===");
+        List<Leave> leaves = LeavesController.getStaffLeave(doctor.getId(), LocalDateTime.now().toLocalDate().atStartOfDay());
+        for (int i=0; i<leaves.size(); i++){
+            System.out.print(i+1 + "- ");
+            leaves.get(i).prettyPrint();
         }
     }
 
@@ -174,7 +185,11 @@ public class DoctorView {
             try {
                 String startDateTimeStr = getValidatedStringInput(scanner, "Enter leave start date and time (yyyy-MM-dd HH:mm): ", 16);
                 start = LocalDateTime.parse(startDateTimeStr, formatter);
-                break;
+                if (start.isAfter(LocalDateTime.now())) {
+                    break;
+                } else {
+                    System.out.println("Please enter a valid start date and time (yyyy-MM-dd HH:mm): ");
+                }
             } catch (DateTimeParseException e) {
                 System.out.println("Invalid date format. Please enter in yyyy-MM-dd HH:mm format.");
             }
@@ -206,7 +221,7 @@ public class DoctorView {
      */
     private void removeLeave() {
         System.out.println("Existing leaves:");
-        List<Leave> leaves = LeavesController.getStaffLeave(doctor.getId());
+        List<Leave> leaves = LeavesController.getStaffLeave(doctor.getId(), LocalDateTime.now().toLocalDate().atStartOfDay());
         if (leaves.isEmpty()) {
             System.out.println("No leaves found.");
             return;
