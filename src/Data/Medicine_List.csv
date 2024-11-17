@@ -1,8 +1,8 @@
 id,medicationName,quantity,lowStockAlert,restockRequested
-MED001,Viagra,1000,10,approved
+MED001,Viagra,900,10,approved
 MED002,Ibuprofen,1000,10,approved
 MED003,Amoxicillin,1000,100,approved
-MED004,Plan-B,72,15,approved
+MED004,Plan-B,222,15,approved
 MED005,Doxycycline,1000,10,approved
 MED006,Xanax,900,10,approved
 MED007,test-medicine,900,10,approved

@@ -265,7 +265,7 @@ public class PatientView {
     public void rescheduleAppointment() {
 
         // Step 1: Display the patient's confirmed appointments
-        List<Appointment> appointments = AppointmentController.getAppointmentByPatientId(patient.getId());
+        List<Appointment> appointments = AppointmentController.getAppointmentByPatientId(patient.getId()).stream().filter(appointment -> (appointment.getStatus().equalsIgnoreCase("pending") || appointment.getStatus().equalsIgnoreCase("confirmed"))).toList();
         if (appointments.isEmpty()) {
             System.out.println("You have no appointments to reschedule.");
             return;
@@ -330,7 +330,7 @@ public class PatientView {
      */
     public void cancelAppointment() {
         // Step 1: Display the patient's appointments
-        List<Appointment> appointments = AppointmentController.getAppointmentByPatientId(patient.getId());
+        List<Appointment> appointments = AppointmentController.getAppointmentByPatientId(patient.getId()).stream().filter(appointment -> (appointment.getStatus().equalsIgnoreCase("pending") || appointment.getStatus().equalsIgnoreCase("confirmed"))).toList();
         if (appointments.isEmpty()) {
             System.out.println("You have no appointments to cancel.");
             return;
