@@ -18,13 +18,29 @@ import static Util.SafeScanner.getValidatedIntInput;
 import static Util.SafeScanner.getValidatedStringInput;
 import static Util.TimeRangeMerger.mergeTimeslotsIntoRanges;
 
+
+/**
+ * Class for managing the patient interface and user interactions.
+ * Provides a menu-driven system to view and manage patient-related operations.
+ */
 public class PatientView {
     Patient patient;
     Scanner scanner = new Scanner(System.in);
+
+    /**
+     * Constructs a `PatientView` for the given patient.
+     *
+     * @param patient The patient for whom the view is being created.
+     */
     public PatientView(Patient patient){
         this.patient = patient;
     }
 
+
+
+    /**
+     * Displays the main menu for the patient and processes user choices.
+     */
     public void displayMenu() {
         int choice;
 
@@ -79,6 +95,9 @@ public class PatientView {
     }
 
     // test case 1
+    /**
+     * Displays the patient's medical record details including personal details and past medical records.
+     */
     public void viewMedicalRecord(){
         System.out.println("=======Medical Records======");
         // get patient info
@@ -96,6 +115,11 @@ public class PatientView {
     }
 
     // test case 2
+    /**
+     * Updates the patient's personal information (email or phone number).
+     *
+     * @return The updated patient object.
+     */
     public Patient updatePersonalInformation(){
         System.out.println("Welcome to the Patient Record System!");
         System.out.println("Current Patient Information:\n");
@@ -149,12 +173,18 @@ public class PatientView {
         return patient;
     }
 
+
+
     private static void printBorder(){
         System.out.println("\n===============================================");
         return;
     }
 
     // test case 3
+
+    /**
+     * Displays available appointment slots for all doctors.
+     */
     public void viewAvailableAppointmentsSlots(){
         // get each doctor's doctor id
         List<Doctor> doctors = DoctorController.getAllDoctors();
@@ -176,6 +206,10 @@ public class PatientView {
         }
     }
 
+
+    /**
+     * Schedules a new appointment for the patient with a selected doctor and timeslot.
+     */
     public void scheduleAppointment() {
         System.out.println("=== Schedule an Appointment ===");
 
@@ -222,6 +256,9 @@ public class PatientView {
         }
     }
     // test case 5
+    /**
+     * Reschedules an existing appointment for the patient.
+     */
     public void rescheduleAppointment() {
 
         // Step 1: Display the patient's confirmed appointments
@@ -285,6 +322,9 @@ public class PatientView {
     }
 
     // test case 6
+    /**
+     * Cancels a scheduled appointment for the patient.
+     */
     public void cancelAppointment() {
         // Step 1: Display the patient's appointments
         List<Appointment> appointments = AppointmentController.getAppointmentByPatientId(patient.getId());
@@ -321,6 +361,9 @@ public class PatientView {
         }
     }
     // test case 7
+    /**
+     * Displays the patient's upcoming scheduled appointments.
+     */
     public void viewScheduledAppointments() {
         // Step 1: Retrieve all upcoming appointments for the patient
         List<Appointment> appointments = AppointmentController.getAppointmentByPatientId(patient.getId());
@@ -349,6 +392,9 @@ public class PatientView {
         }
     }
     // test case 8
+    /**
+     * Displays the patient's past appointment outcomes.
+     */
     public void viewPastAppointmentOutcomes() {
         // Step 1: Retrieve all appointment outcomes for the patient
         List<AppointmentOutcome> outcomes = AppointmentOutcomeController.getAppointmentOutcomeByPatientId(patient.getId());

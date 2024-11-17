@@ -1,6 +1,6 @@
 package Administrator.View;
 
-import Administrator.Controller.AdminActions;
+import Administrator.Controller.AdminController;
 import Administrator.Model.Admin;
 import Appointment.Model.Appointment;
 import Doctor.Model.Doctor;
@@ -19,13 +19,29 @@ import static Util.RepositoryGetter.*;
 import static Util.SafeScanner.getValidatedIntInput;
 import static Util.SafeScanner.getValidatedStringInput;
 
+
+/**
+ * The AdminView class provides a user interface for administrators to manage hospital operations such as staff, appointments,
+ * and inventory, as well as approve replenishment requests.
+ */
+
 public class AdminView {
     private Scanner scanner;
     private Admin admin;
+
+    /**
+     * Constructor to initialize the AdminView with the given administrator.
+     *
+     * @param admin The admin object associated with the view.
+     */
     public AdminView(Admin admin) {
         this.admin = admin;
         scanner = new Scanner(System.in);
     }
+
+    /**
+     * Displays the main menu for the administrator with various management options.
+     */
     public void displayMenu() {
         int choice;
 
@@ -52,10 +68,12 @@ public class AdminView {
         scanner.close();
     }
 
-    // View and manage hospital staff (Doctors, Pharmacists, etc.)
+    /**
+     * Displays and allows management of hospital staff, including adding, deleting, and updating staff.
+     */
     public void viewAndManageHospitalStaff() {
         System.out.println("=== View and Manage Hospital Staff ===");
-        List<Staff> staffList = AdminActions.getAllStaff();
+        List<Staff> staffList = AdminController.getAllStaff();
         // remove self
         staffList.removeIf(staff -> staff.getId().equalsIgnoreCase(this.admin.getId()));
         List<String> staffIds = staffList.stream().map(staff -> staff.getId()).toList();
@@ -80,11 +98,14 @@ public class AdminView {
         }
     }
 
+    /**
+     * Updates the details of an existing staff member.
+     */
     private void updateStaff() {
         System.out.println("=== Update Staff ===");
 
         // Retrieve all staff members, excluding the current admin
-        List<Staff> allStaff = AdminActions.getAllStaff();
+        List<Staff> allStaff = AdminController.getAllStaff();
         allStaff.removeIf(staff -> staff.getId().equalsIgnoreCase(this.admin.getId()));
 
         if (allStaff.isEmpty()) {
@@ -140,7 +161,7 @@ public class AdminView {
         selectedStaff.setAge(newAge);
 
         // Update the staff in the repository
-        Staff updatedStaff = AdminActions.updateStaff(selectedStaff);
+        Staff updatedStaff = AdminController.updateStaff(selectedStaff);
 
         if (updatedStaff != null) {
             System.out.println("Staff updated successfully:");
@@ -152,6 +173,9 @@ public class AdminView {
 
 
     // Add new staff member
+    /**
+     * Adds a new staff member by collecting details and storing them in the repository.
+     */
     public void addStaff() {
         System.out.println("=== Add New Staff ===");
 
@@ -208,11 +232,14 @@ public class AdminView {
 
 
     // Delete a staff member by ID
+    /**
+     * Deletes a staff member from the system after user confirmation.
+     */
     public void deleteStaff() {
         System.out.println("=== Delete Staff ===");
 
         // Retrieve all staff members, excluding the current admin
-        List<Staff> allStaff = AdminActions.getAllStaff();
+        List<Staff> allStaff = AdminController.getAllStaff();
         allStaff.removeIf(staff -> staff.getId().equalsIgnoreCase(this.admin.getId()));
 
         if (allStaff.isEmpty()) {
@@ -245,7 +272,7 @@ public class AdminView {
                 "Are you sure you want to delete this staff member? (yes/no): ", List.of("yes", "no"));
 
         if (confirmation.equalsIgnoreCase("yes")) {
-            boolean success = AdminActions.deleteStaff(selectedStaff);
+            boolean success = AdminController.deleteStaff(selectedStaff);
 
             if (success) {
                 System.out.println("Staff member with ID " + selectedStaff.getId() + " has been deleted.");
@@ -259,9 +286,12 @@ public class AdminView {
 
 
     // View appointments details
+    /**
+     * Displays all appointment details managed by the administrator.
+     */
     public void viewAppointmentsDetails() {
         System.out.println("=== View Appointments Details ===");
-        List<Appointment> appointments = AdminActions.getAllAppointments(); 
+        List<Appointment> appointments = AdminController.getAllAppointments();
         if (appointments.isEmpty()) {
             System.out.println("No appointments found.");
         } else {
@@ -271,7 +301,10 @@ public class AdminView {
         }
     }
 
-    // View and manage medication inventory 
+    // View and manage medication inventory
+    /**
+     * Displays and allows management of medication inventory, such as adding new items or updating stock levels.
+     */
     public void viewAndManageMedicationInventory() {
         System.out.println("=== View and Manage Medication Inventory ===");
         List<Inventory> inventoryList = getInventoryRepoInstance().getAll();
@@ -296,6 +329,9 @@ public class AdminView {
     }
 
     // Update stock of an inventory item
+    /**
+     * Updates the stock of a specific inventory item by increasing the quantity.
+     */
     public void updateStock() {
         System.out.println("=== Update Stock ===");
 
@@ -336,6 +372,9 @@ public class AdminView {
 
 
     // Add new inventory item
+    /**
+     * Adds a new item to the medication inventory by collecting necessary details.
+     */
     public void addInventoryItem() {
         System.out.println("=== Add New Inventory Item ===");
 
@@ -358,6 +397,9 @@ public class AdminView {
 
 
     // Approve replenishment requests
+    /**
+     * Approves replenishment requests for low stock inventory items and updates their stock levels.
+     */
     public void approveReplenishmentRequests() {
         System.out.println("=== Approve Replenishment Requests ===");
 

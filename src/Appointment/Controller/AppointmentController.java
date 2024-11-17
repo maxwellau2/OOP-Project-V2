@@ -1,25 +1,41 @@
 package Appointment.Controller;
 
-import Appointment.Repository.AppointmentRepository;
 import Appointment.Model.Appointment;
-import AppointmentOutcome.Model.AppointmentOutcome;
+import Appointment.Repository.AppointmentRepository;
 import Leaves.Controller.LeavesController;
 import Leaves.Model.Leave;
-import Prescription.Model.Prescription;
 
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import static Util.RepositoryGetter.*;
+import static Util.RepositoryGetter.getAppointmentRepository;
 
+
+/**
+ * Controller for managing Appointment-related operations.
+ */
 public class AppointmentController {
 
+    /**
+     * Creates a new Appointment and adds it to the repository.
+     *
+     * @param appointment The Appointment object to create.
+     * @return The created Appointment.
+     */
     public static Appointment createNewAppointment(Appointment appointment) {
         return getAppointmentRepository().create(appointment);
     }
 
+
+    /**
+     * Retrieves available timeslots for a doctor within the next three days.
+     *
+     * @param doctorId   The ID of the doctor.
+     * @param startDate  The start date for generating timeslots.
+     * @return A list of available LocalDateTime timeslots.
+     */
     public static List<LocalDateTime> getAvailableTimeslots(String doctorId, LocalDateTime startDate) {
         AppointmentRepository repository = getAppointmentRepository();
 
@@ -88,14 +104,37 @@ public class AppointmentController {
     }
 
 
+    /**
+     * Retrieves all appointments for a given doctor.
+     *
+     * @param doctorId The ID of the doctor.
+     * @return A list of appointments for the doctor.
+     */
     public static List<Appointment> getAppointmentByDoctor(String doctorId) {
         return getAppointmentRepository().getByFilter(app -> app.getDoctorId().equals(doctorId));
     }
 
+
+    /**
+     * Retrieves appointments for a doctor filtered by status.
+     *
+     * @param doctorId The ID of the doctor.
+     * @param status   The status to filter by.
+     * @return A list of filtered appointments.
+     */
     public static List<Appointment> getAppointmentByDoctorAndStatus(String doctorId, String status) {
         return getAppointmentRepository().getByFilter(app -> app.getDoctorId().equals(doctorId) && app.getStatus().equals(status));
     }
 
+
+    /**
+     * Retrieves confirmed appointments for a doctor within a specific time range.
+     *
+     * @param doctorId  The ID of the doctor.
+     * @param startDate The start date of the range.
+     * @param days      The number of days from the start date.
+     * @return A list of confirmed appointments.
+     */
     public static List<Appointment> getAppointmentByDoctor(String doctorId, LocalDateTime startDate, Integer days) {
         return getAppointmentRepository().getByFilter(app -> (app.getDoctorId().equals(doctorId)
                 && app.getDate().isAfter(startDate)
@@ -103,46 +142,78 @@ public class AppointmentController {
                 && app.getStatus().equalsIgnoreCase("confirmed") );
     }
 
+
+    /**
+     * Retrieves all appointments for a patient, excluding cancelled ones.
+     *
+     * @param patientId The ID of the patient.
+     * @return A list of appointments for the patient.
+     */
     public static List<Appointment> getAppointmentByPatientId(String patientId){
         AppointmentRepository repository = getAppointmentRepository();
         return repository.getByFilter(a -> (a.getPatientId().equals(patientId) && !a.getStatus().equals("Cancelled")));
     }
 
+
+    /**
+     * Updates an existing Appointment.
+     *
+     * @param appointment The Appointment object with updated data.
+     * @return The updated Appointment.
+     */
     public static Appointment updateAppointment(Appointment appointment) {
         return getAppointmentRepository().update(appointment);
     }
 
+
+    /**
+     * Deletes an Appointment from the repository.
+     *
+     * @param appointment The Appointment to delete.
+     * @return The deleted Appointment, or null if not found.
+     */
     public static Appointment deleteAppointment(Appointment appointment) {
         return getAppointmentRepository().delete(appointment);
     }
 
 
+    /**
+     * Retrieves an Appointment by its ID.
+     *
+     * @param appointmentId The ID of the appointment.
+     * @return The Appointment object if found, null otherwise.
+     */
     public static Appointment getAppointmentById(String appointmentId) {
         return getAppointmentRepository().read(appointmentId);
     }
 
-    public static List<AppointmentOutcome> getAppointmentOutcomeNotDispensed(){
-        List<Prescription> prescriptions = getPrescriptionRepository().getByFilter(p -> p.getStatus().equals("pending"));
-//        System.out.println(prescriptions);
-        List<String> appointmentIds = prescriptions.stream().map(Prescription::getAppointmentId).toList();
-        List<AppointmentOutcome> appointmentOutcomes = new ArrayList<>();
-        for (String appointmentId : appointmentIds) {
-            AppointmentOutcome appointment = getAppointmentOutcomeRepository().read(appointmentId);
-            appointmentOutcomes.add(appointment);
-        }
-        return appointmentOutcomes;
-    }
 
-public static Appointment createPendingAppointmentObject(String patientId, String doctorId, LocalDateTime timeslot){
-    return new Appointment(
-            getAppointmentRepository().generateId(),  // Generate a unique ID
-            patientId,
-            doctorId,
-            timeslot,
-            "Pending"
-    );
-}
+    /**
+     * Creates a new Appointment object with "Pending" status.
+     *
+     * @param patientId  The ID of the patient.
+     * @param doctorId   The ID of the doctor.
+     * @param timeslot   The timeslot for the appointment.
+     * @return The newly created Appointment object.
+     */
+    public static Appointment createPendingAppointmentObject(String patientId, String doctorId, LocalDateTime timeslot){
+        return new Appointment(
+                getAppointmentRepository().generateId(),  // Generate a unique ID
+                patientId,
+                doctorId,
+                timeslot,
+                "Pending"
+                );
+            }
 
+
+    /**
+     * Retrieves appointments for a doctor filtered by a specific status.
+     *
+     * @param id     The ID of the doctor.
+     * @param status The status to filter by.
+     * @return A list of appointments.
+     */
     public static List<Appointment> getAppointmentsByDoctorAndStatus(String id, String status) {
         return getAppointmentRepository().getByFilter(appointment -> appointment.getDoctorId().equals(id) && appointment.getStatus().equalsIgnoreCase(status));
     }
