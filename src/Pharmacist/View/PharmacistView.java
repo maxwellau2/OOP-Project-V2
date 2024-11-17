@@ -4,7 +4,7 @@ import AppointmentOutcome.Controller.AppointmentOutcomeController;
 import AppointmentOutcome.Model.AppointmentOutcome;
 import Inventory.Controller.InventoryController;
 import Inventory.Model.Inventory;
-import Prescription.Controller.PrescriptionActions;
+import Prescription.Controller.PrescriptionController;
 import Prescription.Model.Prescription;
 
 import java.util.List;
@@ -87,7 +87,7 @@ public class PharmacistView {
         System.out.println("=== Update Prescription Status ===");
 
         // Get all prescriptions
-        List<Prescription> prescriptions = PrescriptionActions.getAllPrescriptions();
+        List<Prescription> prescriptions = PrescriptionController.getAllPrescriptions();
 
         // Check if there are any prescriptions
         if (prescriptions.isEmpty()) {
@@ -124,10 +124,10 @@ public class PharmacistView {
         Prescription updatedPrescription;
         selectedPrescription.setStatus(newStatus);
         if (newStatus.equalsIgnoreCase("dispensed")){
-            updatedPrescription = PrescriptionActions.dispensePrescription(selectedPrescription);
+            updatedPrescription = PrescriptionController.dispensePrescription(selectedPrescription);
         }
         else{
-            updatedPrescription = PrescriptionActions.updatePrescription(selectedPrescription);
+            updatedPrescription = PrescriptionController.updatePrescription(selectedPrescription);
         }
 
         if (updatedPrescription != null) {

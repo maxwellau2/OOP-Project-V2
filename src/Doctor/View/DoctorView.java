@@ -13,7 +13,7 @@ import MedicalRecord.Controller.MedicalRecordController;
 import MedicalRecord.Model.MedicalRecord;
 import Patient.Controller.PatientController;
 import Patient.Model.Patient;
-import Prescription.Controller.PrescriptionActions;
+import Prescription.Controller.PrescriptionController;
 import Prescription.Model.Prescription;
 
 import java.time.LocalDateTime;
@@ -339,7 +339,7 @@ public class DoctorView {
             dosage = getValidatedStringInput(scanner, "Enter dosage: ", 100);
 
             // Step 6: Create a new prescription
-            Prescription newPrescription = PrescriptionActions.createNewPendingPrescription(
+            Prescription newPrescription = PrescriptionController.createNewPendingPrescription(
                     selectedAppointment.getDoctorId(),
                     selectedAppointment.getPatientId(),
                     medication,
@@ -348,7 +348,7 @@ public class DoctorView {
             );
 
             // Add the prescription to the repository
-            if (PrescriptionActions.addPrescription(newPrescription) != null) {
+            if (PrescriptionController.addPrescription(newPrescription) != null) {
                 System.out.println("Prescription created successfully.");
             } else {
                 System.out.println("Failed to create prescription. Please try again.");

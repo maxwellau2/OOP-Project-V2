@@ -18,7 +18,6 @@ import java.util.Scanner;
 
 import static Util.SafeScanner.*;
 
-
 /**
  * Main class for the hospital management system.
  * It handles user authentication, role-based redirection, and initializes the respective views.

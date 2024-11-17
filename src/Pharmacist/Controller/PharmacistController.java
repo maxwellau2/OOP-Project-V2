@@ -3,7 +3,6 @@ package Pharmacist.Controller;
 import Inventory.Model.Inventory;
 import Inventory.Repository.InventoryRepository;
 import Pharmacist.Model.Pharmacist;
-import Pharmacist.Repository.PharmacistRepository;
 import Prescription.Model.Prescription;
 import Prescription.Repository.PrescriptionRepository;
 import User.Model.User;
@@ -18,16 +17,6 @@ import static Util.RepositoryGetter.*;
  * Provides methods for interacting with pharmacist, prescription, and inventory repositories.
  */
 public class PharmacistController {
-
-    /**
-     * Retrieves the singleton instance of the {@link PharmacistRepository}.
-     *
-     * @return The {@link PharmacistRepository} instance.
-     */
-    public PharmacistRepository getPharmacistrRepository() {
-        return PharmacistRepository.getInstance("src/Data/Pharmacist_List.csv");
-    }
-
 
     /**
      * Creates a {@link Pharmacist} from a given {@link User}.

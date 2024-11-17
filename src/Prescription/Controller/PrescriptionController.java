@@ -9,10 +9,10 @@ import static Util.RepositoryGetter.*;
 
 
 /**
- * The PrescriptionActions class provides static methods to manage prescriptions,
+ * The PrescriptionController class provides static methods to manage prescriptions,
  * including creating, updating, dispensing, and retrieving prescription details.
  */
-public class PrescriptionActions {
+public class PrescriptionController {
 
     /**
      * Creates a new prescription object with the specified details.

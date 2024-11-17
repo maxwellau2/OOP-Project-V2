@@ -9,7 +9,7 @@ import static Util.RepositoryGetter.getStaffRepoInstance;
  * Controller class for managing actions related to {@link Staff}.
  * Provides methods for retrieving and deleting staff by their ID.
  */
-public class StaffActions {
+public class StaffController {
 
 
     /**
