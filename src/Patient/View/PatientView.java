@@ -200,6 +200,10 @@ public class PatientView {
             // get appointments within these 7 days
             List<LocalDateTime> timeslots = AppointmentController.getAvailableTimeslots(doctor.getId(), timeNow);
             List<String> formatted = mergeTimeslotsIntoRanges(timeslots);
+
+            if (formatted.isEmpty()){
+                System.out.println("No available time slots");
+            }
             for(String f : formatted){
                 System.out.println(f);
             }
