@@ -14,8 +14,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Scanner;
 
-import static Util.SafeScanner.getValidatedIntInput;
-import static Util.SafeScanner.getValidatedStringInput;
+import static Util.SafeScanner.*;
 import static Util.TimeRangeMerger.mergeTimeslotsIntoRanges;
 
 
@@ -139,19 +138,19 @@ public class PatientView {
         String newContactNumber;
         switch (choice) {
             case 1:
-                newEmail = getValidatedStringInput(scanner,"Enter new email address: ", 30);
+                newEmail = getValidatedEmailInput(scanner,"Enter new email address: ");
                 patient.setEmail(newEmail);
                 System.out.println("Email updated successfully.");
                 break;
             case 2:
-                newContactNumber = getValidatedStringInput(scanner,"Enter new contact number: ", 20);
+                newContactNumber = getValidatedContactNumberInput(scanner,"Enter new contact number: ");
                 patient.setPhoneNumber(newContactNumber);
                 System.out.println("Contact number updated successfully.");
                 break;
             case 3:
-                newEmail = getValidatedStringInput(scanner,"Enter new email address: ", 30);
+                newEmail = getValidatedEmailInput(scanner,"Enter new email address: ");
                 patient.setEmail(newEmail);
-                newContactNumber = getValidatedStringInput(scanner,"Enter new contact number: ", 20);
+                newContactNumber = getValidatedContactNumberInput(scanner,"Enter new contact number: ");
                 patient.setPhoneNumber(newContactNumber);
                 break;
             case 0:
@@ -200,6 +199,10 @@ public class PatientView {
             // get appointments within these 7 days
             List<LocalDateTime> timeslots = AppointmentController.getAvailableTimeslots(doctor.getId(), timeNow);
             List<String> formatted = mergeTimeslotsIntoRanges(timeslots);
+
+            if (formatted.isEmpty()){
+                System.out.println("No available time slots");
+            }
             for(String f : formatted){
                 System.out.println(f);
             }
@@ -262,7 +265,7 @@ public class PatientView {
     public void rescheduleAppointment() {
 
         // Step 1: Display the patient's confirmed appointments
-        List<Appointment> appointments = AppointmentController.getAppointmentByPatientId(patient.getId());
+        List<Appointment> appointments = AppointmentController.getAppointmentByPatientId(patient.getId()).stream().filter(appointment -> (appointment.getStatus().equalsIgnoreCase("pending") || appointment.getStatus().equalsIgnoreCase("confirmed"))).toList();
         if (appointments.isEmpty()) {
             System.out.println("You have no appointments to reschedule.");
             return;
@@ -327,7 +330,7 @@ public class PatientView {
      */
     public void cancelAppointment() {
         // Step 1: Display the patient's appointments
-        List<Appointment> appointments = AppointmentController.getAppointmentByPatientId(patient.getId());
+        List<Appointment> appointments = AppointmentController.getAppointmentByPatientId(patient.getId()).stream().filter(appointment -> (appointment.getStatus().equalsIgnoreCase("pending") || appointment.getStatus().equalsIgnoreCase("confirmed"))).toList();
         if (appointments.isEmpty()) {
             System.out.println("You have no appointments to cancel.");
             return;
@@ -366,7 +369,7 @@ public class PatientView {
      */
     public void viewScheduledAppointments() {
         // Step 1: Retrieve all upcoming appointments for the patient
-        List<Appointment> appointments = AppointmentController.getAppointmentByPatientId(patient.getId());
+        List<Appointment> appointments = AppointmentController.getAppointmentByPatientId(patient.getId()).stream().filter(appointment -> !appointment.getStatus().equalsIgnoreCase("completed")).toList();
 
         // Step 2: Check if there are any upcoming appointments
         if (appointments.isEmpty()) {

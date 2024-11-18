@@ -219,4 +219,80 @@ public class SafeScanner {
         System.out.println(); // Move to the next line
         return password.toString().trim();
     }
+
+    /**
+     * Validates an email address format.
+     *
+     * @param email The email address to validate.
+     * @return True if the email is valid, false otherwise.
+     */
+    public static boolean isValidEmail(String email) {
+        String emailRegex = "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,6}$";
+        return email.matches(emailRegex);
+    }
+
+    /**
+     * Validates a contact number format.
+     * Assumes the contact number must be numeric and 8-15 digits long.
+     *
+     * @param contactNumber The contact number to validate.
+     * @return True if the contact number is valid, false otherwise.
+     */
+    public static boolean isValidContactNumber(String contactNumber) {
+        String contactRegex = "^[0-9]{8,15}$";
+        return contactNumber.matches(contactRegex);
+    }
+
+    /**
+     * Prompts the user for a valid email input.
+     *
+     * @param scanner Scanner instance to read input.
+     * @param prompt  The message to prompt the user.
+     * @return A validated email address.
+     */
+    public static String getValidatedEmailInput(Scanner scanner, String prompt) {
+        String email = "";
+        boolean valid = false;
+
+        while (!valid) {
+            System.out.print(prompt);
+            email = scanner.nextLine().trim();
+
+            if (isValidEmail(email)) {
+                valid = true;
+            } else {
+                System.out.println("Invalid email format. Please enter a valid email.");
+            }
+        }
+
+        return email;
+    }
+
+    /**
+     * Prompts the user for a valid contact number input.
+     *
+     * @param scanner Scanner instance to read input.
+     * @param prompt  The message to prompt the user.
+     * @return A validated contact number.
+     */
+    public static String getValidatedContactNumberInput(Scanner scanner, String prompt) {
+        String contactNumber = "";
+        boolean valid = false;
+
+        while (!valid) {
+            System.out.print(prompt);
+            contactNumber = scanner.nextLine().trim();
+
+            if (isValidContactNumber(contactNumber)) {
+                valid = true;
+            } else {
+                System.out.println("Invalid contact number. Please enter a numeric value between 8 and 15 digits.");
+            }
+        }
+
+        return contactNumber;
+    }
+
+
+
 }

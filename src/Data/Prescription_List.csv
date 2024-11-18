@@ -1,3 +1,5 @@
 prescriptionId,doctorId,patientId,medicationName,dosage,status,appointmentId
 PRE001,D001,POO1,Xanax,3,dispensed,APP001
 PRE002,D002,P001,Plan-B,3,dispensed,APP002
+PRE003,D001,P001,Viagra,200,dispensed,APP004
+PRE004,D001,P001,Viagra,100,dispensed,APP005

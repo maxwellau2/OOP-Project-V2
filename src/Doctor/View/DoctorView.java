@@ -130,7 +130,7 @@ public class DoctorView {
      */
     public void viewPersonalSchedule() {
         System.out.println("=== View Personal Schedule ===");
-        List<Appointment> appointments = AppointmentController.getAppointmentByDoctor(doctor.getId(), LocalDateTime.now().toLocalDate().atStartOfDay(), 3);
+        List<Appointment> appointments = AppointmentController.getAppointmentByDoctor(doctor.getId(), LocalDateTime.now().toLocalDate().atStartOfDay(), 7);
         for (Appointment appointment : appointments) {
             appointment.prettyPrint();
         }
@@ -283,7 +283,7 @@ public class DoctorView {
      */
     public void viewUpcomingAppointments() {
         System.out.println("=== View Upcoming Appointments ===");
-        List<Appointment> appointments = AppointmentController.getAppointmentByDoctor(doctor.getId(), LocalDateTime.now().withHour(0), 3);
+        List<Appointment> appointments = AppointmentController.getAppointmentByDoctor(doctor.getId(), LocalDateTime.now().withHour(0), 7);
         if (appointments.isEmpty()){
             System.out.println("No upcoming appointments ");
             return;

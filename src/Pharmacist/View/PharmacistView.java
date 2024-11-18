@@ -87,7 +87,7 @@ public class PharmacistView {
         System.out.println("=== Update Prescription Status ===");
 
         // Get all prescriptions
-        List<Prescription> prescriptions = PrescriptionController.getAllPrescriptions();
+        List<Prescription> prescriptions = PrescriptionController.getAllPendingPrescriptions();
 
         // Check if there are any prescriptions
         if (prescriptions.isEmpty()) {
@@ -134,7 +134,7 @@ public class PharmacistView {
             System.out.println("Prescription status updated successfully.");
             updatedPrescription.prettyPrint(); // Assumes a `prettyPrint` method exists
         } else {
-            System.out.println("Failed to update prescription status. Please try again.");
+            System.out.println("Insufficient inventory of " + selectedPrescription.getMedicationName());
         }
     }
 

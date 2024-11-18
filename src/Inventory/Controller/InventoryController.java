@@ -79,7 +79,7 @@ public class InventoryController {
      * @return The newly created Inventory object, or null if creation failed.
      */
     public static Inventory createInventoryItem(String medicationName, int quantity, int lowStockAlert) {
-        Inventory newItem = new Inventory(getInventoryRepoInstance().generateId(), medicationName, quantity, lowStockAlert, "Pending");
+        Inventory newItem = new Inventory(getInventoryRepoInstance().generateId(), medicationName, quantity, lowStockAlert, "Approved");
         return getInventoryRepoInstance().create(newItem);
     }
 }
