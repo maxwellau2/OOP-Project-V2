@@ -17,11 +17,13 @@ import Prescription.Controller.PrescriptionController;
 import Prescription.Model.Prescription;
 import static Util.SafeScanner.getValidatedIntInput;
 import static Util.SafeScanner.getValidatedStringInput;
+import static Util.TimeRangeMerger.mergeTimeslotsIntoRanges;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.List;
 import java.util.Scanner;
+
 
 
 /**
@@ -130,9 +132,28 @@ public class DoctorView {
      */
     public void viewPersonalSchedule() {
         System.out.println("=== View Personal Schedule ===");
+        System.out.println("- Appiontment: ");
         List<Appointment> appointments = AppointmentController.getAppointmentByDoctor(doctor.getId(), LocalDateTime.now().toLocalDate().atStartOfDay(), 7);
         for (Appointment appointment : appointments) {
             appointment.prettyPrint();
+        }
+        if (appointments.isEmpty()){
+            System.out.println("No available appointment");
+        }
+        System.out.println("- Available time slots: ");
+
+        LocalDateTime timeNow = LocalDateTime.now();
+        // get 7 days after
+        LocalDateTime timeFuture = timeNow.plusDays(7);
+        // get appointments within these 7 days
+        List<LocalDateTime> timeslots = AppointmentController.getAvailableTimeslots(doctor.getId(), timeNow);
+        List<String> formatted = mergeTimeslotsIntoRanges(timeslots);
+
+        if (formatted.isEmpty()){
+            System.out.println("No available time slots");
+        }
+        for(String f : formatted){
+            System.out.println(f);
         }
     }
 
